@@ -15,21 +15,16 @@ function Map(game, width, height) {
 
     this.createMap();
     this.createVillage();
+    //this.createCastles(4);
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
 
 Map.prototype.createMap = function() {
-    let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'tile:water-middle');
+    let background = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:grass');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
-    background.animations.add('idle', [0, 1], 2, true);
-    background.play('idle');
     this.backgroundContainer.addChild(background);
-
-    let floor = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:grass');
-    floor.scale.setTo(GAME.RATIO, GAME.RATIO);
-    this.tilesContainer.addChild(floor);
 
     /* Add borders */
     for (let y=0; y<this.gridHeight; y++) {
@@ -84,10 +79,6 @@ Map.prototype.createMap = function() {
             fow.events.onInputDown.add(this.onFOWClicked, this);
         }
     }
-    
-    /* Center the map */
-    this.tilesContainer.x = (this.game.width/2-(this.tilesContainer.width/2));
-    this.FOWContainer.x = this.FOWContainer.y = this.tilesContainer.y = this.tilesContainer.x;
 };
 
 Map.prototype.createVillage = function() {
