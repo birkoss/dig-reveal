@@ -20,13 +20,49 @@ Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
 
 Map.prototype.init = function() {
-    let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'tile:dungeon');
+    let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'tile:water-middle');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
+    background.animations.add('idle', [0, 1], 2, true);
+    background.play('idle');
     this.backgroundContainer.addChild(background);
 
     let floor = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:grass');
     floor.scale.setTo(GAME.RATIO, GAME.RATIO);
     this.tilesContainer.addChild(floor);
+
+    /* Add borders */
+    for (let y=0; y<this.gridHeight; y++) {
+        for (let x=0; x<this.gridWidth; x++) {
+            let sprite = "";
+            if (x == 0) {
+                sprite = "tile:water-left";
+                if (y == 0) {
+                    sprite = "tile:water-top-left";
+                } else if (y == this.gridHeight - 1) {
+                    sprite = "tile:water-bottom-left";
+                }
+            } else if (x == this.gridWidth -1) {
+                sprite =  "tile:water-right";
+                if (y == 0) {
+                    sprite = "tile:water-top-right";
+                } else if (y == this.gridHeight - 1) {
+                    sprite = "tile:water-bottom-right";
+                }
+            } else if (y == 0) {
+                sprite =  "tile:water-top";
+            } else if (y == this.gridHeight -1) {
+                sprite = "tile:water-bottom";
+            }
+
+
+            if (sprite != "" ) {
+                let tile = this.tilesContainer.create(0, 0, sprite);
+                tile.scale.setTo(GAME.RATIO, GAME.RATIO);
+                tile.x = x * tile.width;
+                tile.y = y * tile.height;
+            }
+        }
+    }
 
     /* Add a fog of war */
     for (let y=0; y<this.gridHeight; y++) {
@@ -54,7 +90,7 @@ Map.prototype.init = function() {
     this.createItem(itemX, itemY, 'tile:village', true);
     
     this.getNeighboorsAt(itemX, itemY).forEach(function(position) {
-        this.getFOWAt(position.x, position.y).kill();
+        this.destroyFOW(this.getFOWAt(position.x, position.y));
     }, this);
 
     this.createItem(6, 9, 'tile:castle');
@@ -73,14 +109,23 @@ Map.prototype.createItem = function(itemX, itemY, itemSprite, reveal) {
 
     /* Remove the FOG at the position */
     if (reveal == true) {
-        let fogOfWar = this.getFOWAt(itemX, itemY);
-        if (fogOfWar != null) {
-            fogOfWar.kill();
-        }
+        this.destroyFOW(this.getFOWAt(itemX, itemY));
     }
 };
 
-/* Getters Helpers */
+Map.prototype.destroyFOW = function(tile) {
+    if (tile != null) {
+        tile.inputEnabled = false;
+
+        this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
+        let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
+        tween.onComplete.add(function() {
+            tile.destroy();
+        }, this);
+    }
+};
+
+/* Getters */
 
 Map.prototype.getNeighboorsAt = function(gridX, gridY) {
     let neighboors = new Array();
@@ -113,13 +158,7 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 /* Events */
 
 Map.prototype.onFOWClicked = function(tile, pointer) {
-    tile.inputEnabled = false;
-
-    this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
-    let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
-    tween.onComplete.add(function() {
-        tile.destroy();
-    }, this);
+    this.destroyFOW(tile);
 };
 
 Map.prototype.onTileClicked = function(tile, pointer) {
