@@ -4,10 +4,12 @@ GAME.Game = function() {};
 
 GAME.Game.prototype = {
     create: function() {
-        this.mapContainer = this.game.add.group();
-        this.mapContainer.scale.setTo(GAME.RATIO, GAME.RATIO);
 
-        this.map = new Map(this.game, 9, 12);
+        let mapWidth = Math.floor(this.game.width / (16 * GAME.RATIO));
+        console.log(mapWidth);
+        this.mapContainer = this.game.add.group();
+
+        this.map = new Map(this.game, mapWidth, 12);
         this.mapContainer.addChild(this.map);
     },
 };

@@ -10,6 +10,8 @@ GAME.Preload.prototype = {
 
         this.load.image('tile:grass', 'images/tiles/grass.png');
         this.load.image('tile:dungeon', 'images/tiles/dungeon.png');
+        this.load.image('tile:village', 'images/tiles/village.png');
+        this.load.image('tile:castle', 'images/tiles/castle.png');
         this.load.image('tile:fog-of-war', 'images/tiles/fog-of-war.png');
     },
     create: function() {
