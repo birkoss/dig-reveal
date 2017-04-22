@@ -13,13 +13,14 @@ function Map(game, width, height) {
     this.FOWContainer = this.game.add.group();
     this.add(this.FOWContainer);
 
-    this.init();
+    this.createMap();
+    this.createVillage();
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
 
-Map.prototype.init = function() {
+Map.prototype.createMap = function() {
     let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'tile:water-middle');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     background.animations.add('idle', [0, 1], 2, true);
@@ -35,28 +36,27 @@ Map.prototype.init = function() {
         for (let x=0; x<this.gridWidth; x++) {
             let sprite = "";
             if (x == 0) {
-                sprite = "tile:water-left";
+                sprite = "left";
                 if (y == 0) {
-                    sprite = "tile:water-top-left";
+                    sprite = "top-left";
                 } else if (y == this.gridHeight - 1) {
-                    sprite = "tile:water-bottom-left";
+                    sprite = "bottom-left";
                 }
             } else if (x == this.gridWidth -1) {
-                sprite =  "tile:water-right";
+                sprite =  "right";
                 if (y == 0) {
-                    sprite = "tile:water-top-right";
+                    sprite = "top-right";
                 } else if (y == this.gridHeight - 1) {
-                    sprite = "tile:water-bottom-right";
+                    sprite = "bottom-right";
                 }
             } else if (y == 0) {
-                sprite =  "tile:water-top";
+                sprite =  "top";
             } else if (y == this.gridHeight -1) {
-                sprite = "tile:water-bottom";
+                sprite = "bottom";
             }
 
-
             if (sprite != "" ) {
-                let tile = this.tilesContainer.create(0, 0, sprite);
+                let tile = this.tilesContainer.create(0, 0, "tile:water-" + sprite);
                 tile.scale.setTo(GAME.RATIO, GAME.RATIO);
                 tile.x = x * tile.width;
                 tile.y = y * tile.height;
@@ -84,20 +84,22 @@ Map.prototype.init = function() {
             fow.events.onInputDown.add(this.onFOWClicked, this);
         }
     }
+    
+    /* Center the map */
+    this.tilesContainer.x = (this.game.width/2-(this.tilesContainer.width/2));
+    this.FOWContainer.x = this.FOWContainer.y = this.tilesContainer.y = this.tilesContainer.x;
+};
 
+Map.prototype.createVillage = function() {
+    /* Choose a random position */
     let itemX = this.game.rnd.integerInRange(1, this.gridWidth-2);
     let itemY = this.game.rnd.integerInRange(1, this.gridHeight-2);
     this.createItem(itemX, itemY, 'tile:village', true);
-    
-    this.getNeighboorsAt(itemX, itemY).forEach(function(position) {
+
+    /* Reveals all tiles around it */
+    this.getNeighboorsAt(itemX, itemY, false).forEach(function(position) {
         this.destroyFOW(this.getFOWAt(position.x, position.y));
     }, this);
-
-    this.createItem(6, 9, 'tile:castle');
-    this.createItem(10, 3, 'tile:castle');
-
-    this.tilesContainer.x = (this.game.width/2-(this.tilesContainer.width/2));
-    this.FOWContainer.x = this.FOWContainer.y = this.tilesContainer.y = this.tilesContainer.x;
 };
 
 Map.prototype.createItem = function(itemX, itemY, itemSprite, reveal) {
@@ -127,16 +129,24 @@ Map.prototype.destroyFOW = function(tile) {
 
 /* Getters */
 
-Map.prototype.getNeighboorsAt = function(gridX, gridY) {
+Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excludeStartingPosition) {
+    if (depth == undefined) { depth = 1; }
+    if (onlyAdjacent == undefined) { onlyAdjacent = true; }
+    if (excludeStartingPosition == undefined) { excludeStartingPosition = true; }
+
+    console.log('depth:' + depth);
+
+    console.log(onlyAdjacent);
     let neighboors = new Array();
-    for (let y=-1; y<=1; y++) {
-        for (let x=-1; x<=1; x++) {
-            if (Math.abs(x) != Math.abs(y)) {
-                let newX = gridX + x;
-                let newY = gridY + y;
-                if (newX >= 0 && newX < this.gridWidth && newY >= 0 && newY < this.gridHeight) {
-                    neighboors.push({x:newX, y:newY});
-                }
+    for (let y=-depth; y<=depth; y++) {
+        for (let x=-depth; x<=depth; x++) {
+            if ((x == 0 && y == 0) && excludeStartingPosition) { continue; }
+            if (onlyAdjacent && (x != 0 && y != 0)) { continue; }
+
+            let newX = gridX + x;
+            let newY = gridY + y;
+            if (newX >= 0 && newX < this.gridWidth && newY >= 0 && newY < this.gridHeight) {
+                neighboors.push({x:newX, y:newY});
             }
         }
     }
