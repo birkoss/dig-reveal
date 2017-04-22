@@ -3,6 +3,7 @@ function Map(game, width, height) {
 
     this.gridWidth = width;
     this.gridHeight = height;
+    console.log('Grid:' + width + "x" + height);
 
     this.backgroundContainer = this.game.add.group();
     this.add(this.backgroundContainer);
@@ -15,7 +16,7 @@ function Map(game, width, height) {
 
     this.createMap();
     this.createVillage();
-    //this.createCastles(4);
+    this.createCastles(5);
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
@@ -55,6 +56,11 @@ Map.prototype.createMap = function() {
                 tile.scale.setTo(GAME.RATIO, GAME.RATIO);
                 tile.x = x * tile.width;
                 tile.y = y * tile.height;
+
+                tile.gridX = x;
+                tile.gridY = y;
+
+                tile.type = 'border';
             }
         }
     }
@@ -82,28 +88,41 @@ Map.prototype.createMap = function() {
 };
 
 Map.prototype.createVillage = function() {
-    /* Choose a random position */
-    let itemX = this.game.rnd.integerInRange(1, this.gridWidth-2);
-    let itemY = this.game.rnd.integerInRange(1, this.gridHeight-2);
-    this.createItem(itemX, itemY, 'tile:village', true);
+    //let position = this.getRandomPosition();
+    let position = {gridX:2, gridY:2};
+
+    this.createItem(position.gridX, position.gridY, 'village');
 
     /* Reveals all tiles around it */
-    this.getNeighboorsAt(itemX, itemY, false).forEach(function(position) {
-        this.destroyFOW(this.getFOWAt(position.x, position.y));
+    this.getNeighboorsAt(position.gridX, position.gridY, false, 1, false).forEach(function(position) {
+        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
     }, this);
+
+
+    console.log( this.getRandomPosition() );
 };
 
-Map.prototype.createItem = function(itemX, itemY, itemSprite, reveal) {
-    let sprite = this.tilesContainer.create(0, 0, itemSprite);
+Map.prototype.createCastles = function(maxCastles) {
+    for (let i=0; i<maxCastles; i++) {
+        let position = this.getRandomPosition();
+        if (position == null) {
+            break;
+        }
+
+        this.createItem(position.gridX, position.gridY, 'castle');
+    }
+};
+
+Map.prototype.createItem = function(gridX, gridY, type, reveal) {
+    let sprite = this.tilesContainer.create(0, 0, "tile:" + type);
+    sprite.type = type;
     sprite.scale.setTo(GAME.RATIO, GAME.RATIO);
 
-    sprite.x = (sprite.width * itemX);
-    sprite.y = (sprite.height * itemY);
+    sprite.x = (sprite.width * gridX);
+    sprite.y = (sprite.height * gridY);
 
-    /* Remove the FOG at the position */
-    if (reveal == true) {
-        this.destroyFOW(this.getFOWAt(itemX, itemY));
-    }
+    sprite.gridX = gridX;
+    sprite.gridY = gridY;
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -120,14 +139,48 @@ Map.prototype.destroyFOW = function(tile) {
 
 /* Getters */
 
+Map.prototype.getRandomPosition = function() {
+    let excludedTiles = this.getExcludedTiles();
+
+    let tiles = new Array();
+    for (let gridY=0; gridY<this.gridHeight; gridY++) {
+        for (let gridX=0; gridX<this.gridWidth; gridX++) {
+            let isExcluded = false;
+            excludedTiles.forEach(function(tile) {
+                if (tile.gridX == gridX && tile.gridY == gridY) {
+                    isExcluded = true;
+                }
+            }, this);
+
+            if (!isExcluded) {
+                tiles.push({gridX:gridX, gridY:gridY});
+            }
+        }
+    }
+
+    return tiles[this.game.rnd.integerInRange(0, tiles.length-1)];
+};
+
+Map.prototype.getExcludedTiles = function() {
+    let excludedTiles = new Array();
+
+    this.tilesContainer.forEach(function(tile) {
+        excludedTiles.push({gridX:tile.gridX, gridY:tile.gridY});
+        if (tile.type == 'village') {
+            excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 2));
+        } else if (tile.type == 'castle') {
+            excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 3));
+        }
+    }, this);
+
+    return excludedTiles;
+};
+
 Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excludeStartingPosition) {
     if (depth == undefined) { depth = 1; }
     if (onlyAdjacent == undefined) { onlyAdjacent = true; }
     if (excludeStartingPosition == undefined) { excludeStartingPosition = true; }
 
-    console.log('depth:' + depth);
-
-    console.log(onlyAdjacent);
     let neighboors = new Array();
     for (let y=-depth; y<=depth; y++) {
         for (let x=-depth; x<=depth; x++) {
@@ -137,7 +190,7 @@ Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excl
             let newX = gridX + x;
             let newY = gridY + y;
             if (newX >= 0 && newX < this.gridWidth && newY >= 0 && newY < this.gridHeight) {
-                neighboors.push({x:newX, y:newY});
+                neighboors.push({gridX:newX, gridY:newY});
             }
         }
     }
