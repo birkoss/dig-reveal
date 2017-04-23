@@ -16,15 +16,26 @@ function Map(game, width, height, type) {
 
     this.onFOWClicked = new Phaser.Signal();
     this.onTileClicked = new Phaser.Signal();
+    this.onMapDirty = new Phaser.Signal();
 
     this.createMap();
-    this.createDetails();
-    this.createStartPosition();
-    this.createLevels(5);
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
+
+Map.prototype.load = function(data) {
+    data['fow'].forEach(function(position) {
+            this.createFOW(position.gridX, position.gridY);
+    }, this);
+};
+
+Map.prototype.generate = function() {
+    this.generateFOW();
+    this.createDetails();
+    this.createStartPosition();
+    this.createLevels(5);
+};
 
 Map.prototype.show = function() {
     this.tilesContainer.alpha = this.backgroundContainer.alpha = 1;
@@ -82,30 +93,36 @@ Map.prototype.createMap = function() {
         }
     }
 
+    /* Hide the tiles and the background */
+    //this.tilesContainer.alpha = 0;
+    //this.backgroundContainer.alpha = 0;
+};
+
+Map.prototype.generateFOW = function() {
     /* Add a fog of war */
     for (let y=0; y<this.gridHeight; y++) {
         for (let x=0; x<this.gridWidth; x++) {
-            let fow = this.FOWContainer.create(0, 0, 'tile:fog-of-war');
-            fow.scale.setTo(GAME.RATIO, GAME.RATIO);
-            fow.anchor.set(0.5, 0.5);
-            fow.gridX = x;
-            fow.gridY = y;
-            fow.x = (x * fow.width);
-            fow.y = (y * fow.height);
-
-            fow.x += (fow.width/2);
-            fow.y += (fow.height/2);
-
-            fow.alpha = 0.8;
-
-            fow.inputEnabled = true;
-            fow.events.onInputDown.add(this.onFOWClick, this);
+            this.createFOW(x, y);
         }
     }
+};
 
-    /* Hide the tiles and the background */
-    this.tilesContainer.alpha = 0;
-    this.backgroundContainer.alpha = 0;
+Map.prototype.createFOW = function(gridX, gridY) {
+    let fow = this.FOWContainer.create(0, 0, 'tile:fog-of-war');
+    fow.scale.setTo(GAME.RATIO, GAME.RATIO);
+    fow.anchor.set(0.5, 0.5);
+    fow.gridX = gridX
+    fow.gridY = gridY;
+    fow.x = (gridX * fow.width);
+    fow.y = (gridY * fow.height);
+
+    fow.x += (fow.width/2);
+    fow.y += (fow.height/2);
+
+    fow.alpha = 0.8;
+
+    fow.inputEnabled = true;
+    fow.events.onInputDown.add(this.onFOWClick, this);
 };
 
 Map.prototype.createDetails = function() {
@@ -158,6 +175,7 @@ Map.prototype.destroyFOW = function(tile) {
         let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
         tween.onComplete.add(function() {
             tile.destroy();
+            this.onMapDirty.dispatch(tile, 1);
         }, this);
     }
 };
