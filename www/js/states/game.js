@@ -15,8 +15,7 @@ GAME.Game.prototype = {
         this.showPanel();
     },
     update: function() {
-        this.staminaText.text = this.staminaTotal + "/" + this.staminaMax; 
-        this.stamina.width = this.staminaTotal / this.staminaMax * this.stamina.originalWidth;
+        this.panelContainer.getChildAt(0).updateStamina(this.staminaTotal, this.staminaMax);
     },
 
     showPanel: function() {
@@ -44,33 +43,9 @@ GAME.Game.prototype = {
         this.map.y = this.panelContainer.height + 16;
     },
     createPanel: function() {
-        let background = this.panelContainer.create(0, 0, 'panel:background');
-        background.scale.setTo(GAME.RATIO, GAME.RATIO);
-        background.width = this.game.width;
+        let panel = new Panel(this.game, 'Village');
+        this.panelContainer.addChild(panel);
 
-        let mapName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', 'Village', 8);
-        mapName.anchor.set(0, 0.5);
-        this.panelContainer.addChild(mapName);
-
-        let staminaIcon = this.panelContainer.create(0, (background.height/2), 'panel:stamina');
-        staminaIcon.anchor.set(1, 0.5);
-        staminaIcon.scale.setTo(GAME.RATIO, GAME.RATIO);
-        staminaIcon.x = background.width - 16;
-
-        let progressBarBackground = this.panelContainer.create(0, (background.height/2), 'progress-bar:background');
-        progressBarBackground.anchor.set(0, 0.5);
-        progressBarBackground.scale.setTo(GAME.RATIO, GAME.RATIO);
-        progressBarBackground.x = staminaIcon.x - progressBarBackground.width - staminaIcon.width - 16;
-
-        this.stamina = this.panelContainer.create(progressBarBackground.x, (background.height/2), 'progress-bar:filling');
-        this.stamina.anchor.set(0, 0.5);
-        this.stamina.scale.setTo(GAME.RATIO, GAME.RATIO);
-        this.stamina.originalWidth = this.stamina.width;
-
-        this.staminaText = this.game.add.bitmapText(this.stamina.x + (this.stamina.width/2), (background.height/2), 'font:gui', '100/100', 8);
-        this.staminaText.anchor.set(0.5, 0.5);
-        this.panelContainer.addChild(this.staminaText);
-
-        this.panelContainer.y = - this.panelContainer.height;
+        this.panelContainer.y = -this.panelContainer.height;
     }
 };
