@@ -9,6 +9,7 @@ GAME.Preload.prototype = {
         this.load.setPreloadSprite(this.preloadBar);
 
         this.load.image('tile:grass', 'images/tiles/grass.png');
+        this.load.image('tile:tree', 'images/tiles/tree.png');
         this.load.image('tile:dungeon', 'images/tiles/dungeon.png');
         this.load.image('tile:village', 'images/tiles/village.png');
         this.load.image('tile:castle', 'images/tiles/castle.png');

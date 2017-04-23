@@ -15,6 +15,7 @@ function Map(game, width, height) {
     this.add(this.FOWContainer);
 
     this.createMap();
+    this.createDetails();
     this.createVillage();
     this.createCastles(5);
 };
@@ -87,9 +88,15 @@ Map.prototype.createMap = function() {
     }
 };
 
+Map.prototype.createDetails = function() {
+    for (let i=0; i<this.game.rnd.integerInRange(15, 25); i++) {
+        let position = this.getRandomPosition();
+        this.createItem(position.gridX, position.gridY, 'tree');
+    }
+};
+
 Map.prototype.createVillage = function() {
-    //let position = this.getRandomPosition();
-    let position = {gridX:2, gridY:2};
+    let position = this.getRandomPosition();
 
     this.createItem(position.gridX, position.gridY, 'village');
 
