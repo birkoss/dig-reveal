@@ -1,8 +1,9 @@
-function Map(game, width, height) {
+function Map(game, width, height, type) {
     Phaser.Group.call(this, game);
 
     this.gridWidth = width;
     this.gridHeight = height;
+    this.type = type;
 
     this.backgroundContainer = this.game.add.group();
     this.add(this.backgroundContainer);
@@ -14,6 +15,7 @@ function Map(game, width, height) {
     this.add(this.FOWContainer);
 
     this.onFOWClicked = new Phaser.Signal();
+    this.onTileClicked = new Phaser.Signal();
 
     this.createMap();
     this.createDetails();
@@ -38,7 +40,7 @@ Map.prototype.show = function() {
 };
 
 Map.prototype.createMap = function() {
-    let background = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:grass');
+    let background = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:'+this.type+'-floor');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     this.backgroundContainer.addChild(background);
 
@@ -67,7 +69,7 @@ Map.prototype.createMap = function() {
             }
 
             if (sprite != "" ) {
-                let tile = this.tilesContainer.create(0, 0, "tile:water-" + sprite);
+                let tile = this.tilesContainer.create(0, 0, "tile:"+this.type+"-border-" + sprite);
                 tile.scale.setTo(GAME.RATIO, GAME.RATIO);
                 tile.x = x * tile.width;
                 tile.y = y * tile.height;
@@ -109,14 +111,14 @@ Map.prototype.createMap = function() {
 Map.prototype.createDetails = function() {
     for (let i=0; i<this.game.rnd.integerInRange(15, 25); i++) {
         let position = this.getRandomPosition();
-        this.createItem(position.gridX, position.gridY, 'tree');
+        this.createItem(position.gridX, position.gridY, this.type+'-detail');
     }
 };
 
 Map.prototype.createVillage = function() {
     let position = this.getRandomPosition();
 
-    this.createItem(position.gridX, position.gridY, 'village');
+    this.createItem(position.gridX, position.gridY, this.type + '-start', 'village');
 };
 
 Map.prototype.createCastles = function(maxCastles) {
@@ -130,16 +132,22 @@ Map.prototype.createCastles = function(maxCastles) {
     }
 };
 
-Map.prototype.createItem = function(gridX, gridY, type, reveal) {
-    let sprite = this.tilesContainer.create(0, 0, "tile:" + type);
-    sprite.type = type;
-    sprite.scale.setTo(GAME.RATIO, GAME.RATIO);
+Map.prototype.createItem = function(gridX, gridY, sprite, type) {
+    if (type == undefined) {
+        type = sprite;
+    }
+    let tile = this.tilesContainer.create(0, 0, "tile:" + sprite);
+    tile.type = type;
+    tile.scale.setTo(GAME.RATIO, GAME.RATIO);
 
-    sprite.x = (sprite.width * gridX);
-    sprite.y = (sprite.height * gridY);
+    tile.x = (tile.width * gridX);
+    tile.y = (tile.height * gridY);
 
-    sprite.gridX = gridX;
-    sprite.gridY = gridY;
+    tile.gridX = gridX;
+    tile.gridY = gridY;
+
+    tile.inputEnabled = true;
+    tile.events.onInputDown.add(this.onTileClick, this);
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -251,6 +259,6 @@ Map.prototype.onFOWClick = function(tile, pointer) {
     }
 };
 
-Map.prototype.onTileClicked = function(tile, pointer) {
-    console.log(tile);
+Map.prototype.onTileClick = function(tile, pointer) {
+    this.onTileClicked.dispatch(this, 1);
 };

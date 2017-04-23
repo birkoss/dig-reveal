@@ -8,22 +8,34 @@ GAME.Preload.prototype = {
         this.preloadBar.anchor.set(0.5);
         this.load.setPreloadSprite(this.preloadBar);
 
-        this.load.image('tile:grass', 'images/tiles/grass.png');
-        this.load.image('tile:tree', 'images/tiles/tree.png');
-        this.load.image('tile:dungeon', 'images/tiles/dungeon.png');
-        this.load.image('tile:village', 'images/tiles/village.png');
         this.load.image('tile:castle', 'images/tiles/castle.png');
         this.load.image('tile:fog-of-war', 'images/tiles/fog-of-war.png');
 
-        this.load.image('tile:water-top', 'images/tiles/water/top.png');
-        this.load.image('tile:water-right', 'images/tiles/water/right.png');
-        this.load.image('tile:water-bottom', 'images/tiles/water/bottom.png');
-        this.load.image('tile:water-left', 'images/tiles/water/left.png');
-        this.load.spritesheet('tile:water-middle', 'images/tiles/water/middle.png', 16, 16);
-        this.load.image('tile:water-top-left', 'images/tiles/water/top-left.png');
-        this.load.image('tile:water-top-right', 'images/tiles/water/top-right.png');
-        this.load.image('tile:water-bottom-left', 'images/tiles/water/bottom-left.png');
-        this.load.image('tile:water-bottom-right', 'images/tiles/water/bottom-right.png');
+        this.load.image('tile:village-start', 'images/tiles/village/start.png');
+        this.load.image('tile:village-floor', 'images/tiles/village/floor.png');
+        this.load.image('tile:village-detail', 'images/tiles/village/detail.png');
+        this.load.image('tile:village-border-top', 'images/tiles/village/borders/top.png');
+        this.load.image('tile:village-border-right', 'images/tiles/village/borders/right.png');
+        this.load.image('tile:village-border-bottom', 'images/tiles/village/borders/bottom.png');
+        this.load.image('tile:village-border-left', 'images/tiles/village/borders/left.png');
+        this.load.spritesheet('tile:village-border-middle', 'images/tiles/village/borders/middle.png', 16, 16);
+        this.load.image('tile:village-border-top-left', 'images/tiles/village/borders/top-left.png');
+        this.load.image('tile:village-border-top-right', 'images/tiles/village/borders/top-right.png');
+        this.load.image('tile:village-border-bottom-left', 'images/tiles/village/borders/bottom-left.png');
+        this.load.image('tile:village-border-bottom-right', 'images/tiles/village/borders/bottom-right.png');
+
+        this.load.image('tile:castle-start', 'images/tiles/castle/start.png');
+        this.load.image('tile:castle-floor', 'images/tiles/castle/floor.png');
+        this.load.image('tile:castle-detail', 'images/tiles/castle/detail.png');
+        this.load.image('tile:castle-border-top', 'images/tiles/castle/borders/top.png');
+        this.load.image('tile:castle-border-right', 'images/tiles/castle/borders/right.png');
+        this.load.image('tile:castle-border-bottom', 'images/tiles/castle/borders/bottom.png');
+        this.load.image('tile:castle-border-left', 'images/tiles/castle/borders/left.png');
+        this.load.spritesheet('tile:castle-border-middle', 'images/tiles/castle/borders/middle.png', 16, 16);
+        this.load.image('tile:castle-border-top-left', 'images/tiles/castle/borders/top-left.png');
+        this.load.image('tile:castle-border-top-right', 'images/tiles/castle/borders/top-right.png');
+        this.load.image('tile:castle-border-bottom-left', 'images/tiles/castle/borders/bottom-left.png');
+        this.load.image('tile:castle-border-bottom-right', 'images/tiles/castle/borders/bottom-right.png');
 
         this.load.image('panel:background', 'images/panel/background.png');
         this.load.image('panel:stamina', 'images/panel/stamina.png');
