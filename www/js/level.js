@@ -6,6 +6,8 @@ function Level(game, name) {
     this.mapContainer = this.game.add.group();
     this.panelContainer = this.game.add.group();
 
+    this.onStaminaChanged = new Phaser.Signal();
+
     this.createPanel();
     this.createMap();
 }
@@ -34,6 +36,7 @@ Level.prototype.createMap = function() {
 
     /* Create the map */
     this.map = new Map(this.game, mapWidth, mapHeight);
+    this.map.onFOWClicked.add(this.onMapFOWClicked, this);
 
     /* Create a background under the map */
     let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.width, 'tile:water-middle');
@@ -56,4 +59,8 @@ Level.prototype.createPanel = function() {
 
     /* Hide the panel */
     this.panelContainer.y = -this.panelContainer.height;
+};
+
+Level.prototype.onMapFOWClicked = function(tile, value) {
+    this.onStaminaChanged.dispatch(this, value);
 };

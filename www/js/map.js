@@ -13,6 +13,8 @@ function Map(game, width, height) {
     this.FOWContainer = this.game.add.group();
     this.add(this.FOWContainer);
 
+    this.onFOWClicked = new Phaser.Signal();
+
     this.createMap();
     this.createDetails();
     this.createVillage();
@@ -95,7 +97,7 @@ Map.prototype.createMap = function() {
             fow.alpha = 0.8;
 
             fow.inputEnabled = true;
-            fow.events.onInputDown.add(this.onFOWClicked, this);
+            fow.events.onInputDown.add(this.onFOWClick, this);
         }
     }
 
@@ -234,8 +236,11 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 
 /* Events */
 
-Map.prototype.onFOWClicked = function(tile, pointer) {
-    this.destroyFOW(tile);
+Map.prototype.onFOWClick = function(tile, pointer) {
+    if (GAME.STAMINA > 0) {
+        this.destroyFOW(tile);
+        this.onFOWClicked.dispatch(this, 1);
+    }
 };
 
 Map.prototype.onTileClicked = function(tile, pointer) {
