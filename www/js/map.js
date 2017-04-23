@@ -28,18 +28,28 @@ Map.prototype.load = function(data) {
     data['fow'].forEach(function(position) {
             this.createFOW(position.gridX, position.gridY);
     }, this);
+
+    this.createStartPosition(data['start'].gridX, data['start'].gridY);
+
+    data['details'].forEach(function(position) {
+        this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
+    }, this);
+
+    data['levels'].forEach(function(position) {
+        this.createItem(position.gridX, position.gridY, 'castle', 'level');
+    }, this);
 };
 
 Map.prototype.generate = function() {
     this.generateFOW();
-    this.createDetails();
-    this.createStartPosition();
-    this.createLevels(5);
+    this.generateDetails();
+    let position = this.getRandomPosition();
+    this.createStartPosition(position.gridX, position.gridY);
+    this.generateLevels(5);
 };
 
+/* @TODO Rename to start, or something more pertinent */
 Map.prototype.show = function() {
-    this.tilesContainer.alpha = this.backgroundContainer.alpha = 1;
-
     let positions = this.getItems('start');
 
     positions.forEach(function(tile) {
@@ -92,10 +102,6 @@ Map.prototype.createMap = function() {
             }
         }
     }
-
-    /* Hide the tiles and the background */
-    //this.tilesContainer.alpha = 0;
-    //this.backgroundContainer.alpha = 0;
 };
 
 Map.prototype.generateFOW = function() {
@@ -125,20 +131,18 @@ Map.prototype.createFOW = function(gridX, gridY) {
     fow.events.onInputDown.add(this.onFOWClick, this);
 };
 
-Map.prototype.createDetails = function() {
+Map.prototype.generateDetails = function() {
     for (let i=0; i<this.game.rnd.integerInRange(15, 25); i++) {
         let position = this.getRandomPosition();
-        this.createItem(position.gridX, position.gridY, this.type+'-detail');
+        this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
     }
 };
 
-Map.prototype.createStartPosition = function() {
-    let position = this.getRandomPosition();
-
-    this.createItem(position.gridX, position.gridY, this.type + '-start', 'start');
+Map.prototype.createStartPosition = function(gridX, gridY) {
+    this.createItem(gridX, gridY, this.type + '-start', 'start');
 };
 
-Map.prototype.createLevels = function(maxLevels) {
+Map.prototype.generateLevels = function(maxLevels) {
     for (let i=0; i<maxLevels; i++) {
         let position = this.getRandomPosition();
         if (position == null) {

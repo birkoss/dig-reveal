@@ -85,6 +85,7 @@ Level.prototype.createMap = function() {
     /* Load an existing level? */
     let data = this.load(mapWidth, mapHeight);
     console.log(data);
+    //data = null;
     if (data != null) {
         console.log('loading map...');
         this.map.load(data);
