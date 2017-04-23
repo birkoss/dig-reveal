@@ -7,8 +7,8 @@ GAME.Game.prototype = {
         this.mapContainer = this.game.add.group();
         this.panelContainer = this.game.add.group();
 
-        this.createMap();
         this.createPanel();
+        this.createMap();
 
         this.showPanel();
     },
@@ -23,7 +23,7 @@ GAME.Game.prototype = {
         this.map = new Map(this.game, mapWidth, 12);
 
         /* Create a background under the map */
-        let background = this.game.add.tileSprite(0, 0, this.game.width, (this.map.height/GAME.RATIO) + 32, 'tile:water-middle');
+        let background = this.game.add.tileSprite(0, 0, this.game.width, (this.map.height/GAME.RATIO) +16 + this.panelContainer.height, 'tile:water-middle');
         background.scale.setTo(GAME.RATIO, GAME.RATIO);
         background.animations.add('idle', [0, 1], 2, true);
         background.play('idle');
@@ -31,7 +31,7 @@ GAME.Game.prototype = {
         this.mapContainer.addChild(this.map);
 
         this.map.x = (this.game.width - this.map.width)/2;
-        this.map.y = 32;
+        this.map.y = this.panelContainer.height + 32;
     },
     createPanel: function() {
         let background = this.panelContainer.create(0, 0, 'panel:background');
