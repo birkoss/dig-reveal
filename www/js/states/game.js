@@ -4,6 +4,8 @@ GAME.Game = function() {};
 
 GAME.Game.prototype = {
     create: function() {
+        this.staminaMax = this.staminaTotal = 100;
+
         this.mapContainer = this.game.add.group();
         this.panelContainer = this.game.add.group();
 
@@ -12,6 +14,11 @@ GAME.Game.prototype = {
 
         this.showPanel();
     },
+    update: function() {
+        this.staminaText.text = this.staminaTotal + "/" + this.staminaMax; 
+        this.stamina.width = this.staminaTotal / this.staminaMax * this.stamina.originalWidth;
+    },
+
     showPanel: function() {
         this.game.add.tween(this.panelContainer).to({y:0}, 1000, Phaser.Easing.Bounce.Out).start();
     },
