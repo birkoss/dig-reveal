@@ -3,7 +3,6 @@ function Map(game, width, height) {
 
     this.gridWidth = width;
     this.gridHeight = height;
-    console.log('Grid:' + width + "x" + height);
 
     this.backgroundContainer = this.game.add.group();
     this.add(this.backgroundContainer);
@@ -22,6 +21,19 @@ function Map(game, width, height) {
 
 Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
+
+Map.prototype.show = function() {
+    this.tilesContainer.alpha = this.backgroundContainer.alpha = 1;
+
+    let positions = this.getItems('village');
+
+    positions.forEach(function(tile) {
+        /* Reveals all tiles around it */
+        this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+        }, this);
+    }, this);
+};
 
 Map.prototype.createMap = function() {
     let background = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:grass');
@@ -86,6 +98,10 @@ Map.prototype.createMap = function() {
             fow.events.onInputDown.add(this.onFOWClicked, this);
         }
     }
+
+    /* Hide the tiles and the background */
+    this.tilesContainer.alpha = 0;
+    this.backgroundContainer.alpha = 0;
 };
 
 Map.prototype.createDetails = function() {
@@ -99,14 +115,6 @@ Map.prototype.createVillage = function() {
     let position = this.getRandomPosition();
 
     this.createItem(position.gridX, position.gridY, 'village');
-
-    /* Reveals all tiles around it */
-    this.getNeighboorsAt(position.gridX, position.gridY, false, 1, false).forEach(function(position) {
-        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
-    }, this);
-
-
-    console.log( this.getRandomPosition() );
 };
 
 Map.prototype.createCastles = function(maxCastles) {
@@ -202,6 +210,14 @@ Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excl
         }
     }
     return neighboors;
+};
+
+Map.prototype.getItems = function(type) {
+    let items = this.tilesContainer.filter(function(tile) {
+        return tile.type == type;
+    });
+
+    return items.list;
 };
 
 Map.prototype.getFOWAt = function(gridX, gridY) {
