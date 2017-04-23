@@ -41,7 +41,7 @@ GAME.Game.prototype = {
         background.scale.setTo(GAME.RATIO, GAME.RATIO);
         background.width = this.game.width;
 
-        let mapName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', 'Village', 16);
+        let mapName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', 'Village', 8);
         mapName.anchor.set(0, 0.5);
         this.panelContainer.addChild(mapName);
 
