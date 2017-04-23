@@ -1,13 +1,7 @@
-function Level(game, type, name, id) {
-    if (id == undefined) {
-        id = name;
-    }
-
+function Level(game, config) {
     Phaser.Group.call(this, game);
 
-    this.id = id;
-    this.name = name;
-    this.type = type;
+    this.config = config;
 
     this.mapContainer = this.game.add.group();
     this.panelContainer = this.game.add.group();
@@ -22,14 +16,16 @@ function Level(game, type, name, id) {
 Level.prototype = Object.create(Phaser.Group.prototype);
 Level.prototype.constructor = Level;
 
+Level.prototype.getSaveName = function(mapGridWidth, mapGridHeight) {
+    return 'level_' + this.config['id'] + '_' + mapGridWidth + 'x' + mapGridHeight;
+};
+
 /* Load an existing level in the local storage
  * - Each level will be saved using the following name :
  *   - level_name_widthxheight
  */
 Level.prototype.load = function(mapGridWidth, mapGridHeight) {
-    let saveName = 'level_'+this.id+'_'+mapGridWidth+'x'+mapGridHeight;
-
-    let data = localStorage.getItem(saveName);
+    let data = localStorage.getItem(this.getSaveName(mapGridWidth, mapGridHeight));
     if (data != null) {
         data = JSON.parse(data);
     }
@@ -38,11 +34,8 @@ Level.prototype.load = function(mapGridWidth, mapGridHeight) {
 
 /* Save the current level */
 Level.prototype.save = function() {
-    let saveName = 'level_'+this.id+'_'+this.map.gridWidth+'x'+this.map.gridHeight;
-
-    var data = {'version':1};
-    data['name'] = this.name;
-    data['type'] = this.type;
+    let data = {'version':1};
+    data['config'] = this.config;
     data['mapWidth'] = this.map.gridWidth;
     data['mapHeight'] = this.map.gridHeight;
     
@@ -65,10 +58,11 @@ Level.prototype.save = function() {
         data['details'].push({gridX:tile.gridX, gridY:tile.gridY});
     }, this);
 
-    localStorage.setItem(saveName, JSON.stringify(data));
+    localStorage.setItem(this.getSaveName(this.map.gridWidth, this.map.gridHeight), JSON.stringify(data));
 };
 
 Level.prototype.show = function() {
+    this.panel.levelName.text = this.config.name;
     this.showPanel();
 };
 
@@ -89,12 +83,13 @@ Level.prototype.createMap = function() {
 
 
     /* Create the map */
-    this.map = new Map(this.game, mapWidth, mapHeight, this.type);
+    this.map = new Map(this.game, mapWidth, mapHeight, this.config.type);
 
     /* Load an existing level? */
     let data = this.load(mapWidth, mapHeight);
     if (data != null) {
         this.map.load(data);
+        this.config = data.config;
     } else {
         this.map.generate();
         this.save();
@@ -105,7 +100,7 @@ Level.prototype.createMap = function() {
     this.map.onMapDirty.add(this.onMapDirty, this);
 
     /* Create a background under the map */
-    let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.width, 'tile:'+this.type+'-border-middle');
+    let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.width, 'tile:'+this.config.type+'-border-middle');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     background.animations.add('idle', [0, 1], 2, true);
     background.play('idle');
@@ -117,7 +112,7 @@ Level.prototype.createMap = function() {
 };
 
 Level.prototype.createPanel = function() {
-    this.panel = new Panel(this.game, this.name);
+    this.panel = new Panel(this.game, this.config.name);
     this.panelContainer.addChild(this.panel);
 
     /* Hide the panel */

@@ -4,34 +4,37 @@ GAME.Game = function() {};
 
 GAME.Game.prototype = {
     create: function() {
-        GAME.STAMINA = GAME.STAMINA_MAX = 100;
+        console.log('Game.create');
+        console.log(GAME.level);
+
         this.levelContainer = this.game.add.group();
-        this.subLevelContainer = this.game.add.group();
 
-        let level = new Level(this.game, 'village', 'Village');
-        level.onStaminaChanged.add(this.onLevelStaminaChanged, this);
-        level.onLoadMap.add(this.onLevelOnLoadMap, this);
-        this.levelContainer.addChild(level);
+        this.level = new Level(this.game, GAME.level);
+        this.level.onStaminaChanged.add(this.onLevelStaminaChanged, this);
+        this.level.onLoadMap.add(this.onLevelOnLoadMap, this);
+        this.levelContainer.addChild(this.level);
 
-        level.show();
-    },
-    createSubLevel: function(id) {
-        let level = new Level(this.game, 'castle', 'Castle', id);
-        level.onStaminaChanged.add(this.onLevelStaminaChanged, this);
-        this.subLevelContainer.addChild(level);
-
-        level.show();
+        this.level.show();
     },
     update: function() {
-        this.levelContainer.getChildAt(0).panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
-        if (this.subLevelContainer.children.length > 0) {
-            this.subLevelContainer.getChildAt(0).panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
-        }
+        this.level.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
     },
     onLevelStaminaChanged: function(level, value) {
         GAME.STAMINA = Math.max(0, GAME.STAMINA - value);
     },
     onLevelOnLoadMap: function(type, tile) {
-        this.createSubLevel(tile.id);
+        let config = {name:tile.name, id:tile.id};
+        switch (tile.type) {
+            case 'level':
+                config.type = 'castle';
+                config.parent = this.level.config.id;
+                break;
+            case 'start':
+                config.type = 'village';
+                config.id = this.level.config.parent;
+                break;
+        }
+        GAME.level = config;
+        this.game.state.restart();
     }
 };

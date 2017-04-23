@@ -1,7 +1,5 @@
-function Panel(game, name) {
+function Panel(game) {
     Phaser.Group.call(this, game);
-
-    this.name = name;
 
     this.createBackground();
 }
@@ -19,9 +17,9 @@ Panel.prototype.createBackground = function() {
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     background.width = this.game.width;
 
-    let mapName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', this.name, 8);
-    mapName.anchor.set(0, 0.5);
-    this.addChild(mapName);
+    this.levelName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', '', 8);
+    this.levelName.anchor.set(0, 0.5);
+    this.addChild(this.levelName);
 
     let staminaIcon = this.create(0, (background.height/2), 'panel:stamina');
     staminaIcon.anchor.set(1, 0.5);

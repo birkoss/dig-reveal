@@ -149,7 +149,7 @@ Map.prototype.generateLevels = function(maxLevels) {
             break;
         }
 
-        this.createItem(position.gridX, position.gridY, 'castle', 'level', {id:this.type+'-'+i});
+        this.createItem(position.gridX, position.gridY, 'castle', 'level', {name:'Chateau', id:this.type+'-'+i});
     }
 };
 
