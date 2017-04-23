@@ -19,11 +19,14 @@ GAME.Game.prototype = {
         /* Get the best map size for the current resolution */
         let mapWidth = Math.floor(this.game.width / (16 * GAME.RATIO));
 
+        /* Get the best map height from the remaining space left UNDER the panel */
+        let mapHeight = Math.floor((this.game.height-this.panelContainer.height) / (16 * GAME.RATIO));
+
         /* Create the map */
-        this.map = new Map(this.game, mapWidth, 12);
+        this.map = new Map(this.game, mapWidth, mapHeight);
 
         /* Create a background under the map */
-        let background = this.game.add.tileSprite(0, 0, this.game.width, (this.map.height/GAME.RATIO) +16 + this.panelContainer.height, 'tile:water-middle');
+        let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.width, 'tile:water-middle');
         background.scale.setTo(GAME.RATIO, GAME.RATIO);
         background.animations.add('idle', [0, 1], 2, true);
         background.play('idle');
@@ -31,7 +34,7 @@ GAME.Game.prototype = {
         this.mapContainer.addChild(this.map);
 
         this.map.x = (this.game.width - this.map.width)/2;
-        this.map.y = this.panelContainer.height + 32;
+        this.map.y = this.panelContainer.height + 16;
     },
     createPanel: function() {
         let background = this.panelContainer.create(0, 0, 'panel:background');
