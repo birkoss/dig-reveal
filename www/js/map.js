@@ -19,8 +19,8 @@ function Map(game, width, height, type) {
 
     this.createMap();
     this.createDetails();
-    this.createVillage();
-    this.createCastles(5);
+    this.createStartPosition();
+    this.createLevels(5);
 };
 
 Map.prototype = Object.create(Phaser.Group.prototype);
@@ -29,7 +29,7 @@ Map.prototype.constructor = Map;
 Map.prototype.show = function() {
     this.tilesContainer.alpha = this.backgroundContainer.alpha = 1;
 
-    let positions = this.getItems('village');
+    let positions = this.getItems('start');
 
     positions.forEach(function(tile) {
         /* Reveals all tiles around it */
@@ -115,20 +115,20 @@ Map.prototype.createDetails = function() {
     }
 };
 
-Map.prototype.createVillage = function() {
+Map.prototype.createStartPosition = function() {
     let position = this.getRandomPosition();
 
-    this.createItem(position.gridX, position.gridY, this.type + '-start', 'village');
+    this.createItem(position.gridX, position.gridY, this.type + '-start', 'start');
 };
 
-Map.prototype.createCastles = function(maxCastles) {
-    for (let i=0; i<maxCastles; i++) {
+Map.prototype.createLevels = function(maxLevels) {
+    for (let i=0; i<maxLevels; i++) {
         let position = this.getRandomPosition();
         if (position == null) {
             break;
         }
 
-        this.createItem(position.gridX, position.gridY, 'castle');
+        this.createItem(position.gridX, position.gridY, 'castle', 'level');
     }
 };
 
@@ -191,9 +191,9 @@ Map.prototype.getExcludedTiles = function() {
 
     this.tilesContainer.forEach(function(tile) {
         excludedTiles.push({gridX:tile.gridX, gridY:tile.gridY});
-        if (tile.type == 'village') {
+        if (tile.type == 'start') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 2));
-        } else if (tile.type == 'castle') {
+        } else if (tile.type == 'level') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 3));
         }
     }, this);
@@ -249,8 +249,8 @@ Map.prototype.onFOWClick = function(tile, pointer) {
         this.destroyFOW(tile);
         this.onFOWClicked.dispatch(this, 1);
 
-        this.getItems('castle').forEach(function(castle) {
-            if (tile.gridX == castle.gridX && tile.gridY == castle.gridY) {
+        this.getItems('level').forEach(function(level) {
+            if (tile.gridX == level.gridX && tile.gridY == level.gridY) {
                 this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
                     this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
                 }, this);
