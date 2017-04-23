@@ -4,7 +4,7 @@ GAME.Preload = function() {};
 
 GAME.Preload.prototype = {
     preload: function() {
-        this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY + 128, 'gui:preloader');
+        this.preloadBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, 'gui:preloader');
         this.preloadBar.anchor.set(0.5);
         this.load.setPreloadSprite(this.preloadBar);
 
@@ -24,6 +24,14 @@ GAME.Preload.prototype = {
         this.load.image('tile:water-top-right', 'images/tiles/water/top-right.png');
         this.load.image('tile:water-bottom-left', 'images/tiles/water/bottom-left.png');
         this.load.image('tile:water-bottom-right', 'images/tiles/water/bottom-right.png');
+
+        this.load.image('panel:background', 'images/panel/background.png');
+        this.load.image('panel:stamina', 'images/panel/stamina.png');
+
+        this.load.image('progress-bar:background', 'images/progress-bar/background.png');
+        this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
+
+        this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
     },
     create: function() {
         this.state.start('Game');
