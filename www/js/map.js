@@ -240,6 +240,14 @@ Map.prototype.onFOWClick = function(tile, pointer) {
     if (GAME.STAMINA > 0) {
         this.destroyFOW(tile);
         this.onFOWClicked.dispatch(this, 1);
+
+        this.getItems('castle').forEach(function(castle) {
+            if (tile.gridX == castle.gridX && tile.gridY == castle.gridY) {
+                this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+                    this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                }, this);
+            }
+        }, this);
     }
 };
 
