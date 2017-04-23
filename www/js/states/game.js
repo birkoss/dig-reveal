@@ -34,7 +34,10 @@ GAME.Game.prototype = {
                 config.id = this.level.config.parent;
                 break;
         }
-        GAME.level = config;
-        this.game.state.restart();
+
+        if (config.id != null) {
+            GAME.level = config;
+            this.game.state.restart();
+        }
     }
 };
