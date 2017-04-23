@@ -1,6 +1,11 @@
-function Level(game, type, name) {
+function Level(game, type, name, id) {
+    if (id == undefined) {
+        id = name;
+    }
+
     Phaser.Group.call(this, game);
 
+    this.id = id;
     this.name = name;
     this.type = type;
 
@@ -17,10 +22,13 @@ function Level(game, type, name) {
 Level.prototype = Object.create(Phaser.Group.prototype);
 Level.prototype.constructor = Level;
 
+/* Load an existing level in the local storage
+ * - Each level will be saved using the following name :
+ *   - level_name_widthxheight
+ */
 Level.prototype.load = function(mapGridWidth, mapGridHeight) {
-    let saveName = 'level_'+this.name+'_'+mapGridWidth+'x'+mapGridHeight;
+    let saveName = 'level_'+this.id+'_'+mapGridWidth+'x'+mapGridHeight;
 
-    console.log('load:'+saveName);
     let data = localStorage.getItem(saveName);
     if (data != null) {
         data = JSON.parse(data);
@@ -28,8 +36,9 @@ Level.prototype.load = function(mapGridWidth, mapGridHeight) {
     return data;
 };
 
+/* Save the current level */
 Level.prototype.save = function() {
-    let saveName = 'level_'+this.name+'_'+this.map.gridWidth+'x'+this.map.gridHeight;
+    let saveName = 'level_'+this.id+'_'+this.map.gridWidth+'x'+this.map.gridHeight;
 
     var data = {'version':1};
     data['name'] = this.name;
@@ -48,7 +57,7 @@ Level.prototype.save = function() {
 
     data['levels'] = [];
     this.map.getItems('level').forEach(function(tile) {
-        data['levels'].push({gridX:tile.gridX, gridY:tile.gridY});
+        data['levels'].push({id:tile.id, gridX:tile.gridX, gridY:tile.gridY});
     }, this);
 
     data['details'] = [];
@@ -84,10 +93,7 @@ Level.prototype.createMap = function() {
 
     /* Load an existing level? */
     let data = this.load(mapWidth, mapHeight);
-    console.log(data);
-    //data = null;
     if (data != null) {
-        console.log('loading map...');
         this.map.load(data);
     } else {
         this.map.generate();

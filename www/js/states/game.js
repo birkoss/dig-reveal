@@ -15,8 +15,8 @@ GAME.Game.prototype = {
 
         level.show();
     },
-    createSubLevel: function() {
-        let level = new Level(this.game, 'castle', 'Castle');
+    createSubLevel: function(id) {
+        let level = new Level(this.game, 'castle', 'Castle', id);
         level.onStaminaChanged.add(this.onLevelStaminaChanged, this);
         this.subLevelContainer.addChild(level);
 
@@ -31,7 +31,7 @@ GAME.Game.prototype = {
     onLevelStaminaChanged: function(level, value) {
         GAME.STAMINA = Math.max(0, GAME.STAMINA - value);
     },
-    onLevelOnLoadMap: function(type, item) {
-        this.createSubLevel();
+    onLevelOnLoadMap: function(type, tile) {
+        this.createSubLevel(tile.id);
     }
 };

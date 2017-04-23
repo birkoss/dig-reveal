@@ -35,8 +35,8 @@ Map.prototype.load = function(data) {
         this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
     }, this);
 
-    data['levels'].forEach(function(position) {
-        this.createItem(position.gridX, position.gridY, 'castle', 'level');
+    data['levels'].forEach(function(level) {
+        this.createItem(level.gridX, level.gridY, 'castle', 'level', {id: level.id});
     }, this);
 };
 
@@ -149,11 +149,11 @@ Map.prototype.generateLevels = function(maxLevels) {
             break;
         }
 
-        this.createItem(position.gridX, position.gridY, 'castle', 'level');
+        this.createItem(position.gridX, position.gridY, 'castle', 'level', {id:this.type+'-'+i});
     }
 };
 
-Map.prototype.createItem = function(gridX, gridY, sprite, type) {
+Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     if (type == undefined) {
         type = sprite;
     }
@@ -169,6 +169,12 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type) {
 
     tile.inputEnabled = true;
     tile.events.onInputDown.add(this.onTileClick, this);
+
+    if (data != undefined) {
+        for (let index in data) {
+            tile[index] = data[index];
+        }
+    }
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -282,5 +288,5 @@ Map.prototype.onFOWClick = function(tile, pointer) {
 };
 
 Map.prototype.onTileClick = function(tile, pointer) {
-    this.onTileClicked.dispatch(this, 1);
+    this.onTileClicked.dispatch(tile, 1);
 };
