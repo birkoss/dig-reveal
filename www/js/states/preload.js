@@ -51,6 +51,13 @@ GAME.Preload.prototype = {
         this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
 
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+
+        this.load.audio('music:village', 'audio/musics/village.ogg');
+        this.load.audio('music:castle', 'audio/musics/castle.ogg');
+
+        this.load.audio('sound:attack', 'audio/sounds/attack.wav');
+        this.load.audio('sound:fow', 'audio/sounds/fow.wav');
+        this.load.audio('sound:skeleton', 'audio/sounds/skeleton.wav');
     },
     create: function() {
         GAME.level = {type:'village', name:'Village', id:'village'};

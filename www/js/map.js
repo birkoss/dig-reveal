@@ -225,6 +225,9 @@ Map.prototype.destroyFOW = function(tile) {
     if (tile != null) {
         tile.inputEnabled = false;
 
+        let sound = this.game.add.audio('sound:fow');
+        sound.play();
+
         this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
         let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
         tween.onComplete.add(function() {
@@ -362,6 +365,9 @@ Map.prototype.onTileClick = function(tile, pointer) {
         if (GAME.STAMINA >= 5) {
             this.onStaminaSpent.dispatch(this, 5);
             tile.health = Math.max(0, tile.health-1);
+
+            let sound = this.game.add.audio('sound:fow');
+            sound.play();
 
             let effect = this.effectsContainer.create(0, 0, 'effect:attack');
             effect.scale.setTo(GAME.RATIO, GAME.RATIO);

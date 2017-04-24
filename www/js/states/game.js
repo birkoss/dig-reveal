@@ -7,6 +7,12 @@ GAME.Game.prototype = {
         console.log('Game.create');
         console.log(GAME.level);
 
+        if (GAME.music != null) {
+            GAME.music.destroy();
+        }
+        GAME.music = this.game.add.audio('music:' + GAME.level.type);
+        GAME.music.play();
+
         this.levelContainer = this.game.add.group();
 
         this.level = new Level(this.game, GAME.level);

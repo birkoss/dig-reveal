@@ -15,6 +15,8 @@ GAME.STAMINA = GAME.STAMINA_MAX = 100;
 GAME.timeDelay = Phaser.Timer.SECOND * 60;
 GAME.time = null;
 
+GAME.music = null;
+
 GAME.tick = function() {
     if (GAME.STAMINA < GAME.STAMINA_MAX) {
         GAME.now = (new Date()).getTime();
