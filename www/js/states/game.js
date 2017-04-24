@@ -20,7 +20,7 @@ GAME.Game.prototype = {
         /* Keep the panel updated with the stamina amount */
         this.level.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
 
-        GAME.updateTimer(this.game);
+        GAME.tick();
     },
     onLevelStaminaChanged: function(level, value) {
         GAME.STAMINA = Math.max(0, GAME.STAMINA - value);
@@ -39,6 +39,7 @@ GAME.Game.prototype = {
         }
 
         if (config.id != null) {
+            console.log('DELETE TIMER');
             GAME.level = config;
             this.game.state.restart();
         }

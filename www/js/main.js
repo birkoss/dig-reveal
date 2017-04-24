@@ -11,18 +11,22 @@ GAME.game.state.start('Boot');
 GAME.RATIO = window.devicePixelRatio;
 GAME.RATIO = Math.floor(window.innerWidth / 320) * 2;
 
-GAME.timerDelay = Phaser.Timer.SECOND * 2;
-GAME.updateTimer = function(game) {
+GAME.timeDelay = Phaser.Timer.SECOND * 2;
+GAME.time = null;
+GAME.tick = function() {
     if (GAME.STAMINA < GAME.STAMINA_MAX) {
-        if (GAME.timer == null) {
-            GAME.timer = game.time.events.loop(GAME.timerDelay, function() {
-                GAME.STAMINA = Math.min(GAME.STAMINA_MAX, GAME.STAMINA + 1);
-            }, this);
+        let now = (new Date()).getTime();
+        if (GAME.time == null) {
+            console.log('Setting time to : ' + now);
+            GAME.time = now;
+        }
+
+        while (GAME.time + GAME.timeDelay <= now) {
+            console.log('Tick...');
+            GAME.time += GAME.timeDelay;
+            GAME.STAMINA = Math.min(GAME.STAMINA_MAX, GAME.STAMINA + 1);
         }
     } else {
-        if (GAME.timer != null) {
-            game.time.events.remove(GAME.timer);
-            GAME.timer = null;
-        }
+        GAME.time = null;
     }
-}
+};
