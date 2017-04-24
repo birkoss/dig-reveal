@@ -55,11 +55,6 @@ GAME.Preload.prototype = {
         GAME.STAMINA = GAME.STAMINA_MAX = 100;
         GAME.level = {type:'village', name:'Village', id:'village'};
 
-        setTimeout(function() {
-            console.log("TIMEOUT...");
-            GAME.STAMINA = Math.min(GAME.STAMINA_MAX, GAME.STAMINA + 1);
-        }, Phaser.Timer.SECOND * 2);
-
         this.state.start('Game');
     }
 };
