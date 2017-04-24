@@ -13,18 +13,18 @@ GAME.RATIO = Math.floor(window.innerWidth / 320) * 2;
 
 GAME.timeDelay = Phaser.Timer.SECOND * 2;
 GAME.time = null;
+/* @TODO Load the value here */
 GAME.tick = function() {
     if (GAME.STAMINA < GAME.STAMINA_MAX) {
-        let now = (new Date()).getTime();
+        GAME.now = (new Date()).getTime();
         if (GAME.time == null) {
-            console.log('Setting time to : ' + now);
-            GAME.time = now;
+            GAME.time = GAME.now;
         }
 
-        while (GAME.time + GAME.timeDelay <= now) {
-            console.log('Tick...');
+        while (GAME.time + GAME.timeDelay <= GAME.now) {
             GAME.time += GAME.timeDelay;
             GAME.STAMINA = Math.min(GAME.STAMINA_MAX, GAME.STAMINA + 1);
+            /* @TODO Save the value here */
         }
     } else {
         GAME.time = null;

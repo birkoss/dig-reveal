@@ -10,12 +10,21 @@ Panel.prototype.constructor = Panel;
 Panel.prototype.updateStamina = function(staminaTotal, staminaMax) {
     this.staminaText.text = staminaTotal + "/" + staminaMax; 
     this.stamina.width = staminaTotal / staminaMax * this.stamina.originalWidth;
+
+    if (GAME.time == null) {
+        this.staminaRefresh.width = this.width;
+    } else {
+        this.staminaRefresh.width = this.width * ((GAME.now - GAME.time) / GAME.timeDelay);
+    }
 };
 
 Panel.prototype.createBackground = function() {
     let background = this.create(0, 0, 'panel:background');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     background.width = this.game.width;
+
+    this.staminaRefresh = this.create(0, 0, 'panel:stamina-timer');
+    this.staminaRefresh.scale.setTo(GAME.RATIO, GAME.RATIO);
 
     this.levelName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', '', 8);
     this.levelName.anchor.set(0, 0.5);

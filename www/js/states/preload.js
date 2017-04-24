@@ -38,6 +38,7 @@ GAME.Preload.prototype = {
         this.load.image('tile:castle-border-bottom-right', 'images/tiles/castle/borders/bottom-right.png');
 
         this.load.image('panel:background', 'images/panel/background.png');
+        this.load.image('panel:stamina-timer', 'images/panel/stamina-timer.png');
         this.load.image('panel:stamina', 'images/panel/stamina.png');
 
         this.load.image('progress-bar:background', 'images/progress-bar/background.png');
