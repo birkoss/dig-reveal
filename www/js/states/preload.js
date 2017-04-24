@@ -53,7 +53,6 @@ GAME.Preload.prototype = {
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
     },
     create: function() {
-        GAME.STAMINA = GAME.STAMINA_MAX = 100;
         GAME.level = {type:'village', name:'Village', id:'village'};
 
         this.state.start('Game');
