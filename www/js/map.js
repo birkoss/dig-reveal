@@ -14,9 +14,12 @@ function Map(game, width, height, type) {
     this.FOWContainer = this.game.add.group();
     this.add(this.FOWContainer);
 
-    this.onFOWClicked = new Phaser.Signal();
+    this.effectsContainer = this.game.add.group();
+    this.add(this.effectsContainer);
+
     this.onTileClicked = new Phaser.Signal();
     this.onMapDirty = new Phaser.Signal();
+    this.onStaminaSpent = new Phaser.Signal();
 
     this.createMap();
 };
@@ -166,10 +169,10 @@ Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
     let enemy = this.createItem(gridX, gridY, sprite, 'enemy', data);
 
     enemy.animations.add('idle', [0, 1], 2, true);
-console.log(enemy);
     if (enemy.isActive) {
-        console.log('-----------');
         enemy.animations.play('idle');
+    } else if (enemy.health <= 0) {
+        this.destroyUnit(enemy);
     }
 };
 
@@ -209,6 +212,13 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     }
 
     return tile;
+};
+
+Map.prototype.destroyUnit = function(tile) {
+    tile.loadTexture('effect:dead');
+    /* @TODO: Choose a random frame (0-3) */
+
+    tile.isActive = false;
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -340,11 +350,35 @@ Map.prototype.onFOWClick = function(tile, pointer) {
                 }
             }, this);
 
-            this.onFOWClicked.dispatch(this, 1);
+            this.onStaminaSpent.dispatch(this, 1);
         }
     }
 };
 
 Map.prototype.onTileClick = function(tile, pointer) {
     this.onTileClicked.dispatch(tile, 1);
+
+    if (tile.type == 'enemy' && tile.isActive) {
+        if (GAME.STAMINA >= 5) {
+            this.onStaminaSpent.dispatch(this, 5);
+            tile.health = Math.max(0, tile.health-1);
+
+            let effect = this.effectsContainer.create(0, 0, 'effect:attack');
+            effect.scale.setTo(GAME.RATIO, GAME.RATIO);
+
+            effect.animations.add('attacking', [0, 1, 0, 1, 0, 1], 10, false);
+            effect.events.onAnimationComplete.add(function() {
+                effect.destroy();
+            }, this);
+            effect.animations.play('attacking');
+
+            effect.x = tile.x;
+            effect.y = tile.y;
+
+            if (tile.health <= 0) {
+                this.destroyUnit(tile);
+            }
+            this.onMapDirty.dispatch(tile, 1);
+        }
+    }
 };

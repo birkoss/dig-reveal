@@ -46,6 +46,9 @@ GAME.Preload.prototype = {
 
         this.load.spritesheet('unit:skeleton', 'images/units/skeleton.png', 16, 16);
 
+        this.load.spritesheet('effect:dead', 'images/effects/dead.png', 16, 16);
+        this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
+
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
     },
     create: function() {

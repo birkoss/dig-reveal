@@ -7,7 +7,7 @@ function Level(game, config) {
     this.panelContainer = this.game.add.group();
 
     this.onStaminaChanged = new Phaser.Signal();
-    this.onLoadMap = new Phaser.Signal();
+    this.onLoadMap = new Phaser.Signal(); 
 
     this.createPanel();
     this.createMap();
@@ -100,9 +100,9 @@ Level.prototype.createMap = function() {
         this.save();
     }
 
-    this.map.onFOWClicked.add(this.onMapFOWClicked, this);
     this.map.onTileClicked.add(this.onMapTileClicked, this);
     this.map.onMapDirty.add(this.onMapDirty, this);
+    this.map.onStaminaSpent.add(this.onMapStaminaSpent, this);
 
     /* Create a background under the map */
     let background = this.game.add.tileSprite(0, 0, this.game.width, this.game.width, 'tile:'+this.config.type+'-border-middle');
@@ -124,12 +124,17 @@ Level.prototype.createPanel = function() {
     this.panelContainer.y = -this.panelContainer.height;
 };
 
-Level.prototype.onMapFOWClicked = function(tile, value) {
-    this.onStaminaChanged.dispatch(this, value);
+Level.prototype.onMapStaminaSpent = function(tile, amount) {
+    this.onStaminaChanged.dispatch(this, amount);
 };
 
 Level.prototype.onMapTileClicked = function(tile, value) {
-    this.onLoadMap.dispatch(tile.type, tile);
+    switch (tile.type) {
+        case 'level':
+        case 'start':
+            this.onLoadMap.dispatch(tile.type, tile);
+            break;
+    }
 };
 
 Level.prototype.onMapDirty = function(tile, value) {
