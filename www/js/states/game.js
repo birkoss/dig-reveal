@@ -17,6 +17,7 @@ GAME.Game.prototype = {
         this.level.show();
     },
     update: function() {
+        /* Keep the panel updated with the stamina amount */
         this.level.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
     },
     onLevelStaminaChanged: function(level, value) {
