@@ -310,28 +310,38 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 
 Map.prototype.onFOWClick = function(tile, pointer) {
     if (GAME.STAMINA > 0) {
-        this.destroyFOW(tile);
-
-        this.getItems('level').forEach(function(level) {
-            if (tile.gridX == level.gridX && tile.gridY == level.gridY) {
-                this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-                    this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
-                }, this);
-            }
-        }, this);
-
+        let hasEnemyActive = false;
         this.getItems('enemy').forEach(function(enemy) {
-            if (tile.gridX == enemy.gridX && tile.gridY == enemy.gridY) {
-                this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-                    this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
-                }, this);
-
-                enemy.isActive = true;
-                enemy.animations.play('idle');
+            if (enemy.isActive) {
+                hasEnemyActive = true;
             }
         }, this);
 
-        this.onFOWClicked.dispatch(this, 1);
+        /* Can't explore when at least ONE enemy is active */
+        if (!hasEnemyActive) {
+            this.destroyFOW(tile);
+
+            this.getItems('level').forEach(function(level) {
+                if (tile.gridX == level.gridX && tile.gridY == level.gridY) {
+                    this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                    }, this);
+                }
+            }, this);
+
+            this.getItems('enemy').forEach(function(enemy) {
+                if (tile.gridX == enemy.gridX && tile.gridY == enemy.gridY) {
+                    this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                    }, this);
+
+                    enemy.isActive = true;
+                    enemy.animations.play('idle');
+                }
+            }, this);
+
+            this.onFOWClicked.dispatch(this, 1);
+        }
     }
 };
 
