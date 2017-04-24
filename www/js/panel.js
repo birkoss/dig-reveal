@@ -36,6 +36,11 @@ Panel.prototype.createBackground = function() {
     this.stamina.scale.setTo(GAME.RATIO, GAME.RATIO);
     this.stamina.originalWidth = this.stamina.width;
 
+    let progressBarBorder = this.create(0, (background.height/2), 'progress-bar:border');
+    progressBarBorder.anchor.set(0, 0.5);
+    progressBarBorder.scale.setTo(GAME.RATIO, GAME.RATIO);
+    progressBarBorder.x = staminaIcon.x - progressBarBorder.width - staminaIcon.width - 16;
+
     this.staminaText = this.game.add.bitmapText(this.stamina.x + (this.stamina.width/2), (background.height/2), 'font:gui', '100/100', 8);
     this.staminaText.anchor.set(0.5, 0.5);
     this.addChild(this.staminaText);

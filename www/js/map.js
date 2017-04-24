@@ -36,7 +36,11 @@ Map.prototype.load = function(data) {
     }, this);
 
     data['levels'].forEach(function(level) {
-        this.createItem(level.gridX, level.gridY, 'castle', 'level', {id: level.id});
+        this.createItem(level.gridX, level.gridY, 'castle', 'level', {id:level.id});
+    }, this);
+
+    data['enemys'].forEach(function(enemy) {
+        this.createEnemy(enemy.gridX, enemy.gridY, enemy.sprite, {isActive:enemy.isActive, health:enemy.health});
     }, this);
 };
 
@@ -45,7 +49,12 @@ Map.prototype.generate = function() {
     this.generateDetails();
     let position = this.getRandomPosition();
     this.createStartPosition(position.gridX, position.gridY);
-    this.generateLevels(5);
+
+    if (this.type == 'village') {
+        this.generateLevels(5);
+    } else {
+        this.generateEnemies(10);
+    }
 };
 
 /* @TODO Rename to start, or something more pertinent */
@@ -125,7 +134,7 @@ Map.prototype.createFOW = function(gridX, gridY) {
     fow.x += (fow.width/2);
     fow.y += (fow.height/2);
 
-    fow.alpha = 0.8;
+    fow.alpha = 0.3;
 
     fow.inputEnabled = true;
     fow.events.onInputDown.add(this.onFOWClick, this);
@@ -140,6 +149,28 @@ Map.prototype.generateDetails = function() {
 
 Map.prototype.createStartPosition = function(gridX, gridY) {
     this.createItem(gridX, gridY, this.type + '-start', 'start');
+};
+
+Map.prototype.generateEnemies = function(maxEnemies) {
+    for (let i=0; i<maxEnemies; i++) {
+        let position = this.getRandomPosition();
+        if (position == null) {
+            break;
+        }
+
+        this.createEnemy(position.gridX, position.gridY, 'skeleton', {isActive:false, health:3});
+    }
+};
+
+Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
+    let enemy = this.createItem(gridX, gridY, sprite, 'enemy', data);
+
+    enemy.animations.add('idle', [0, 1], 2, true);
+console.log(enemy);
+    if (enemy.isActive) {
+        console.log('-----------');
+        enemy.animations.play('idle');
+    }
 };
 
 Map.prototype.generateLevels = function(maxLevels) {
@@ -157,8 +188,9 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     if (type == undefined) {
         type = sprite;
     }
-    let tile = this.tilesContainer.create(0, 0, "tile:" + sprite);
+    let tile = this.tilesContainer.create(0, 0, (type == 'enemy' ? 'unit:' : 'tile:') + sprite);
     tile.type = type;
+    tile.sprite = sprite;
     tile.scale.setTo(GAME.RATIO, GAME.RATIO);
 
     tile.x = (tile.width * gridX);
@@ -175,6 +207,8 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
             tile[index] = data[index];
         }
     }
+
+    return tile;
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -223,6 +257,8 @@ Map.prototype.getExcludedTiles = function() {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 2));
         } else if (tile.type == 'level') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 3));
+        } else if (tile.type == 'enemy') {
+            excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1));
         }
     }, this);
 
@@ -275,7 +311,6 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 Map.prototype.onFOWClick = function(tile, pointer) {
     if (GAME.STAMINA > 0) {
         this.destroyFOW(tile);
-        this.onFOWClicked.dispatch(this, 1);
 
         this.getItems('level').forEach(function(level) {
             if (tile.gridX == level.gridX && tile.gridY == level.gridY) {
@@ -284,6 +319,19 @@ Map.prototype.onFOWClick = function(tile, pointer) {
                 }, this);
             }
         }, this);
+
+        this.getItems('enemy').forEach(function(enemy) {
+            if (tile.gridX == enemy.gridX && tile.gridY == enemy.gridY) {
+                this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+                    this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                }, this);
+
+                enemy.isActive = true;
+                enemy.animations.play('idle');
+            }
+        }, this);
+
+        this.onFOWClicked.dispatch(this, 1);
     }
 };
 

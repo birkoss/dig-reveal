@@ -58,6 +58,11 @@ Level.prototype.save = function() {
         data['details'].push({gridX:tile.gridX, gridY:tile.gridY});
     }, this);
 
+    data['enemys'] = [];
+    this.map.getItems('enemy').forEach(function(tile) {
+        data['enemys'].push({gridX:tile.gridX, gridY:tile.gridY, health:tile.health, isActive:tile.isActive, sprite:tile.sprite});
+    }, this);
+
     localStorage.setItem(this.getSaveName(this.map.gridWidth, this.map.gridHeight), JSON.stringify(data));
 };
 

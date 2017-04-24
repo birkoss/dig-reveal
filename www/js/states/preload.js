@@ -42,6 +42,9 @@ GAME.Preload.prototype = {
 
         this.load.image('progress-bar:background', 'images/progress-bar/background.png');
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
+        this.load.image('progress-bar:border', 'images/progress-bar/border.png');
+
+        this.load.spritesheet('unit:skeleton', 'images/units/skeleton.png', 16, 16);
 
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
     },
