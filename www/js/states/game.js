@@ -152,6 +152,9 @@ GAME.Game.prototype = {
                     this.game.state.restart();
                 }
                 break;
+            case 'chest':
+                console.log('do something...');
+                break;
         }
     },
     onMapDirty: function(tile, value) {

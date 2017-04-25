@@ -46,7 +46,7 @@ Map.prototype.load = function(data) {
 
     data['chests'].forEach(function(c) {
         let item = GAME.json['items'][c.itemID];
-        this.createItem(c.gridX, c.gridY, this.type + '-chest', {isOpen:c.isOpen, item:item});
+        this.createItem(c.gridX, c.gridY, this.type + '-chest', 'chest', {isOpen:c.isOpen, item:item});
     }, this);
 
     data['enemies'].forEach(function(e) {
@@ -305,6 +305,14 @@ Map.prototype.onFOWClick = function(tile, pointer) {
                     }, this);
 
                     enemy.animations.play('idle');
+                }
+            }, this);
+
+            this.getItems('chest').forEach(function(chest) {
+                if (tile.gridX == chest.gridX && tile.gridY == chest.gridY) {
+                    this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                    }, this);
                 }
             }, this);
 
