@@ -58,8 +58,12 @@ GAME.Preload.prototype = {
         this.load.audio('sound:attack', 'audio/sounds/attack.wav');
         this.load.audio('sound:fow', 'audio/sounds/fow.wav');
         this.load.audio('sound:skeleton', 'audio/sounds/skeleton.wav');
+
+        this.load.json('data:maps', 'data/maps.json');
+
     },
     create: function() {
+        GAME.json['maps'] = this.cache.getJSON('data:maps');
         GAME.level = {type:'village', name:'Village', id:'village'};
 
         this.state.start('Game');

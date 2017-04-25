@@ -42,7 +42,7 @@ Map.prototype.load = function(data) {
         this.createItem(level.gridX, level.gridY, 'castle', 'level', {id:level.id});
     }, this);
 
-    data['enemys'].forEach(function(enemy) {
+    data['enemies'].forEach(function(enemy) {
         this.createEnemy(enemy.gridX, enemy.gridY, enemy.sprite, {isActive:enemy.isActive, health:enemy.health});
     }, this);
 };
@@ -61,6 +61,7 @@ Map.prototype.generate = function() {
 };
 
 /* @TODO Rename to start, or something more pertinent */
+/* @TODO Should not be called when the map is loading, only when created or opened for the first time */
 Map.prototype.show = function() {
     let positions = this.getItems('start');
 

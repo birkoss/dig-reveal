@@ -1,0 +1,9 @@
+{
+    "village": {
+        "id": "village",
+        "name": "Village",
+        "type": "map",
+        "items": [],
+        "boss": "boss1"
+    }
+}
