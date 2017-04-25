@@ -38,26 +38,13 @@ Map.prototype.load = function(data) {
         this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
     }, this);
 
-    data['levels'].forEach(function(level) {
-        this.createItem(level.gridX, level.gridY, 'castle', 'level', {id:level.id});
+    data['dungeons'].forEach(function(dungeon) {
+        this.createItem(dungeon.gridX, dungeon.gridY, this.type + '-dungeon', 'dungeon', {id:dungeon.id});
     }, this);
 
     data['enemies'].forEach(function(enemy) {
         this.createEnemy(enemy.gridX, enemy.gridY, enemy.sprite, {isActive:enemy.isActive, health:enemy.health});
     }, this);
-};
-
-Map.prototype.generate = function() {
-    this.generateFOW();
-    this.generateDetails();
-    let position = this.getRandomPosition();
-    this.createStartPosition(position.gridX, position.gridY);
-
-    if (this.type == 'village') {
-        this.generateLevels(5);
-    } else {
-        this.generateEnemies(10);
-    }
 };
 
 /* @TODO Rename to start, or something more pertinent */
@@ -117,15 +104,6 @@ Map.prototype.createMap = function() {
     }
 };
 
-Map.prototype.generateFOW = function() {
-    /* Add a fog of war */
-    for (let y=0; y<this.gridHeight; y++) {
-        for (let x=0; x<this.gridWidth; x++) {
-            this.createFOW(x, y);
-        }
-    }
-};
-
 Map.prototype.createFOW = function(gridX, gridY) {
     let fow = this.FOWContainer.create(0, 0, 'tile:fog-of-war');
     fow.scale.setTo(GAME.RATIO, GAME.RATIO);
@@ -144,26 +122,8 @@ Map.prototype.createFOW = function(gridX, gridY) {
     fow.events.onInputDown.add(this.onFOWClick, this);
 };
 
-Map.prototype.generateDetails = function() {
-    for (let i=0; i<this.game.rnd.integerInRange(15, 25); i++) {
-        let position = this.getRandomPosition();
-        this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
-    }
-};
-
 Map.prototype.createStartPosition = function(gridX, gridY) {
     this.createItem(gridX, gridY, this.type + '-start', 'start');
-};
-
-Map.prototype.generateEnemies = function(maxEnemies) {
-    for (let i=0; i<maxEnemies; i++) {
-        let position = this.getRandomPosition();
-        if (position == null) {
-            break;
-        }
-
-        this.createEnemy(position.gridX, position.gridY, 'skeleton', {isActive:false, health:3});
-    }
 };
 
 Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
@@ -174,17 +134,6 @@ Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
         enemy.animations.play('idle');
     } else if (enemy.health <= 0) {
         this.destroyUnit(enemy);
-    }
-};
-
-Map.prototype.generateLevels = function(maxLevels) {
-    for (let i=0; i<maxLevels; i++) {
-        let position = this.getRandomPosition();
-        if (position == null) {
-            break;
-        }
-
-        this.createItem(position.gridX, position.gridY, 'castle', 'level', {name:'Chateau', id:this.type+'-'+i});
     }
 };
 
@@ -269,7 +218,7 @@ Map.prototype.getExcludedTiles = function() {
         excludedTiles.push({gridX:tile.gridX, gridY:tile.gridY});
         if (tile.type == 'start') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 2));
-        } else if (tile.type == 'level') {
+        } else if (tile.type == 'dungeon') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 3));
         } else if (tile.type == 'enemy') {
             excludedTiles = excludedTiles.concat(this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1));
@@ -335,8 +284,8 @@ Map.prototype.onFOWClick = function(tile, pointer) {
         if (!hasEnemyActive) {
             this.destroyFOW(tile);
 
-            this.getItems('level').forEach(function(level) {
-                if (tile.gridX == level.gridX && tile.gridY == level.gridY) {
+            this.getItems('dungeon').forEach(function(dungeon) {
+                if (tile.gridX == dungeon.gridX && tile.gridY == dungeon.gridY) {
                     this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
                         this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
                     }, this);

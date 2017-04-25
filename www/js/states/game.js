@@ -4,21 +4,17 @@ GAME.Game = function() {};
 
 GAME.Game.prototype = {
     create: function() {
-        console.log('Game.create');
-        console.log(GAME.level);
-        console.log(GAME.level_id);
+        console.log('Game.create: ' + GAME.level_id);
 
         this.config = {
              id: GAME.level_id,
-             name: "NAME HERE"
+             name: ""
         };
 
         console.log(this.config);
         if (GAME.music != null) {
             GAME.music.destroy();
         }
-        GAME.music = this.game.add.audio('music:' + GAME.level.type);
-        GAME.music.play();
 
         this.mapContainer = this.game.add.group();
         this.panelContainer = this.game.add.group();
@@ -26,11 +22,14 @@ GAME.Game.prototype = {
         this.createPanel();
         this.createMap();
 
+        GAME.music = this.game.add.audio('music:' + this.config.type);
+        GAME.music.play();
+
         this.showPanel();
     },
     update: function() {
         /* Keep the panel updated with the stamina amount */
-        // @TODO this.level.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
+        this.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
 
         GAME.tick();
     },
@@ -45,28 +44,25 @@ GAME.Game.prototype = {
         let mapHeight = Math.floor((this.game.height-this.panelContainer.height) / (16 * GAME.RATIO));
 
         let levelConfig = GAME.json['maps'][this.config.id];
-        this.config.type = levelConfig.type;
 
+        this.generator = new Generator(levelConfig, mapWidth, mapHeight);
 
         /* Load an existing level? */
-        let data = this.loadLevel(mapWidth, mapHeight);
+        let mapData = this.generator.load();
         /* If it's not already generated, do it first */
-        data = null;
-        if (data == null) {
-            let generator = new Generator(levelConfig, mapWidth, mapHeight);
-            this.map.generate(levelConfig);
-            this.saveLevel();
-            let data = this.loadLevel(mapWidth, mapHeight);
+        if (mapData == null) {
+            this.generator.generate();
+            mapData = this.generator.load();
         }
 
+        this.config.type = this.generator.levelConfig.type;
+        this.config.name = this.generator.levelConfig.name;
 
-        return;
-
+        console.log(levelConfig);
+        console.log(this.config);
         /* Create the map */
         this.map = new Map(this.game, mapWidth, mapHeight, this.config.type);
-
-        //this.map.load(data);
-        this.config = data.config;
+        this.map.load(mapData);
 
         this.map.onTileClicked.add(this.onMapTileClicked, this);
         this.map.onMapDirty.add(this.onMapDirty, this);
@@ -99,20 +95,6 @@ GAME.Game.prototype = {
     },
 
     /* Level methods */
-    getSaveName: function(mapGridWidth, mapGridHeight) {
-        return 'level_' + this.config['id'] + '_' + mapGridWidth + 'x' + mapGridHeight;
-    },
-    /* Load an existing level in the local storage
-     * - Each level will be saved using the following name :
-     *   - level_name_widthxheight
-     */
-    loadLevel: function(mapGridWidth, mapGridHeight) {
-        let data = localStorage.getItem(this.getSaveName(mapGridWidth, mapGridHeight));
-        if (data != null) {
-            data = JSON.parse(data);
-        }
-        return data;
-    },
     saveLevel: function() {
         let data = {'version':1};
         data['config'] = this.config;
@@ -152,8 +134,9 @@ GAME.Game.prototype = {
         GAME.STAMINA = Math.max(0, GAME.STAMINA - amount);
     },
     onMapTileClicked: function(tile, value) {
+        console.log(tile);
         switch (tile.type) {
-            case 'level':
+            case 'dungeon':
             case 'start':
                 if (tile.levelID != null) {
                     GAME.level_id = tile.levelID;
@@ -163,6 +146,6 @@ GAME.Game.prototype = {
         }
     },
     onMapDirty: function(tile, value) {
-        this.saveLevel();
+        this.generator.saveMap(this.map);
     }
 };

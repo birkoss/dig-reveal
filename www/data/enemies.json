@@ -9,5 +9,16 @@
         ],
         "sprite": "skeleton",
         "health": 2
+    },
+    "skeletonKing": {
+        "id": "skeletonKing",
+        "name": "Roi Squelette",
+        "type": "boss",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "skeleton",
+        "health": 20
     }
 }

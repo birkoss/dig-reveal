@@ -33,12 +33,13 @@ GAME.tick = function() {
             if (GAME.STAMINA >= GAME.STAMINA_MAX) {
                 break;
             }
+
+            /* @TODO Should not call this that often... */
+            GAME.save();
         }
     } else {
         GAME.time = null;
     }
-
-    GAME.save();
 };
 
 GAME.save = function() {
@@ -46,7 +47,7 @@ GAME.save = function() {
     data['time'] = GAME.time;
     data['stamina'] = GAME.STAMINA;
     data['stamina_max'] = GAME.STAMINA_MAX;
-    data['map_id'] = GAME.level_id;
+    data['level_id'] = GAME.level_id;
 
     localStorage.setItem('game_config', JSON.stringify(data));
 };

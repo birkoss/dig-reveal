@@ -16,5 +16,14 @@
         "modifier": [
             {"staminaMax": 10}
         ]
+    },
+    "apple": {
+        "id": "apple",
+        "name": "Pomme",
+        "type": "normal",
+        "sprite": "apple",
+        "modifier": [
+            {"stamina": 25}
+        ]
     }
 }

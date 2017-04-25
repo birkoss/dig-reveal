@@ -4,6 +4,12 @@
         "name": "Village",
         "type": "map",
         "items": ["sword1", "shield1"],
-        "boss": "boss1"
+        "boss": "skeletonKing",
+        "enemies": [
+            {"skeleton": 60}
+        ],
+        "chests": [
+            {"apple": 40}
+        ]
     }
 }

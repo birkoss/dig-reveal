@@ -8,34 +8,34 @@ GAME.Preload.prototype = {
         this.preloadBar.anchor.set(0.5);
         this.load.setPreloadSprite(this.preloadBar);
 
-        this.load.image('tile:castle', 'images/tiles/castle.png');
         this.load.image('tile:fog-of-war', 'images/tiles/fog-of-war.png');
 
-        this.load.image('tile:village-start', 'images/tiles/village/start.png');
-        this.load.image('tile:village-floor', 'images/tiles/village/floor.png');
-        this.load.image('tile:village-detail', 'images/tiles/village/detail.png');
-        this.load.image('tile:village-border-top', 'images/tiles/village/borders/top.png');
-        this.load.image('tile:village-border-right', 'images/tiles/village/borders/right.png');
-        this.load.image('tile:village-border-bottom', 'images/tiles/village/borders/bottom.png');
-        this.load.image('tile:village-border-left', 'images/tiles/village/borders/left.png');
-        this.load.spritesheet('tile:village-border-middle', 'images/tiles/village/borders/middle.png', 16, 16);
-        this.load.image('tile:village-border-top-left', 'images/tiles/village/borders/top-left.png');
-        this.load.image('tile:village-border-top-right', 'images/tiles/village/borders/top-right.png');
-        this.load.image('tile:village-border-bottom-left', 'images/tiles/village/borders/bottom-left.png');
-        this.load.image('tile:village-border-bottom-right', 'images/tiles/village/borders/bottom-right.png');
+        this.load.image('tile:map-start', 'images/tiles/map/start.png');
+        this.load.image('tile:map-dungeon', 'images/tiles/map/dungeon.png');
+        this.load.image('tile:map-floor', 'images/tiles/map/floor.png');
+        this.load.image('tile:map-detail', 'images/tiles/map/detail.png');
+        this.load.image('tile:map-border-top', 'images/tiles/map/borders/top.png');
+        this.load.image('tile:map-border-right', 'images/tiles/map/borders/right.png');
+        this.load.image('tile:map-border-bottom', 'images/tiles/map/borders/bottom.png');
+        this.load.image('tile:map-border-left', 'images/tiles/map/borders/left.png');
+        this.load.spritesheet('tile:map-border-middle', 'images/tiles/map/borders/middle.png', 16, 16);
+        this.load.image('tile:map-border-top-left', 'images/tiles/map/borders/top-left.png');
+        this.load.image('tile:map-border-top-right', 'images/tiles/map/borders/top-right.png');
+        this.load.image('tile:map-border-bottom-left', 'images/tiles/map/borders/bottom-left.png');
+        this.load.image('tile:map-border-bottom-right', 'images/tiles/map/borders/bottom-right.png');
 
-        this.load.image('tile:castle-start', 'images/tiles/castle/start.png');
-        this.load.image('tile:castle-floor', 'images/tiles/castle/floor.png');
-        this.load.image('tile:castle-detail', 'images/tiles/castle/detail.png');
-        this.load.image('tile:castle-border-top', 'images/tiles/castle/borders/top.png');
-        this.load.image('tile:castle-border-right', 'images/tiles/castle/borders/right.png');
-        this.load.image('tile:castle-border-bottom', 'images/tiles/castle/borders/bottom.png');
-        this.load.image('tile:castle-border-left', 'images/tiles/castle/borders/left.png');
-        this.load.spritesheet('tile:castle-border-middle', 'images/tiles/castle/borders/middle.png', 16, 16);
-        this.load.image('tile:castle-border-top-left', 'images/tiles/castle/borders/top-left.png');
-        this.load.image('tile:castle-border-top-right', 'images/tiles/castle/borders/top-right.png');
-        this.load.image('tile:castle-border-bottom-left', 'images/tiles/castle/borders/bottom-left.png');
-        this.load.image('tile:castle-border-bottom-right', 'images/tiles/castle/borders/bottom-right.png');
+        this.load.image('tile:dungeon-start', 'images/tiles/dungeon/start.png');
+        this.load.image('tile:dungeon-floor', 'images/tiles/dungeon/floor.png');
+        this.load.image('tile:dungeon-detail', 'images/tiles/dungeon/detail.png');
+        this.load.image('tile:dungeon-border-top', 'images/tiles/dungeon/borders/top.png');
+        this.load.image('tile:dungeon-border-right', 'images/tiles/dungeon/borders/right.png');
+        this.load.image('tile:dungeon-border-bottom', 'images/tiles/dungeon/borders/bottom.png');
+        this.load.image('tile:dungeon-border-left', 'images/tiles/dungeon/borders/left.png');
+        this.load.spritesheet('tile:dungeon-border-middle', 'images/tiles/dungeon/borders/middle.png', 16, 16);
+        this.load.image('tile:dungeon-border-top-left', 'images/tiles/dungeon/borders/top-left.png');
+        this.load.image('tile:dungeon-border-top-right', 'images/tiles/dungeon/borders/top-right.png');
+        this.load.image('tile:dungeon-border-bottom-left', 'images/tiles/dungeon/borders/bottom-left.png');
+        this.load.image('tile:dungeon-border-bottom-right', 'images/tiles/dungeon/borders/bottom-right.png');
 
         this.load.image('panel:background', 'images/panel/background.png');
         this.load.image('panel:stamina-timer', 'images/panel/stamina-timer.png');
@@ -52,18 +52,22 @@ GAME.Preload.prototype = {
 
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
 
-        this.load.audio('music:village', 'audio/musics/village.ogg');
-        this.load.audio('music:castle', 'audio/musics/castle.ogg');
+        this.load.audio('music:map', 'audio/musics/map.ogg');
+        this.load.audio('music:dungeon', 'audio/musics/dungeon.ogg');
 
         this.load.audio('sound:attack', 'audio/sounds/attack.wav');
         this.load.audio('sound:fow', 'audio/sounds/fow.wav');
         this.load.audio('sound:skeleton', 'audio/sounds/skeleton.wav');
 
         this.load.json('data:maps', 'data/maps.json');
-
+        this.load.json('data:enemies', 'data/enemies.json');
+        this.load.json('data:items', 'data/items.json');
     },
     create: function() {
         GAME.json['maps'] = this.cache.getJSON('data:maps');
+        GAME.json['enemies'] = this.cache.getJSON('data:enemies');
+        GAME.json['items'] = this.cache.getJSON('data:items');
+
         GAME.level = {type:'village', name:'Village', id:'village'};
 
         this.state.start('Game');

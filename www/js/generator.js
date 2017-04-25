@@ -3,13 +3,34 @@ function Generator(levelConfig, gridWidth, gridHeight) {
     this.gridWidth = gridWidth;
     this.gridHeight = gridHeight;
 
-    this.init();
-
-    this.generate();
+    this.grid = new Array();
 };
 
 Generator.prototype = {
+    addItem: function(gridType, gridData) {
+        let position = this.getRandomPosition();
+        if (position != null) {
+            this.setTypeAt(position.gridX, position.gridY, gridType, gridData);
+        }
+    },
+    fillArrayWithPool: function(array, pool, limit, data) {
+        for (let i=0; i<limit; i++) {
+            let element_id = pool[this.getRandomBetween(0, pool.length-1)];
+            if (data[element_id] != undefined) {
+                array.push(data[element_id]);
+            }
+        }
+    },
+    load: function() {
+        let data = localStorage.getItem(this.getSaveName());
+        if (data != null) {
+            data = JSON.parse(data);
+        }
+        return data;
+    },
     generate: function() {
+        this.init();
+
         /* Starting position */
         let position = this.getRandomPosition();
         if (position != null) {
@@ -26,31 +47,101 @@ Generator.prototype = {
         }
 
         if (this.levelConfig.type == "map") {
-            console.log(this.levelConfig);
             /* Enemies */
             let enemies = new Array();
+
+            /* Get the boss if it's available */
+            if (this.levelConfig.boss != undefined && GAME.json['enemies'][this.levelConfig.boss] != null) {
+                enemies.push(GAME.json['enemies'][this.levelConfig.boss]);
+            }
+
+            /* Generate an array with all the possible enemies */
+            let enemiesPool = new Array();
+            if (this.levelConfig.enemies != null) {
+                for (let i=0; i<this.levelConfig.enemies.length; i++) {
+                    for (let enemy_id in this.levelConfig.enemies[i]) {
+                        for (let j=0; j<this.levelConfig.enemies[i][enemy_id]; j++) {
+                            enemiesPool.push(enemy_id);
+                        }
+                    }
+                }
+            }
 
             /* Items */
             let items = new Array();
 
-            /* Levels */
-            let parent_id = this.levelConfig.id;
-            let maxSubLevels = 5;
-            let nbrSubLevels = 0;
+            /* Get the unique items */
+            if (this.levelConfig.items != undefined) {
+                for (let i=0; i<this.levelConfig.items.length; i++) {
+                    let item = GAME.json['items'][this.levelConfig.items[i]];
+                    if (item != null) {
+                        items.push(item);
+                    }
+                }
+            }
 
-            for (let i=0; i<maxSubLevels; i++) {
+            /* Generate an array with all the possible items */
+            let itemsPool = new Array();
+            if (this.levelConfig.chests != null) {
+                for (let i=0; i<this.levelConfig.chests.length; i++) {
+                    for (let item_id in this.levelConfig.chests[i]) {
+                        for (let j=0; j<this.levelConfig.chests[i][item_id]; j++) {
+                            itemsPool.push(item_id);
+                        }
+                    }
+                }
+            }
+
+            /* Dungeons */
+            let parent_id = this.levelConfig.id;
+            let maxDungeons = 5;
+
+            let dungeons = new Array();
+            for (let i=0; i<maxDungeons; i++) {
                 let position = this.getRandomPosition();
                 if (position == null) {
                     break;
                 }
 
-                let subLevelConfig = {id:parent_id+"-dungeon-"+i, name:"Chateau", type:"dungeon", parent:parent_id};
-                let subLevel = new Generator(subLevelConfig, this.gridWidth, this.gridHeight);
-                this.setTypeAt(position.gridX, position.gridY, 'dungeon', {level:subLevel});
-                nbrSubLevels++;
+                let dungeonConfig = {id:parent_id+"-dungeon-"+i, name:"Chateau", type:"dungeon", parent:parent_id};
+                let dungeon = new Generator(dungeonConfig, this.gridWidth, this.gridHeight);
+                dungeon.generate();
+                this.setTypeAt(position.gridX, position.gridY, 'dungeon', {dungeon:dungeon});
+
+                dungeons.push(dungeon);
             }
 
-            console.log('Dungeons:' + nbrSubLevels);
+            /* Pick enemies PER dungeon */
+            let nbrEnemiesPerDungeon = 10;
+            this.fillArrayWithPool(enemies, enemiesPool, (nbrEnemiesPerDungeon*dungeons.length), GAME.json['enemies']);
+
+            /* Pick items PER dungeon */
+            let nbrItemsPerDungeon = 3;
+            this.fillArrayWithPool(items, itemsPool, (nbrItemsPerDungeon*dungeons.length), GAME.json['items']);
+
+            /* Place items and enemies in each dungeon */
+            for (let i=0; i<dungeons.length; i++) {
+                for (let j=0; j<nbrEnemiesPerDungeon; j++) {
+                    if (enemies.length == 0) {
+                        break;
+                    }
+                    let enemy = enemies.shift();
+                    dungeons[i].addItem('enemy', {enemy: enemy});
+                }
+                for (let j=0; j<nbrItemsPerDungeon; j++) {
+                    if (items.length == 0) {
+                        break;
+                    }
+                    let item = items.shift();
+                    dungeons[i].addItem('chest', {item: item});
+                }
+            }
+
+            /* Save the map and its dungeons */
+            this.save();
+            for (let i=0; i<dungeons.length; i++) {
+                dungeons[i].save();
+            }
         }
 
     },
@@ -62,9 +153,11 @@ Generator.prototype = {
                 excludedPositions.push({gridX:position.gridX, gridY:position.gridY});
                 if (position.type == "start") {
                     excludedPositions = excludedPositions.concat(this.getNeighboorsAt(position.gridX, position.gridY, false, 2));
-                } else if (position.type == "level") {
+                } else if (position.type == "dungeon") {
                     excludedPositions = excludedPositions.concat(this.getNeighboorsAt(position.gridX, position.gridY, false, 3));
                 } else if (position.type == "enemy") {
+                    excludedPositions = excludedPositions.concat(this.getNeighboorsAt(position.gridX, position.gridY, false, 1));
+                } else if (position.type == "chest") {
                     excludedPositions = excludedPositions.concat(this.getNeighboorsAt(position.gridX, position.gridY, false, 1));
                 }
             }
@@ -116,6 +209,9 @@ Generator.prototype = {
 
         return grid[this.getRandomBetween(0, grid.length-1)];
     },
+    getSaveName: function() {
+        return 'level_' + this.levelConfig.id + '_' + this.gridWidth + 'x' + this.gridHeight;
+    },
     init: function() {
         this.grid = new Array();
 
@@ -137,7 +233,95 @@ Generator.prototype = {
                 this.grid[(gridY * this.gridWidth) + gridX][index] = gridData[index];
             }
         }
+    },
+    save: function() {
+        let data = this.saveHeaders();
+
+        this.grid.forEach(function(g) {
+            data['fow'].push({gridX:g.gridX, gridY:g.gridY});
+
+            let item = {gridX:g.gridX, gridY:g.gridY};
+            switch(g.type) {
+                case 'start':
+                    if (this.levelConfig.parent != undefined) {
+                        item.parent = this.levelConfig.parent;
+                    }
+                    data['start'] = item;
+                    break;
+                case 'dungeon':
+                    item.name = g.name;
+                    item.id = g.id;
+                    item.parent = g.parent;
+                    data['dungeons'].push(item);
+                    break;
+                case 'enemy':
+                    item.enemy_id = g.enemy.id;
+                    item.health = g.enemy.health;
+                    data['enemies'].push(item);
+                    break;
+                case 'chest':
+                    item.item_id = g.item.id;
+                    item.isOpen = false;
+                    data['chests'].push(item);
+                    break;
+                case 'detail':
+                    data['details'].push(item);
+                    break;
+            }
+        }, this);
+        
+        this.saveJSON(this.getSaveName(), JSON.stringify(data));
+    },
+    saveHeaders: function() {
+        let data = {version:"1.0"};
+        data['id'] = this.levelConfig.id;
+        data['name'] = this.levelConfig.name;
+        data['type'] = this.levelConfig.type;
+        data['gridWidth'] = this.gridWidth;
+        data['gridHeight'] = this.gridHeight;
+        if (this.levelConfig.parent != undefined) {
+            data['parent'] = this.levelConfig.parent;
+        }
+
+        data['start'] = {};
+        data['fow'] = [];
+        data['dungeons'] = [];
+        data['details'] = [];
+        data['enemies'] = [];
+        data['chests'] = [];
+
+        return data;
+    },
+    saveMap: function(map) {
+        let data = this.saveHeaders();
+
+        map.getItems('start').forEach(function(tile) {
+            data['start'] = {gridX:tile.gridX, gridY:tile.gridY, parent:tile.parent_id}
+        }, this);
+
+        map.FOWContainer.children.forEach(function(tile) {
+            data['fow'].push({gridX:tile.gridX, gridY:tile.gridY});
+        }, this);
+
+        map.getItems('dungeon').forEach(function(tile) {
+            data['dungeons'].push({id:tile.id, name:tile.name, parent:tile.parent_id, gridX:tile.gridX, gridY:tile.gridY});
+        }, this);
+
+        map.getItems('detail').forEach(function(tile) {
+            data['details'].push({gridX:tile.gridX, gridY:tile.gridY});
+        }, this);
+
+        map.getItems('enemy').forEach(function(tile) {
+            data['enemies'].push({gridX:tile.gridX, gridY:tile.gridY, health:tile.health, enemy_id:tile.enemy.id});
+        }, this);
+
+        map.getItems('chest').forEach(function(tile) {
+            data['chests'].push({gridX:tile.gridX, gridY:tile.gridY, isOpen:tile.isOpen, item_id:tile.item.id});
+        }, this);
+
+        this.saveJSON(this.getSaveName(), JSON.stringify(data));
+    },
+    saveJSON: function(filename, json) {
+        localStorage.setItem(filename, json);
     }
-
-
 };
