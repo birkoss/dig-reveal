@@ -1,0 +1,20 @@
+{
+    "sword1": {
+        "id": "sword1",
+        "name": "Épée en bois",
+        "type": "unique",
+        "sprite": "sword1",
+        "modifier": [
+            {"attack": 1}
+        ]
+    },
+    "shield1": {
+        "id": "shield1",
+        "name": "Bouclier en bois",
+        "type": "unique",
+        "sprite": "shield1",
+        "modifier": [
+            {"staminaMax": 10}
+        ]
+    }
+}

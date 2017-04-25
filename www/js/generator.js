@@ -19,12 +19,20 @@ Generator.prototype = {
         /* Details */
         for (let i=0; i<this.getRandomBetween(15, 25); i++) {
             let position = this.getRandomPosition();
-            if (position != null) {
-                this.setTypeAt(position.gridX, position.gridY, "detail");
+            if (position == null) {
+                break;
             }
+            this.setTypeAt(position.gridX, position.gridY, "detail");
         }
 
         if (this.levelConfig.type == "map") {
+            console.log(this.levelConfig);
+            /* Enemies */
+            let enemies = new Array();
+
+            /* Items */
+            let items = new Array();
+
             /* Levels */
             let parent_id = this.levelConfig.id;
             let maxSubLevels = 5;
@@ -37,10 +45,14 @@ Generator.prototype = {
                 }
 
                 let subLevelConfig = {id:parent_id+"-dungeon-"+i, name:"Chateau", type:"dungeon", parent:parent_id};
-                let sublevel = new Generator(subLevelConfig, this.gridWidth, this.gridHeight);
+                let subLevel = new Generator(subLevelConfig, this.gridWidth, this.gridHeight);
                 this.setTypeAt(position.gridX, position.gridY, 'dungeon', {level:subLevel});
                 nbrSubLevels++;
             }
+
+            console.log('Dungeons:' + nbrSubLevels);
+        }
+
     },
     getExcludedPositions: function() {
         let excludedPositions = new Array();

@@ -1,0 +1,13 @@
+{
+    "skeleton": {
+        "id": "skeleton",
+        "name": "Skeleton",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "skeleton",
+        "health": 2
+    }
+}

@@ -3,7 +3,7 @@
         "id": "village",
         "name": "Village",
         "type": "map",
-        "items": [],
+        "items": ["sword1", "shield1"],
         "boss": "boss1"
     }
 }
