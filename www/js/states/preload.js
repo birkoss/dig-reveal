@@ -25,6 +25,7 @@ GAME.Preload.prototype = {
         this.load.image('tile:map-border-bottom-right', 'images/tiles/map/borders/bottom-right.png');
 
         this.load.image('tile:dungeon-start', 'images/tiles/dungeon/start.png');
+        this.load.image('tile:dungeon-chest', 'images/tiles/dungeon/chest.png');
         this.load.image('tile:dungeon-floor', 'images/tiles/dungeon/floor.png');
         this.load.image('tile:dungeon-detail', 'images/tiles/dungeon/detail.png');
         this.load.image('tile:dungeon-border-top', 'images/tiles/dungeon/borders/top.png');

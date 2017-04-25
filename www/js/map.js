@@ -44,6 +44,11 @@ Map.prototype.load = function(data) {
         this.createItem(dungeon.gridX, dungeon.gridY, this.type + '-dungeon', 'dungeon', {levelID:dungeon.levelID});
     }, this);
 
+    data['chests'].forEach(function(c) {
+        let item = GAME.json['items'][c.itemID];
+        this.createItem(c.gridX, c.gridY, this.type + '-chest', {isOpen:c.isOpen, item:item});
+    }, this);
+
     data['enemies'].forEach(function(e) {
         let enemy = GAME.json['enemies'][e.enemyID];
         this.createEnemy(e.gridX, e.gridY, enemy.sprite, {health:e.health, enemy:enemy});
