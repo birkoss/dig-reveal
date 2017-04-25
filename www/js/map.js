@@ -137,7 +137,7 @@ Map.prototype.createFOW = function(gridX, gridY) {
     fow.x += (fow.width/2);
     fow.y += (fow.height/2);
 
-    fow.alpha = 0.3;
+    fow.alpha = 0.5;
 
     fow.inputEnabled = true;
     fow.events.onInputDown.add(this.onFOWClick, this);
