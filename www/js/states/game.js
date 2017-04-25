@@ -43,8 +43,12 @@ GAME.Game.prototype = {
         /* Get the best map height from the remaining space left UNDER the panel */
         let mapHeight = Math.floor((this.game.height-this.panelContainer.height) / (16 * GAME.RATIO));
 
+        /* @TODO Remove levelConfig for this.config */
         let levelConfig = GAME.json['maps'][this.config.id];
-
+        if (levelConfig == undefined) {
+            levelConfig = this.config;
+        }
+        
         this.generator = new Generator(levelConfig, mapWidth, mapHeight);
 
         /* Load an existing level? */
@@ -54,6 +58,9 @@ GAME.Game.prototype = {
             this.generator.generate();
             mapData = this.generator.load();
         }
+
+        this.generator.levelConfig.type = mapData.type;
+        this.generator.levelConfig.name = mapData.name;
 
         this.config.type = this.generator.levelConfig.type;
         this.config.name = this.generator.levelConfig.name;
@@ -140,6 +147,8 @@ GAME.Game.prototype = {
             case 'start':
                 if (tile.levelID != null) {
                     GAME.level_id = tile.levelID;
+                    GAME.save();
+
                     this.game.state.restart();
                 }
                 break;

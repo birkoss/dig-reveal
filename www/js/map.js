@@ -28,22 +28,25 @@ Map.prototype = Object.create(Phaser.Group.prototype);
 Map.prototype.constructor = Map;
 
 Map.prototype.load = function(data) {
+    console.log(data);
+
     data['fow'].forEach(function(position) {
             this.createFOW(position.gridX, position.gridY);
     }, this);
 
-    this.createStartPosition(data['start'].gridX, data['start'].gridY);
+    this.createStartPosition(data['start'].gridX, data['start'].gridY, {levelID:data['start'].levelID});
 
     data['details'].forEach(function(position) {
         this.createItem(position.gridX, position.gridY, this.type+'-detail', 'detail');
     }, this);
 
     data['dungeons'].forEach(function(dungeon) {
-        this.createItem(dungeon.gridX, dungeon.gridY, this.type + '-dungeon', 'dungeon', {id:dungeon.id});
+        this.createItem(dungeon.gridX, dungeon.gridY, this.type + '-dungeon', 'dungeon', {levelID:dungeon.levelID});
     }, this);
 
-    data['enemies'].forEach(function(enemy) {
-        this.createEnemy(enemy.gridX, enemy.gridY, enemy.sprite, {isActive:enemy.isActive, health:enemy.health});
+    data['enemies'].forEach(function(e) {
+        let enemy = GAME.json['enemies'][e.enemyID];
+        this.createEnemy(e.gridX, e.gridY, enemy.sprite, {health:e.health, enemy:enemy});
     }, this);
 };
 
@@ -122,15 +125,15 @@ Map.prototype.createFOW = function(gridX, gridY) {
     fow.events.onInputDown.add(this.onFOWClick, this);
 };
 
-Map.prototype.createStartPosition = function(gridX, gridY) {
-    this.createItem(gridX, gridY, this.type + '-start', 'start');
+Map.prototype.createStartPosition = function(gridX, gridY, data) {
+    this.createItem(gridX, gridY, this.type + '-start', 'start', data);
 };
 
 Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
     let enemy = this.createItem(gridX, gridY, sprite, 'enemy', data);
 
     enemy.animations.add('idle', [0, 1], 2, true);
-    if (enemy.isActive) {
+    if (this.getFOWAt(gridX, gridY) == null && enemy.health > 0) {
         enemy.animations.play('idle');
     } else if (enemy.health <= 0) {
         this.destroyUnit(enemy);
@@ -167,8 +170,6 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
 Map.prototype.destroyUnit = function(tile) {
     tile.loadTexture('effect:dead');
     /* @TODO: Choose a random frame (0-3) */
-
-    tile.isActive = false;
 };
 
 Map.prototype.destroyFOW = function(tile) {
@@ -275,7 +276,7 @@ Map.prototype.onFOWClick = function(tile, pointer) {
     if (GAME.STAMINA > 0) {
         let hasEnemyActive = false;
         this.getItems('enemy').forEach(function(enemy) {
-            if (enemy.isActive) {
+            if (this.getFOWAt(enemy.gridX, enemy.gridY) == null && enemy.health > 0) {
                 hasEnemyActive = true;
             }
         }, this);
@@ -298,7 +299,6 @@ Map.prototype.onFOWClick = function(tile, pointer) {
                         this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
                     }, this);
 
-                    enemy.isActive = true;
                     enemy.animations.play('idle');
                 }
             }, this);
@@ -311,7 +311,7 @@ Map.prototype.onFOWClick = function(tile, pointer) {
 Map.prototype.onTileClick = function(tile, pointer) {
     this.onTileClicked.dispatch(tile, 1);
 
-    if (tile.type == 'enemy' && tile.isActive) {
+    if (tile.type == 'enemy' && tile.health > 0) {
         if (GAME.STAMINA >= 5) {
             this.onStaminaSpent.dispatch(this, 5);
             tile.health = Math.max(0, tile.health-1);

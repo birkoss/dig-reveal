@@ -244,23 +244,22 @@ Generator.prototype = {
             switch(g.type) {
                 case 'start':
                     if (this.levelConfig.parent != undefined) {
-                        item.parent = this.levelConfig.parent;
+                        item.levelID = this.levelConfig.parent;
                     }
                     data['start'] = item;
                     break;
                 case 'dungeon':
-                    item.name = g.name;
-                    item.id = g.id;
-                    item.parent = g.parent;
+                    item.name = g.dungeon.levelConfig.name;
+                    item.levelID = g.dungeon.levelConfig.id;
                     data['dungeons'].push(item);
                     break;
                 case 'enemy':
-                    item.enemy_id = g.enemy.id;
+                    item.enemyID = g.enemy.id;
                     item.health = g.enemy.health;
                     data['enemies'].push(item);
                     break;
                 case 'chest':
-                    item.item_id = g.item.id;
+                    item.itemID = g.item.id;
                     item.isOpen = false;
                     data['chests'].push(item);
                     break;
@@ -296,7 +295,7 @@ Generator.prototype = {
         let data = this.saveHeaders();
 
         map.getItems('start').forEach(function(tile) {
-            data['start'] = {gridX:tile.gridX, gridY:tile.gridY, parent:tile.parent_id}
+            data['start'] = {gridX:tile.gridX, gridY:tile.gridY, levelID:tile.levelID}
         }, this);
 
         map.FOWContainer.children.forEach(function(tile) {
@@ -304,7 +303,7 @@ Generator.prototype = {
         }, this);
 
         map.getItems('dungeon').forEach(function(tile) {
-            data['dungeons'].push({id:tile.id, name:tile.name, parent:tile.parent_id, gridX:tile.gridX, gridY:tile.gridY});
+            data['dungeons'].push({levelID:tile.levelID, name:tile.name, gridX:tile.gridX, gridY:tile.gridY});
         }, this);
 
         map.getItems('detail').forEach(function(tile) {
@@ -312,11 +311,11 @@ Generator.prototype = {
         }, this);
 
         map.getItems('enemy').forEach(function(tile) {
-            data['enemies'].push({gridX:tile.gridX, gridY:tile.gridY, health:tile.health, enemy_id:tile.enemy.id});
+            data['enemies'].push({gridX:tile.gridX, gridY:tile.gridY, health:tile.health, enemyID:tile.enemy.id});
         }, this);
 
         map.getItems('chest').forEach(function(tile) {
-            data['chests'].push({gridX:tile.gridX, gridY:tile.gridY, isOpen:tile.isOpen, item_id:tile.item.id});
+            data['chests'].push({gridX:tile.gridX, gridY:tile.gridY, isOpen:tile.isOpen, itemID:tile.item.id});
         }, this);
 
         this.saveJSON(this.getSaveName(), JSON.stringify(data));
