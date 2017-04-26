@@ -3,10 +3,10 @@
         "id": "demon",
         "name": "Demon",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death1",
+            "hit": "hit2"
+        },
         "sprite": "demon",
         "health": 2
     },
@@ -14,10 +14,10 @@
         "id": "ghost",
         "name": "Fantome",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death3",
+            "hit": "hit3"
+        },
         "sprite": "ghost",
         "health": 1
     },
@@ -25,10 +25,10 @@
         "id": "mummy",
         "name": "Momie",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death1",
+            "hit": "hit3"
+        },
         "sprite": "mummy",
         "health": 2
     },
@@ -36,10 +36,10 @@
         "id": "skeleton",
         "name": "Skeleton",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death2",
+            "hit": "hit1"
+        },
         "sprite": "skeleton",
         "health": 1
     },
@@ -47,10 +47,10 @@
         "id": "skeletonKing",
         "name": "Roi Squelette",
         "type": "boss",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death3",
+            "hit": "hit1"
+        },
         "sprite": "skeleton",
         "health": 20
     },
@@ -58,10 +58,10 @@
         "id": "spectral",
         "name": "Spectre",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death3",
+            "hit": "hit3"
+        },
         "sprite": "spectral",
         "health": 2
     },
@@ -69,10 +69,10 @@
         "id": "vampire",
         "name": "Vampire",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death1",
+            "hit": "hit1"
+        },
         "sprite": "vampire",
         "health": 4
     },
@@ -80,10 +80,10 @@
         "id": "zombie",
         "name": "Zombie",
         "type": "normal",
-        "sounds": [
-            {"death": "death"},
-            {"hit": "hit"}
-        ],
+        "sounds": {
+            "death": "death2",
+            "hit": "hit3"
+        },
         "sprite": "zombie",
         "health": 2
     }

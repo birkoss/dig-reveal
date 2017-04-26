@@ -327,10 +327,15 @@ Map.prototype.onTileClick = function(tile, pointer) {
     if (tile.type == 'enemy' && tile.health > 0) {
         if (GAME.STAMINA >= 5) {
             this.onStaminaSpent.dispatch(this, 5);
+            /* @TODO: Use the weapon stats */
             tile.health = Math.max(0, tile.health-1);
 
-            let sound = this.game.add.audio('sound:fow');
-            sound.play();
+            console.log(tile.enemy);
+            if (tile.enemy.sounds && tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']) {
+                let sound = this.game.add.audio('sound:' + tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']);
+                console.log(tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit'] );
+                sound.play();
+            }
 
             let effect = this.effectsContainer.create(0, 0, 'effect:attack');
             effect.scale.setTo(GAME.RATIO, GAME.RATIO);
