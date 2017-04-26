@@ -28,6 +28,8 @@ function Popup(game) {
 Popup.prototype = Object.create(Phaser.Group.prototype);
 Popup.prototype.constructor = Popup;
 
+Popup.SPEED = 250;
+
 Popup.prototype.addButton = function(buttonData) {
     let button = this.game.add.button(0, 0, 'popup:button', buttonData.callback, buttonData.context, 1, 0, 1, 0);
     button.x = this.buttonsContainer.children.length * (button.width + this.padding);
@@ -126,7 +128,7 @@ Popup.prototype.show = function() {
     this.popupContainer.originalY = this.popupContainer.y;
     this.popupContainer.y = - this.backgroundContainer.height;
 
-    let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, 500).start();
+    let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED).start();
 };
 
 Popup.prototype.setImage = function(spriteName, label) {
@@ -142,7 +144,7 @@ Popup.prototype.setImage = function(spriteName, label) {
 };
 
 Popup.prototype.close = function() {
-    let tween = this.game.add.tween(this.popupContainer).to({y:-this.backgroundContainer.height}, 500);
+    let tween = this.game.add.tween(this.popupContainer).to({y:-this.backgroundContainer.height}, Popup.SPEED);
     tween.onComplete.add(function() {
         this.destroy();
     }, this);
