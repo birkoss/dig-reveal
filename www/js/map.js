@@ -193,6 +193,11 @@ Map.prototype.destroyFOW = function(tile) {
     }
 };
 
+Map.prototype.noMoreStamina = function() {
+    let sound = this.game.add.audio('sound:empty');
+    sound.play();
+}
+
 /* Getters */
 
 Map.prototype.getRandomPosition = function() {
@@ -318,6 +323,8 @@ Map.prototype.onFOWClick = function(tile, pointer) {
 
             this.onStaminaSpent.dispatch(this, 1);
         }
+    } else {
+        this.noMoreStamina();
     }
 };
 
@@ -333,7 +340,6 @@ Map.prototype.onTileClick = function(tile, pointer) {
             console.log(tile.enemy);
             if (tile.enemy.sounds && tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']) {
                 let sound = this.game.add.audio('sound:' + tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']);
-                console.log(tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit'] );
                 sound.play();
             }
 
@@ -353,6 +359,8 @@ Map.prototype.onTileClick = function(tile, pointer) {
                 this.destroyEnemy(tile);
             }
             this.onMapDirty.dispatch(tile, 1);
+        } else {
+            this.noMoreStamina();
         }
     }
 };

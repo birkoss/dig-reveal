@@ -67,6 +67,8 @@ GAME.Preload.prototype = {
         this.load.audio('sound:fow', 'audio/sounds/fow.wav');
         this.load.audio('sound:skeleton', 'audio/sounds/skeleton.wav');
         
+        this.load.audio('sound:empty', 'audio/sounds/empty.wav');
+        
         this.load.audio('sound:hit1', 'audio/sounds/hit1.wav');
         this.load.audio('sound:hit2', 'audio/sounds/hit2.wav');
         this.load.audio('sound:hit3', 'audio/sounds/hit3.wav');
