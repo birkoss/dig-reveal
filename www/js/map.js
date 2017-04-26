@@ -196,6 +196,8 @@ Map.prototype.destroyFOW = function(tile) {
 Map.prototype.noMoreStamina = function() {
     let sound = this.game.add.audio('sound:empty');
     sound.play();
+
+    this.onStaminaSpent.dispatch(this, 0);
 }
 
 /* Getters */

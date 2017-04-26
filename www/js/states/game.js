@@ -43,6 +43,9 @@ GAME.Game.prototype = {
         let levelData = this.level.load();
         if (levelData == null) {
             /* If it's not already generated, do it first */
+            if (GAME.json['maps'][this.level.config.id] == null) {
+                this.level.config.id = 'village';
+            }
             this.level.generate(GAME.json['maps'][this.level.config.id]);
             levelData = this.level.load();
         }
@@ -84,6 +87,9 @@ GAME.Game.prototype = {
     /* Events */
 
     onMapStaminaSpent: function(tile, amount) {
+        if (amount == 0) {
+            this.panel.noMoreStamina();
+        }
         GAME.STAMINA = Math.max(0, GAME.STAMINA - amount);
     },
     onMapTileClicked: function(tile, value) {
