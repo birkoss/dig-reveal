@@ -51,7 +51,7 @@
             "death": "death3",
             "hit": "hit1"
         },
-        "sprite": "skeleton",
+        "sprite": "skeletonKing",
         "health": 20
     },
     "spectral": {

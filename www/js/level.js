@@ -33,7 +33,6 @@ Level.prototype = {
         return data;
     },
     generate: function(mapData) {
-        console.log(mapData);
         this.config.type = mapData.type;
         this.config.name = mapData.name;
         this.config.parentID = mapData.parentID;

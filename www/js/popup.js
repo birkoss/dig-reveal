@@ -43,7 +43,7 @@ Popup.prototype.generate = function() {
     this.contentContainer.x = this.padding;
     this.contentContainer.y = this.padding;
 
-    this.resizePopupBackground(this.contentContainer.width+(this.padding*2), this.contentContainer.y + this.contentContainer.height + (this.padding*2) + this.buttonsContainer.height);
+    this.resizePopupBackground(Math.max(this.buttonsContainer.width, this.contentContainer.width)+(this.padding*2), this.contentContainer.y + this.contentContainer.height + (this.padding*2) + this.buttonsContainer.height);
 
     /* Position the buttons */
     this.buttonsContainer.x = (this.popupBackgroundContainer.width - this.buttonsContainer.width) / 2;
@@ -106,6 +106,8 @@ Popup.prototype.setContent = function(newContent) {
 };
 
 Popup.prototype.show = function() {
+    this.generate();
+
     this.backgroundContainer.alpha = 0.8;
     this.popupContainer.originalY = this.popupContainer.y;
     this.popupContainer.y = - this.backgroundContainer.height;
