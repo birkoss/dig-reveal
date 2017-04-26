@@ -1,4 +1,37 @@
 {
+    "demon": {
+        "id": "demon",
+        "name": "Demon",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "demon",
+        "health": 2
+    },
+    "ghost": {
+        "id": "ghost",
+        "name": "Fantome",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "ghost",
+        "health": 1
+    },
+    "mummy": {
+        "id": "mummy",
+        "name": "Momie",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "mummy",
+        "health": 2
+    },
     "skeleton": {
         "id": "skeleton",
         "name": "Skeleton",
@@ -8,7 +41,7 @@
             {"hit": "hit"}
         ],
         "sprite": "skeleton",
-        "health": 2
+        "health": 1
     },
     "skeletonKing": {
         "id": "skeletonKing",
@@ -20,5 +53,38 @@
         ],
         "sprite": "skeleton",
         "health": 20
+    },
+    "spectral": {
+        "id": "spectral",
+        "name": "Spectre",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "spectral",
+        "health": 2
+    },
+    "vampire": {
+        "id": "vampire",
+        "name": "Vampire",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "vampire",
+        "health": 4
+    },
+    "zombie": {
+        "id": "zombie",
+        "name": "Zombie",
+        "type": "normal",
+        "sounds": [
+            {"death": "death"},
+            {"hit": "hit"}
+        ],
+        "sprite": "zombie",
+        "health": 2
     }
 }

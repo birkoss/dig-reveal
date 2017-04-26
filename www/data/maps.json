@@ -6,7 +6,13 @@
         "items": ["sword1", "shield1"],
         "boss": "skeletonKing",
         "enemies": [
-            {"skeleton": 60}
+            {"skeleton": 40},
+            {"ghost": 15},
+            {"demon": 10},
+            {"mummy": 10},
+            {"spectral": 10},
+            {"zombie": 10},
+            {"vampire": 5}
         ],
         "chests": [
             {"apple": 40}

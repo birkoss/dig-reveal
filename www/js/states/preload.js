@@ -46,7 +46,14 @@ GAME.Preload.prototype = {
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
         this.load.image('progress-bar:border', 'images/progress-bar/border.png');
 
+        this.load.spritesheet('enemy:demon', 'images/enemies/demon.png', 16, 16);
+        this.load.spritesheet('enemy:ghost', 'images/enemies/ghost.png', 16, 16);
+        this.load.spritesheet('enemy:mummy', 'images/enemies/mummy.png', 16, 16);
         this.load.spritesheet('enemy:skeleton', 'images/enemies/skeleton.png', 16, 16);
+        this.load.spritesheet('enemy:skeletonKing', 'images/enemies/skeletonKing.png', 16, 16);
+        this.load.spritesheet('enemy:spectral', 'images/enemies/spectral.png', 16, 16);
+        this.load.spritesheet('enemy:vampire', 'images/enemies/vampire.png', 16, 16);
+        this.load.spritesheet('enemy:zombie', 'images/enemies/zombie.png', 16, 16);
 
         this.load.spritesheet('effect:dead', 'images/effects/dead.png', 16, 16);
         this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
