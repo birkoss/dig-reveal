@@ -59,6 +59,9 @@ GAME.Preload.prototype = {
         this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
 
         this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+        this.load.bitmapFont('font:gui-multiline', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+        this.load.spritesheet('popup:background', 'images/gui/popup/background.png', 4, 4);
+        this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 100, 16);
 
         this.load.audio('music:map', 'audio/musics/map.ogg');
         this.load.audio('music:dungeon', 'audio/musics/dungeon.ogg');
@@ -82,12 +85,12 @@ GAME.Preload.prototype = {
         this.load.json('data:items', 'data/items.json');
     },
     create: function() {
+        this.game.cache.getBitmapFont('font:gui-multiline').font.lineHeight += (4 * GAME.RATIO);
+
         GAME.json['maps'] = this.cache.getJSON('data:maps');
         GAME.json['enemies'] = this.cache.getJSON('data:enemies');
         GAME.json['items'] = this.cache.getJSON('data:items');
 
-        GAME.level = {type:'village', name:'Village', id:'village'};
-
-        this.state.start('Game');
+        this.state.start('Debug'); /* Game... */
     }
 };
