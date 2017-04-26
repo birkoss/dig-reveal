@@ -334,8 +334,8 @@ Map.prototype.onTileClick = function(tile, pointer) {
     this.onTileClicked.dispatch(tile, 1);
 
     if (tile.type == 'enemy' && tile.health > 0) {
-        if (GAME.STAMINA >= 5) {
-            this.onStaminaSpent.dispatch(this, 5);
+        if (GAME.STAMINA > 0) {
+            this.onStaminaSpent.dispatch(this, 1);
             /* @TODO: Use the weapon stats */
             tile.health = Math.max(0, tile.health-1);
 
