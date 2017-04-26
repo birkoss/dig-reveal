@@ -20,6 +20,17 @@ GAME.Game.prototype = {
         GAME.music.play();
 
         this.showPanel();
+
+        let popup = new Popup(this.game);
+
+        popup.setContent("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin a sapien a tellus vulputate vulputate varius eu eros. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla aliquet suscipit lacus non consectetur.");
+        popup.addButton({text:"Utiliser", callback:function(abc, def) {
+            popup.close();
+            console.log('pressed....');    
+        }, context:this});
+        popup.generate();
+
+        popup.show();
     },
     update: function() {
         /* Keep the panel updated with the stamina amount */

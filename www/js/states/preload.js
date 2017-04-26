@@ -91,6 +91,6 @@ GAME.Preload.prototype = {
         GAME.json['enemies'] = this.cache.getJSON('data:enemies');
         GAME.json['items'] = this.cache.getJSON('data:items');
 
-        this.state.start('Debug'); /* Game... */
+        this.state.start('Game'); /* Game/Debug */
     }
 };
