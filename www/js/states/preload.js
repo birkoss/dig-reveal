@@ -48,7 +48,7 @@ GAME.Preload.prototype = {
 
         this.load.image('item:shield1', 'images/items/shield1.png');
         this.load.image('item:apple', 'images/items/apple.png');
-        this.load.image('item:sword11', 'images/items/sword11.png');
+        this.load.image('item:sword1', 'images/items/sword1.png');
 
         this.load.spritesheet('enemy:demon', 'images/enemies/demon.png', 16, 16);
         this.load.spritesheet('enemy:ghost', 'images/enemies/ghost.png', 16, 16);
@@ -75,6 +75,8 @@ GAME.Preload.prototype = {
         this.load.audio('sound:skeleton', 'audio/sounds/skeleton.wav');
         
         this.load.audio('sound:empty', 'audio/sounds/empty.wav');
+        this.load.audio('sound:chest-open', 'audio/sounds/chest-open.wav');
+        this.load.audio('sound:popup-button', 'audio/sounds/popup-button.wav');
         
         this.load.audio('sound:hit1', 'audio/sounds/hit1.wav');
         this.load.audio('sound:hit2', 'audio/sounds/hit2.wav');

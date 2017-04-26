@@ -48,7 +48,7 @@ Map.prototype.load = function(data) {
         let item = GAME.json['items'][c.itemID];
         let chest = this.createItem(c.gridX, c.gridY, this.type + '-chest', 'chest', {isOpen:c.isOpen, item:item});
         if (chest.isOpen) {
-            this.openChest(chest);
+            this.openChest(chest, false);
         }
     }, this);
 
@@ -203,9 +203,14 @@ Map.prototype.noMoreStamina = function() {
     this.onStaminaSpent.dispatch(this, 0);
 };
 
-Map.prototype.openChest = function(tile) {
+Map.prototype.openChest = function(tile, playSound) {
     tile.isOpen = true;
     tile.frame = 1;
+
+    if (playSound) {
+        let sound = this.game.add.audio('sound:chest-open');
+        sound.play();
+    }
 
     // @TODO : Save the chest open this.onMapDirty.dispatch(tile, 1);
 };
@@ -375,6 +380,6 @@ Map.prototype.onTileClick = function(tile, pointer) {
             this.noMoreStamina();
         }
     } else if (tile.type == "chest" && !tile.isOpen) {
-        this.openChest(tile);
+        this.openChest(tile, true);
     }
 };

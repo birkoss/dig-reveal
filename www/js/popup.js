@@ -144,6 +144,9 @@ Popup.prototype.setImage = function(spriteName, label) {
 };
 
 Popup.prototype.close = function() {
+    let sound = this.game.add.audio('sound:popup-button');
+    sound.play();
+
     let tween = this.game.add.tween(this.popupContainer).to({y:-this.backgroundContainer.height}, Popup.SPEED);
     tween.onComplete.add(function() {
         this.destroy();
