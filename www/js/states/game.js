@@ -16,7 +16,7 @@ GAME.Game.prototype = {
         this.createPanel();
         this.createMap();
 
-        GAME.music = this.game.add.audio('music:' + this.level.config.type);
+        GAME.music = this.game.add.audio('music:' + this.level.config.type, 1, true);
         GAME.music.play();
 
         this.showPanel();
