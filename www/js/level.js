@@ -1,12 +1,12 @@
-function Generator(levelConfig, gridWidth, gridHeight) {
-    this.levelConfig = levelConfig;
+function Level(levelID, gridWidth, gridHeight) {
+    this.config = {id: levelID};
     this.gridWidth = gridWidth;
     this.gridHeight = gridHeight;
 
     this.grid = new Array();
 };
 
-Generator.prototype = {
+Level.prototype = {
     addItem: function(gridType, gridData) {
         let position = this.getRandomPosition();
         if (position != null) {
@@ -25,10 +25,18 @@ Generator.prototype = {
         let data = localStorage.getItem(this.getSaveName());
         if (data != null) {
             data = JSON.parse(data);
+
+            this.config.name = data.name;
+            this.config.type = data.type;
+            this.config.parentID = data.parentID;
         }
         return data;
     },
-    generate: function() {
+    generate: function(mapData) {
+        this.config.type = mapData.type;
+        this.config.name = mapData.name;
+        this.config.parentID = mapData.parentID;
+
         this.init();
 
         /* Starting position */
@@ -46,21 +54,21 @@ Generator.prototype = {
             this.setTypeAt(position.gridX, position.gridY, "detail");
         }
 
-        if (this.levelConfig.type == "map") {
+        if (this.config.type == "map") {
             /* Enemies */
             let enemies = new Array();
 
             /* Get the boss if it's available */
-            if (this.levelConfig.boss != undefined && GAME.json['enemies'][this.levelConfig.boss] != null) {
-                enemies.push(GAME.json['enemies'][this.levelConfig.boss]);
+            if (mapData.boss != undefined && GAME.json['enemies'][mapData.boss] != null) {
+                enemies.push(GAME.json['enemies'][mapData.boss]);
             }
 
             /* Generate an array with all the possible enemies */
             let enemiesPool = new Array();
-            if (this.levelConfig.enemies != null) {
-                for (let i=0; i<this.levelConfig.enemies.length; i++) {
-                    for (let enemy_id in this.levelConfig.enemies[i]) {
-                        for (let j=0; j<this.levelConfig.enemies[i][enemy_id]; j++) {
+            if (mapData.enemies != null) {
+                for (let i=0; i<mapData.enemies.length; i++) {
+                    for (let enemy_id in mapData.enemies[i]) {
+                        for (let j=0; j<mapData.enemies[i][enemy_id]; j++) {
                             enemiesPool.push(enemy_id);
                         }
                     }
@@ -71,9 +79,9 @@ Generator.prototype = {
             let items = new Array();
 
             /* Get the unique items */
-            if (this.levelConfig.items != undefined) {
-                for (let i=0; i<this.levelConfig.items.length; i++) {
-                    let item = GAME.json['items'][this.levelConfig.items[i]];
+            if (mapData.items != undefined) {
+                for (let i=0; i<mapData.items.length; i++) {
+                    let item = GAME.json['items'][mapData.items[i]];
                     if (item != null) {
                         items.push(item);
                     }
@@ -82,10 +90,10 @@ Generator.prototype = {
 
             /* Generate an array with all the possible items */
             let itemsPool = new Array();
-            if (this.levelConfig.chests != null) {
-                for (let i=0; i<this.levelConfig.chests.length; i++) {
-                    for (let item_id in this.levelConfig.chests[i]) {
-                        for (let j=0; j<this.levelConfig.chests[i][item_id]; j++) {
+            if (mapData.chests != null) {
+                for (let i=0; i<mapData.chests.length; i++) {
+                    for (let item_id in mapData.chests[i]) {
+                        for (let j=0; j<mapData.chests[i][item_id]; j++) {
                             itemsPool.push(item_id);
                         }
                     }
@@ -93,7 +101,6 @@ Generator.prototype = {
             }
 
             /* Dungeons */
-            let parent_id = this.levelConfig.id;
             let maxDungeons = 5;
 
             let dungeons = new Array();
@@ -103,9 +110,8 @@ Generator.prototype = {
                     break;
                 }
 
-                let dungeonConfig = {id:parent_id+"-dungeon-"+i, name:"Chateau", type:"dungeon", parent:parent_id};
-                let dungeon = new Generator(dungeonConfig, this.gridWidth, this.gridHeight);
-                dungeon.generate();
+                let dungeon = new Level(this.config.id+"-dungeon-"+i, this.gridWidth, this.gridHeight);
+                dungeon.generate({name:"Chateau", type:"dungeon", parentID:this.config.id});
                 this.setTypeAt(position.gridX, position.gridY, 'dungeon', {dungeon:dungeon});
 
                 dungeons.push(dungeon);
@@ -210,7 +216,7 @@ Generator.prototype = {
         return grid[this.getRandomBetween(0, grid.length-1)];
     },
     getSaveName: function() {
-        return 'level_' + this.levelConfig.id + '_' + this.gridWidth + 'x' + this.gridHeight;
+        return 'level_' + this.config.id + '_' + this.gridWidth + 'x' + this.gridHeight;
     },
     init: function() {
         this.grid = new Array();
@@ -243,14 +249,14 @@ Generator.prototype = {
             let item = {gridX:g.gridX, gridY:g.gridY};
             switch(g.type) {
                 case 'start':
-                    if (this.levelConfig.parent != undefined) {
-                        item.levelID = this.levelConfig.parent;
+                    if (this.config.parentID != undefined) {
+                        item.levelID = this.config.parentID;
                     }
                     data['start'] = item;
                     break;
                 case 'dungeon':
-                    item.name = g.dungeon.levelConfig.name;
-                    item.levelID = g.dungeon.levelConfig.id;
+                    item.name = g.dungeon.config.name;
+                    item.levelID = g.dungeon.config.id;
                     data['dungeons'].push(item);
                     break;
                 case 'enemy':
@@ -273,13 +279,13 @@ Generator.prototype = {
     },
     saveHeaders: function() {
         let data = {version:"1.0"};
-        data['id'] = this.levelConfig.id;
-        data['name'] = this.levelConfig.name;
-        data['type'] = this.levelConfig.type;
+        data['id'] = this.config.id;
+        data['name'] = this.config.name;
+        data['type'] = this.config.type;
         data['gridWidth'] = this.gridWidth;
         data['gridHeight'] = this.gridHeight;
-        if (this.levelConfig.parent != undefined) {
-            data['parent'] = this.levelConfig.parent;
+        if (this.config.parentID != undefined) {
+            data['parent'] = this.config.parentID;
         }
 
         data['start'] = {};
