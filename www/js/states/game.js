@@ -104,6 +104,7 @@ GAME.Game.prototype = {
         }
     },
     onMapDirty: function(tile, value) {
+        GAME.save();
         this.level.saveMap(this.map);
     }
 };

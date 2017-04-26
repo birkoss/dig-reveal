@@ -48,6 +48,8 @@ GAME.save = function() {
     data['stamina'] = GAME.STAMINA;
     data['stamina_max'] = GAME.STAMINA_MAX;
     data['level_id'] = GAME.level_id;
+    console.log('Saving');
+    console.log(data);
 
     localStorage.setItem('game_config', JSON.stringify(data));
 };
@@ -56,6 +58,9 @@ GAME.load = function() {
     let data = localStorage.getItem('game_config');
     if (data != null) {
         data = JSON.parse(data);
+
+        console.log('Loading');
+        console.log(data);
 
         GAME.time = data['time'];
         GAME.STAMINA = data['stamina'];
