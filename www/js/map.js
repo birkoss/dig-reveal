@@ -141,7 +141,7 @@ Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
     if (this.getFOWAt(gridX, gridY) == null && enemy.health > 0) {
         enemy.animations.play('idle');
     } else if (enemy.health <= 0) {
-        this.destroyUnit(enemy);
+        this.destroyEnemy(enemy);
     }
 };
 
@@ -149,7 +149,7 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     if (type == undefined) {
         type = sprite;
     }
-    let tile = this.tilesContainer.create(0, 0, (type == 'enemy' ? 'unit:' : 'tile:') + sprite);
+    let tile = this.tilesContainer.create(0, 0, (type == 'enemy' ? 'enemy:' : 'tile:') + sprite);
     tile.type = type;
     tile.sprite = sprite;
     tile.scale.setTo(GAME.RATIO, GAME.RATIO);
@@ -172,7 +172,7 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     return tile;
 };
 
-Map.prototype.destroyUnit = function(tile) {
+Map.prototype.destroyEnemy = function(tile) {
     tile.loadTexture('effect:dead');
     /* @TODO: Choose a random frame (0-3) */
 };
@@ -345,7 +345,7 @@ Map.prototype.onTileClick = function(tile, pointer) {
             effect.y = tile.y;
 
             if (tile.health <= 0) {
-                this.destroyUnit(tile);
+                this.destroyEnemy(tile);
             }
             this.onMapDirty.dispatch(tile, 1);
         }

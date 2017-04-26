@@ -25,7 +25,7 @@ GAME.Preload.prototype = {
         this.load.image('tile:map-border-bottom-right', 'images/tiles/map/borders/bottom-right.png');
 
         this.load.image('tile:dungeon-start', 'images/tiles/dungeon/start.png');
-        this.load.image('tile:dungeon-chest', 'images/tiles/dungeon/chest.png');
+        this.load.spritesheet('tile:dungeon-chest', 'images/tiles/dungeon/chest.png', 16, 16);
         this.load.image('tile:dungeon-floor', 'images/tiles/dungeon/floor.png');
         this.load.image('tile:dungeon-detail', 'images/tiles/dungeon/detail.png');
         this.load.image('tile:dungeon-border-top', 'images/tiles/dungeon/borders/top.png');
@@ -46,7 +46,7 @@ GAME.Preload.prototype = {
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
         this.load.image('progress-bar:border', 'images/progress-bar/border.png');
 
-        this.load.spritesheet('unit:skeleton', 'images/units/skeleton.png', 16, 16);
+        this.load.spritesheet('enemy:skeleton', 'images/enemies/skeleton.png', 16, 16);
 
         this.load.spritesheet('effect:dead', 'images/effects/dead.png', 16, 16);
         this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
