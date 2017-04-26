@@ -16,6 +16,9 @@ function Popup(game) {
     this.contentContainer = this.game.add.group();
     this.popupContainer.add(this.contentContainer);
 
+    this.imageContainer = this.game.add.group();
+    this.popupContainer.add(this.imageContainer);
+
     this.padding = 10 * GAME.RATIO;
 
     this.createBackground();
@@ -40,14 +43,25 @@ Popup.prototype.addButton = function(buttonData) {
 };
 
 Popup.prototype.generate = function() {
-    this.contentContainer.x = this.padding;
-    this.contentContainer.y = this.padding;
 
-    this.resizePopupBackground(Math.max(this.buttonsContainer.width, this.contentContainer.width)+(this.padding*2), this.contentContainer.y + this.contentContainer.height + (this.padding*2) + this.buttonsContainer.height);
+    let popupWidth = Math.max(this.buttonsContainer.width, this.contentContainer.width)+(this.padding*2);
+    let popupHeight = this.contentContainer.y + this.contentContainer.height + (this.padding*3) + this.buttonsContainer.height;
+    if (this.imageContainer.height > 0) {
+        popupHeight += this.imageContainer.height + this.padding;
+    }
 
-    /* Position the buttons */
+    this.resizePopupBackground(popupWidth, popupHeight);
+
     this.buttonsContainer.x = (this.popupBackgroundContainer.width - this.buttonsContainer.width) / 2;
     this.buttonsContainer.y = this.popupBackgroundContainer.height - this.buttonsContainer.height - this.padding;
+
+    if (this.imageContainer.height > 0) {
+        this.imageContainer.y = this.padding;
+        this.imageContainer.x = this.padding;
+    }
+
+    this.contentContainer.x = this.padding;
+    this.contentContainer.y = this.padding + this.imageContainer.y + this.imageContainer.height;
 
     this.popupContainer.x = (this.backgroundContainer.width - this.popupContainer.width)/2;
     this.popupContainer.y = (this.backgroundContainer.height - this.popupContainer.height)/2;
@@ -113,6 +127,18 @@ Popup.prototype.show = function() {
     this.popupContainer.y = - this.backgroundContainer.height;
 
     let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, 500).start();
+};
+
+Popup.prototype.setImage = function(spriteName, label) {
+    let sprite = this.imageContainer.create(0, 0, spriteName);
+    sprite.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
+
+    if (label != undefined) {
+        let content = this.game.add.bitmapText(0, 0, 'font:gui-multiline', label, 8);
+        content.x = sprite.width + (this.padding / 2)
+        content.y = (sprite.height - content.height) / 2;
+        this.imageContainer.addChild(content);
+    }
 };
 
 Popup.prototype.close = function() {

@@ -46,6 +46,10 @@ GAME.Preload.prototype = {
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
         this.load.image('progress-bar:border', 'images/progress-bar/border.png');
 
+        this.load.image('item:shield1', 'images/items/shield1.png');
+        this.load.image('item:apple', 'images/items/apple.png');
+        this.load.image('item:sword11', 'images/items/sword11.png');
+
         this.load.spritesheet('enemy:demon', 'images/enemies/demon.png', 16, 16);
         this.load.spritesheet('enemy:ghost', 'images/enemies/ghost.png', 16, 16);
         this.load.spritesheet('enemy:mummy', 'images/enemies/mummy.png', 16, 16);

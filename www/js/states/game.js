@@ -97,6 +97,7 @@ GAME.Game.prototype = {
             case 'chest':
                 if (!tile.isOpen) {
                     let popup = new Popup(this.game);
+                    popup.setImage("item:" + tile.item.sprite, tile.item.name);
                     popup.setContent("C'est un coffre: " + tile.item.name);
                     popup.addButton({text:"OK", callback:function() {
                         popup.close();
