@@ -34,8 +34,10 @@ Popup.prototype.addButton = function(buttonData) {
 };
 
 Popup.prototype.generate = function() {
+    this.contentContainer.x = this.padding;
+    this.contentContainer.y = this.padding;
 
-    this.resizeBackground(300, 150);
+    this.resizeBackground(this.maxWidth, this.contentContainer.y + this.contentContainer.height + (this.padding*2) + this.buttonsContainer.height);
 
     /* Position the buttons */
     this.buttonsContainer.x = (this.backgroundContainer.width - this.buttonsContainer.width) / 2;
@@ -78,9 +80,9 @@ Popup.prototype.resizeBackground = function(newWidth, newHeight) {
 Popup.prototype.setContent = function(newContent) {
     let borderSize = this.backgroundContainer.getChildAt(0).width;
 
-    let maxWidth = this.game.width - (borderSize*2) - (this.padding*2);
+    this.maxWidth = this.game.width - (borderSize*2) - (this.padding*2);
 
     let content = this.game.add.bitmapText(0, 0, 'font:gui-multiline', newContent, 8);
-    content.maxWidth = maxWidth;
+    content.maxWidth = this.maxWidth;
     this.contentContainer.addChild(content);
 };
