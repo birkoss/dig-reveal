@@ -66,7 +66,7 @@ Map.prototype.show = function() {
     positions.forEach(function(tile) {
         /* Reveals all tiles around it */
         this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false);
         }, this);
     }, this);
 };
@@ -180,12 +180,14 @@ Map.prototype.destroyEnemy = function(tile) {
     /* @TODO: Choose a random frame (0-3) */
 };
 
-Map.prototype.destroyFOW = function(tile) {
+Map.prototype.destroyFOW = function(tile, playSound) {
     if (tile != null) {
         tile.inputEnabled = false;
 
-        let sound = this.game.add.audio('sound:fow');
-        sound.play();
+        if (playSound == true) {
+            let sound = this.game.add.audio('sound:fow');
+            sound.play();
+        }
 
         this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
         let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
@@ -310,12 +312,12 @@ Map.prototype.onFOWClick = function(tile, pointer) {
 
         /* Can't explore when at least ONE enemy is active */
         if (!hasEnemyActive) {
-            this.destroyFOW(tile);
+            this.destroyFOW(tile, true);
 
             this.getItems('dungeon').forEach(function(dungeon) {
                 if (tile.gridX == dungeon.gridX && tile.gridY == dungeon.gridY) {
                     this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false);
                     }, this);
                 }
             }, this);
@@ -323,7 +325,7 @@ Map.prototype.onFOWClick = function(tile, pointer) {
             this.getItems('enemy').forEach(function(enemy) {
                 if (tile.gridX == enemy.gridX && tile.gridY == enemy.gridY) {
                     this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false);
                     }, this);
 
                     enemy.animations.play('idle');
@@ -333,7 +335,7 @@ Map.prototype.onFOWClick = function(tile, pointer) {
             this.getItems('chest').forEach(function(chest) {
                 if (tile.gridX == chest.gridX && tile.gridY == chest.gridY) {
                     this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY));
+                        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false);
                     }, this);
                 }
             }, this);
@@ -351,24 +353,22 @@ Map.prototype.onTileClick = function(tile, pointer) {
     if (tile.type == 'enemy' && tile.health > 0) {
         if (GAME.config.stamina > 0) {
             this.onStaminaSpent.dispatch(this, 1);
-            /* @TODO: Use the weapon stats */
-            tile.health = Math.max(0, tile.health-1);
 
-            console.log(tile.enemy);
+            /* Play a different sounds depending if the enemy is alive or dead */
+            tile.health = Math.max(0, tile.health-GAME.attack);
             if (tile.enemy.sounds && tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']) {
                 let sound = this.game.add.audio('sound:' + tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']);
                 sound.play();
             }
 
+            /* Play an attack animation */
             let effect = this.effectsContainer.create(0, 0, 'effect:attack');
             effect.scale.setTo(GAME.RATIO, GAME.RATIO);
-
             effect.animations.add('attacking', [0, 1, 0, 1, 0, 1], 10, false);
             effect.events.onAnimationComplete.add(function() {
                 effect.destroy();
             }, this);
             effect.animations.play('attacking');
-
             effect.x = tile.x;
             effect.y = tile.y;
 
@@ -381,6 +381,5 @@ Map.prototype.onTileClick = function(tile, pointer) {
         }
     } else if (tile.type == "chest" && !tile.isOpen) {
         this.openChest(tile, true);
-        // @TODO Apply the tile.item effect
     }
 };
