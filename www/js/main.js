@@ -1,3 +1,10 @@
+/* @TODO
+ *
+ * Testing with different resolutions and set a limit
+ * Update the text shown in the chest popup to represent the stats boost
+ * See how to fix accentuated character
+ *
+ */
 var GAME = GAME || {};
 
 GAME.config = {};

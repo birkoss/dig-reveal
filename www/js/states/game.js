@@ -96,7 +96,10 @@ GAME.Game.prototype = {
                 if (!tile.isOpen) {
                     let popup = new Popup(this.game);
                     popup.setImage("item:" + tile.item.sprite, tile.item.name);
-                    popup.setContent("C'est un coffre: " + tile.item.name);
+                    for (let index in tile.item.modifier) {
+                        let value = tile.item.modifier[index];
+                        popup.addStats(index, GAME.config[index], GAME.config[index]+value);
+                    }
                     popup.addButton({text:"OK", callback:function() {
                         if (tile.item.equipable == true) {
                             GAME.equip(tile.item.slot, tile.item.id);

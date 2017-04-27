@@ -16,6 +16,9 @@ function Popup(game) {
     this.contentContainer = this.game.add.group();
     this.popupContainer.add(this.contentContainer);
 
+    this.statsContainer = this.game.add.group();
+    this.popupContainer.add(this.statsContainer);
+
     this.imageContainer = this.game.add.group();
     this.popupContainer.add(this.imageContainer);
 
@@ -47,9 +50,15 @@ Popup.prototype.addButton = function(buttonData) {
 Popup.prototype.generate = function() {
 
     let popupWidth = Math.max(this.buttonsContainer.width, this.contentContainer.width)+(this.padding*2);
-    let popupHeight = this.contentContainer.y + this.contentContainer.height + (this.padding*3) + this.buttonsContainer.height;
+    let popupHeight = (this.padding*2) + this.buttonsContainer.height;
     if (this.imageContainer.height > 0) {
         popupHeight += this.imageContainer.height + this.padding;
+    }
+    if (this.statsContainer.height > 0) {
+        popupHeight += this.statsContainer.height + this.padding;
+    }
+    if (this.contentContainer.height > 0) {
+        popupHeight += this.contentContainer.height + this.padding;
     }
 
     this.resizePopupBackground(popupWidth, popupHeight);
@@ -57,13 +66,25 @@ Popup.prototype.generate = function() {
     this.buttonsContainer.x = (this.popupBackgroundContainer.width - this.buttonsContainer.width) / 2;
     this.buttonsContainer.y = this.popupBackgroundContainer.height - this.buttonsContainer.height - this.padding;
 
+    let popupY = 0;
+
     if (this.imageContainer.height > 0) {
-        this.imageContainer.y = this.padding;
+        this.imageContainer.y = this.padding + popupY;
         this.imageContainer.x = this.padding;
+        popupY += this.imageContainer.height + this.padding;
     }
 
-    this.contentContainer.x = this.padding;
-    this.contentContainer.y = this.padding + this.imageContainer.y + this.imageContainer.height;
+    if (this.statsContainer.height > 0) {
+        this.statsContainer.x = (this.popupContainer.width - this.statsContainer.width) / 2;
+        this.statsContainer.y = this.padding + popupY;
+        popupY += this.statsContainer.height + this.padding;
+    }
+
+    if (this.contentContainer.height > 0) {
+        this.contentContainer.x = this.padding;
+        this.contentContainer.y = this.padding + popupY;
+        popupY += this.contentContainer.height + this.padding;
+    }
 
     this.popupContainer.x = (this.backgroundContainer.width - this.popupContainer.width)/2;
     this.popupContainer.y = (this.backgroundContainer.height - this.popupContainer.height)/2;
@@ -121,16 +142,6 @@ Popup.prototype.setContent = function(newContent) {
     this.contentContainer.addChild(content);
 };
 
-Popup.prototype.show = function() {
-    this.generate();
-
-    this.backgroundContainer.alpha = 0.8;
-    this.popupContainer.originalY = this.popupContainer.y;
-    this.popupContainer.y = - this.backgroundContainer.height;
-
-    let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED).start();
-};
-
 Popup.prototype.setImage = function(spriteName, label) {
     let sprite = this.imageContainer.create(0, 0, spriteName);
     sprite.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
@@ -141,6 +152,58 @@ Popup.prototype.setImage = function(spriteName, label) {
         content.y = (sprite.height - content.height) / 2;
         this.imageContainer.addChild(content);
     }
+};
+
+Popup.prototype.addStats = function(stat, from, to) {
+    let statName = stat;
+    switch(stat) {
+        case "attack":
+            statName = "Attaque";
+            break;
+        case "stamina":
+            statName = "Stamina";
+            break;
+        case "staminaMax":
+            statName = "Stamina\nmaximum";
+            break;
+    }
+
+    let nbrStats = Math.floor(this.statsContainer.children.length/4);
+    let textX = 0;
+    let textY = this.statsContainer.height;
+    if (textY > 0) {
+        textY += this.padding;
+    }
+
+    let text = this.game.add.bitmapText(textX, textY, 'font:gui-multiline', statName + ": ", 8);
+    this.statsContainer.addChild(text);
+    textX += text.width + this.padding;
+    let labelHeight = text.height;
+
+    text = this.game.add.bitmapText(textX, textY, 'font:gui', from, 8);
+    text.y += (labelHeight - text.height) / 2;
+    this.statsContainer.addChild(text);
+    textX += text.width + this.padding;
+    
+    text = this.game.add.bitmapText(textX, textY, 'font:gui', "->", 8);
+    text.y += (labelHeight - text.height) / 2;
+    this.statsContainer.addChild(text);
+    textX += text.width + this.padding;
+
+    text = this.game.add.bitmapText(textX, textY, 'font:gui', to, 8);
+    text.y += (labelHeight - text.height) / 2;
+    this.statsContainer.addChild(text);
+    textX += text.width + this.padding;
+};
+
+Popup.prototype.show = function() {
+    this.generate();
+
+    this.backgroundContainer.alpha = 0.8;
+    this.popupContainer.originalY = this.popupContainer.y;
+    this.popupContainer.y = - this.backgroundContainer.height;
+
+    let tween = this.game.add.tween(this.popupContainer).to({y:this.popupContainer.originalY}, Popup.SPEED).start();
 };
 
 Popup.prototype.close = function() {
