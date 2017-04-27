@@ -300,7 +300,7 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 /* Events */
 
 Map.prototype.onFOWClick = function(tile, pointer) {
-    if (GAME.STAMINA > 0) {
+    if (GAME.config.stamina > 0) {
         let hasEnemyActive = false;
         this.getItems('enemy').forEach(function(enemy) {
             if (this.getFOWAt(enemy.gridX, enemy.gridY) == null && enemy.health > 0) {
@@ -349,7 +349,7 @@ Map.prototype.onTileClick = function(tile, pointer) {
     this.onTileClicked.dispatch(tile, 1);
 
     if (tile.type == 'enemy' && tile.health > 0) {
-        if (GAME.STAMINA > 0) {
+        if (GAME.config.stamina > 0) {
             this.onStaminaSpent.dispatch(this, 1);
             /* @TODO: Use the weapon stats */
             tile.health = Math.max(0, tile.health-1);
@@ -381,5 +381,6 @@ Map.prototype.onTileClick = function(tile, pointer) {
         }
     } else if (tile.type == "chest" && !tile.isOpen) {
         this.openChest(tile, true);
+        // @TODO Apply the tile.item effect
     }
 };

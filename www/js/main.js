@@ -1,37 +1,46 @@
 var GAME = GAME || {};
 
-GAME.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, '');
+GAME.config = {};
 
-GAME.game.state.add('Boot', GAME.Boot);
-GAME.game.state.add('Preload', GAME.Preload);
-GAME.game.state.add('Game', GAME.Game);
-GAME.game.state.add('Debug', GAME.Debug);
+/* Base values, never saved */
+GAME.config['attack'] = 1;
+GAME.config['staminaMax'] = 100;
+GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 
-GAME.level_id = 'village';
+/* Dynamics values */
+GAME.config['weapon'] = null;
+GAME.config['shield'] = null;
+GAME.config['stamina'] = GAME.config['staminaMax'];
+GAME.config['time'] = null;
+GAME.config['levelID'] = null;
 
-GAME.RATIO = window.devicePixelRatio;
+
 GAME.RATIO = Math.floor(window.innerWidth / 320) * 2;
-
-GAME.STAMINA = GAME.STAMINA_MAX = 100;
-GAME.timeDelay = Phaser.Timer.SECOND * 60;
-GAME.time = null;
 
 GAME.json = {};
 
 GAME.music = null;
 
+GAME.equip = function(type, itemID) {
+    if (itemID != null && GAME.json['items'] != null && GAME.json['items'][itemID] != null) {
+        let item = GAME.json['items'][itemID];
+        console.log(item);
+    }
+};
+
 GAME.tick = function() {
-    if (GAME.STAMINA < GAME.STAMINA_MAX) {
+    if (GAME.config.stamina < GAME.config.staminaMax) {
         GAME.now = (new Date()).getTime();
-        if (GAME.time == null) {
-            GAME.time = GAME.now;
+        if (GAME.config.time == null) {
+            GAME.config.time = GAME.now;
         }
 
-        while (GAME.time + GAME.timeDelay <= GAME.now) {
-            GAME.time += GAME.timeDelay;
-            GAME.STAMINA = Math.min(GAME.STAMINA_MAX, GAME.STAMINA + 1);
+        /* Increase our stamina (retroactively...) */
+        while (GAME.config.time + GAME.config.timeDelay <= GAME.now) {
+            GAME.config.time += GAME.config.timeDelay;
+            GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + 1);
             /* Stop the loop if we are full */
-            if (GAME.STAMINA >= GAME.STAMINA_MAX) {
+            if (GAME.config.stamina >= GAME.config.staminaMax) {
                 break;
             }
 
@@ -39,16 +48,17 @@ GAME.tick = function() {
             GAME.save();
         }
     } else {
-        GAME.time = null;
+        GAME.config.time = null;
     }
 };
 
 GAME.save = function() {
+    let fields = ['time', 'stamina', 'levelID', 'weapon', 'shield'];
+
     let data = {};
-    data['time'] = GAME.time;
-    data['stamina'] = GAME.STAMINA;
-    data['stamina_max'] = GAME.STAMINA_MAX;
-    data['level_id'] = GAME.level_id;
+    fields.forEach(function(field) {
+        data[field] = GAME.config[field];
+    }, this);
 
     localStorage.setItem('game_config', JSON.stringify(data));
 };
@@ -58,13 +68,20 @@ GAME.load = function() {
     if (data != null) {
         data = JSON.parse(data);
 
-        GAME.time = data['time'];
-        GAME.STAMINA = data['stamina'];
-        GAME.STAMINA_MAX = data['stamina_max'];
-        GAME.level_id = data['level_id'];
+        GAME.config = Object.assign(GAME.config, data);
     }
 };
 
 GAME.load();
+
+console.log(GAME.config);
+/* Start Phaser */
+
+GAME.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, '');
+
+GAME.game.state.add('Boot', GAME.Boot);
+GAME.game.state.add('Preload', GAME.Preload);
+GAME.game.state.add('Game', GAME.Game);
+GAME.game.state.add('Debug', GAME.Debug);
 
 GAME.game.state.start('Boot');

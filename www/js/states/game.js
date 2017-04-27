@@ -4,7 +4,7 @@ GAME.Game = function() {};
 
 GAME.Game.prototype = {
     create: function() {
-        console.log('Game.create: ' + GAME.level_id);
+        console.log('Game.create: ' + GAME.config.levelID);
 
         if (GAME.music != null) {
             GAME.music.destroy();
@@ -23,7 +23,7 @@ GAME.Game.prototype = {
     },
     update: function() {
         /* Keep the panel updated with the stamina amount */
-        this.panel.updateStamina(GAME.STAMINA, GAME.STAMINA_MAX);
+        this.panel.updateStamina(GAME.config.stamina, GAME.config.staminaMax);
 
         GAME.tick();
     },
@@ -37,14 +37,15 @@ GAME.Game.prototype = {
         /* Get the best map height from the remaining space left UNDER the panel */
         let mapHeight = Math.floor((this.game.height-this.panelContainer.height) / (16 * GAME.RATIO));
 
-        this.level = new Level(GAME.level_id, mapWidth, mapHeight);
+        this.level = new Level(GAME.config.levelID, mapWidth, mapHeight);
 
         /* Try to load an existing saved level */
         let levelData = this.level.load();
         if (levelData == null) {
             /* If it's not already generated, do it first */
             if (GAME.json['maps'][this.level.config.id] == null) {
-                this.level.config.id = 'village';
+                GAME.config.levelID = this.level.config.id = 'village';
+                GAME.save();
             }
             this.level.generate(GAME.json['maps'][this.level.config.id]);
             levelData = this.level.load();
@@ -90,7 +91,7 @@ GAME.Game.prototype = {
         if (amount == 0) {
             this.panel.noMoreStamina();
         }
-        GAME.STAMINA = Math.max(0, GAME.STAMINA - amount);
+        GAME.config.stamina = Math.max(0, GAME.config.stamina - amount);
     },
     onMapTileClicked: function(tile, value) {
         switch (tile.type) {
@@ -108,7 +109,7 @@ GAME.Game.prototype = {
             case 'dungeon':
             case 'start':
                 if (tile.levelID != null) {
-                    GAME.level_id = tile.levelID;
+                    GAME.config.levelID = tile.levelID;
                     GAME.save();
 
                     this.game.state.restart();

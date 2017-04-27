@@ -97,6 +97,9 @@ GAME.Preload.prototype = {
         GAME.json['enemies'] = this.cache.getJSON('data:enemies');
         GAME.json['items'] = this.cache.getJSON('data:items');
 
+        GAME.equip('weapon', GAME.config.weapon);
+        GAME.equip('shield', GAME.config.shield);
+
         this.state.start('Game'); /* Game/Debug */
     }
 };
