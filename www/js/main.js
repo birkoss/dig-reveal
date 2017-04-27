@@ -1,7 +1,24 @@
 /* @TODO
  *
- * Testing with different resolutions and set a limit
  * See how to fix accentuated character
+ * - Use a new fonts to replace gui and gui-multiline
+ *
+ * Time based usable items:
+ * - Reduce the stamina timeDelay by X secondes for 2 hours
+ *
+ * Weapon effects
+ * - Some weapon may add a AOE (without stamina cost) when we reveal tiles (With a % of happening)
+ *   - X effects until borders
+ *   - Square effects
+ *   - + effects until borders
+ *   
+ * Enemy effects
+ * - On hit, hide in another hidden cell (if remaining)
+ * - On death, spawn another enemy (like a weak skeleton)
+ * - On reveal, spawn enemies around to protect it
+ * - On health below treshold, change into another enemy
+ *
+ * Add an inventory for owned weapon and shield
  *
  */
 var GAME = GAME || {};

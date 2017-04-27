@@ -67,6 +67,8 @@ GAME.Preload.prototype = {
         this.load.spritesheet('popup:background', 'images/gui/popup/background.png', 4, 4);
         this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 100, 16);
 
+        this.load.image('inventory:item-frame', 'images/gui/popup/background.png');
+
         this.load.audio('music:map', 'audio/musics/map.ogg');
         this.load.audio('music:dungeon', 'audio/musics/dungeon.ogg');
 
@@ -100,6 +102,6 @@ GAME.Preload.prototype = {
         GAME.equip('weapon', GAME.config.weapon);
         GAME.equip('shield', GAME.config.shield);
 
-        this.state.start('Game'); /* Game/Debug */
+        this.state.start('Debug'); /* Game/Debug */
     }
 };
