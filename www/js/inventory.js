@@ -39,14 +39,13 @@ Inventory.prototype.addButton = function(buttonData) {
     let button = this.game.add.button(0, 0, 'popup:button', buttonData.callback, buttonData.context, 1, 0, 1, 0);
     button.x = this.buttonsContainer.children.length * (button.width + this.padding);
     button.scale.setTo(GAME.RATIO, GAME.RATIO);
-
-    let label = this.game.add.bitmapText(0, 0, 'font:gui', buttonData.text, 8);
-    label.anchor.set(0.5, 0.5);
-    label.x = (button.width/GAME.RATIO)/2;
-    label.y = (button.height/GAME.RATIO)/2;
-    button.addChild(label);
-
     this.buttonsContainer.addChild(button);
+
+    let label = this.game.add.bitmapText(0, 0, 'font:gui', buttonData.text, 10);
+    label.anchor.set(0.5, 0.5);
+    label.x = (button.width/2);
+    label.y = (button.height/2);
+    this.buttonsContainer.addChild(label);
 };
 
 Inventory.prototype.generate = function() {
@@ -55,12 +54,12 @@ Inventory.prototype.generate = function() {
 
     /* Generate labels */
 
-    let label = this.game.add.bitmapText(0, 0, 'font:gui', "Arme", 8);
+    let label = this.game.add.bitmapText(0, 0, 'font:gui', "Arme", 10);
     label.anchor.set(0.5, 0);
     label.x = (minWidth / 4);
     this.labelContainer.addChild(label);
     
-    label = this.game.add.bitmapText(0, 0, 'font:gui', "Bouclier", 8);
+    label = this.game.add.bitmapText(0, 0, 'font:gui', "Bouclier", 10);
     label.anchor.set(0.5, 0);
     label.x = (minWidth / 4) * 3;
     this.labelContainer.addChild(label);
@@ -101,12 +100,15 @@ Inventory.prototype.generate = function() {
     this.descriptionContainer.add(ninepatch);
     ninepatch.resize(minWidth - (this.padding * 2), 80);
 
-    this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", "Aucun n'item n'est sélectionné", 8);
+    this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", "Aucun n'item n'est sélectionné", 10);
     this.itemDescription.anchor.set(0, 0.5);
     this.itemDescription.x = this.padding;
     this.itemDescription.maxWidth = minWidth - (this.padding*2);
     this.itemDescription.y = (this.descriptionContainer.height/2) + 3;
     this.descriptionContainer.add(this.itemDescription);
+    
+    /* Buttons */
+    this.addButton({text:"Changer"});
 
     let InventoryWidth = minWidth;
     let InventoryHeight = (this.padding*2) + this.buttonsContainer.height;
@@ -227,6 +229,7 @@ Inventory.prototype.addStats = function(stat, from, to) {
     text.y += (labelHeight - text.height) / 2;
     this.descriptionContainer.addChild(text);
     textX += text.width + this.padding;
+
 };
 
 Inventory.prototype.selectItem = function(slot) {
@@ -237,8 +240,6 @@ Inventory.prototype.selectItem = function(slot) {
         let position = (slot == 'weapon' ? 0 : 2);
         this.imageContainer.getChildAt(position).alpha = 0.5;
         let item = this.imageContainer.getChildAt(position+1).item;
-
-        console.log(item);
 
         this.selectedSlot = slot;
     }

@@ -6,8 +6,6 @@ GAME.Debug.prototype = {
     create: function() {
         let inventory = new Inventory(this.game);
 
-        inventory.addButton({"text":"aaa"});
-
         inventory.show();
     }
 };

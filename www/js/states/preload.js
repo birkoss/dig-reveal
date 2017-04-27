@@ -62,8 +62,15 @@ GAME.Preload.prototype = {
         this.load.spritesheet('effect:dead', 'images/effects/dead.png', 16, 16);
         this.load.spritesheet('effect:attack', 'images/effects/attack.png', 16, 16);
 
-        this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
-        this.load.bitmapFont('font:gui-multiline', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+        let abc = 1;
+        if (abc == 2) {
+            this.load.bitmapFont('font:gui', 'images/fonts/gui2.png', 'images/fonts/gui2.xml');
+            this.load.bitmapFont('font:gui-multiline', 'images/fonts/gui2.png', 'images/fonts/gui2.xml');
+        } else {
+            this.load.bitmapFont('font:gui', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+            this.load.bitmapFont('font:gui-multiline', 'images/fonts/gui.png', 'images/fonts/gui.xml');
+        }
+
         this.load.spritesheet('popup:background', 'images/gui/popup/background.png', 4, 4);
         this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 100, 16);
 
