@@ -24,8 +24,21 @@ GAME.music = null;
 GAME.equip = function(type, itemID) {
     if (itemID != null && GAME.json['items'] != null && GAME.json['items'][itemID] != null) {
         let item = GAME.json['items'][itemID];
-        /* Stamina Max = Stamina & StaminaMax mod */
-        console.log(item);
+        if (item.equipable == true && item.modifier != undefined) {
+            if (item.modifier.staminaMax != undefined) {
+                GAME.config['stamina'] += item.modifier.staminaMax;
+                GAME.config['staminaMax'] += item.modifier.staminaMax;
+            }
+            if (item.modifier.attack != undefined) {
+                GAME.config['attack'] += item.modifier.attack;
+            }
+
+            /* If it's a new equipment, equip and save it */
+            if (GAME.config[item.slot] != item.id) {
+                GAME.config[item.slot] = item.id;
+                GAME.save();
+            }
+        }
     }
 };
 
