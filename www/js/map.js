@@ -66,7 +66,7 @@ Map.prototype.show = function() {
     positions.forEach(function(tile) {
         /* Reveals all tiles around it */
         this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false);
+            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false, false);
         }, this);
     }, this);
 };
@@ -179,7 +179,7 @@ Map.prototype.destroyEnemy = function(tile) {
     tile.loadTexture('effect:dead');
 };
 
-Map.prototype.destroyFOW = function(tile, playSound) {
+Map.prototype.destroyFOW = function(tile, playSound, shouldAnimate) {
     if (tile != null) {
         tile.inputEnabled = false;
 
@@ -188,12 +188,17 @@ Map.prototype.destroyFOW = function(tile, playSound) {
             sound.play();
         }
 
-        this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
-        let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
-        tween.onComplete.add(function() {
+        if (!shouldAnimate) {
             tile.destroy();
             this.onMapDirty.dispatch(tile, 1);
-        }, this);
+        } else {
+            this.game.add.tween(tile.scale).to({x:0, y:0}, 400).start();
+            let tween = this.game.add.tween(tile).to({alpha:0}, 400).start();
+            tween.onComplete.add(function() {
+                tile.destroy();
+                this.onMapDirty.dispatch(tile, 1);
+            }, this);
+        }
     }
 };
 
