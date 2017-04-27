@@ -108,7 +108,6 @@ GAME.Game.prototype = {
                                 GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + tile.item.modifier.stamina);
                             }
                         }
-                        console.log(tile.item);
                         popup.close();
                     }, context:this});
                     popup.show();

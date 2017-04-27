@@ -177,7 +177,6 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
 
 Map.prototype.destroyEnemy = function(tile) {
     tile.loadTexture('effect:dead');
-    /* @TODO: Choose a random frame (0-3) */
 };
 
 Map.prototype.destroyFOW = function(tile, playSound) {
@@ -355,7 +354,7 @@ Map.prototype.onTileClick = function(tile, pointer) {
             this.onStaminaSpent.dispatch(this, 1);
 
             /* Play a different sounds depending if the enemy is alive or dead */
-            tile.health = Math.max(0, tile.health-GAME.attack);
+            tile.health = Math.max(0, tile.health-GAME.config.attack);
             if (tile.enemy.sounds && tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']) {
                 let sound = this.game.add.audio('sound:' + tile.enemy.sounds[tile.health == 0 ? 'death' : 'hit']);
                 sound.play();
