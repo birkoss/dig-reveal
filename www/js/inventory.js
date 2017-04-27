@@ -24,6 +24,8 @@ function Inventory(game) {
 
     this.padding = 10 * GAME.RATIO;
 
+    this.selectedSlot = '';
+
     this.createBackground();
     this.createInventoryBackground();
 };
@@ -68,24 +70,27 @@ Inventory.prototype.generate = function() {
     let frame = new Ninepatch(this.game);
     frame.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
     frame.x = (minWidth / 4) - (frame.width/2);
+    frame.enableClick(function() { 
+        this.selectItem('weapon');
+    }, this);
     this.imageContainer.add(frame);
 
     this.spriteWeapon = this.imageContainer.create(0, 0, 'item:apple');
+    this.spriteWeapon.item = GAME.json['items']['apple'];
     this.spriteWeapon.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
     this.spriteWeapon.x = frame.x;
     this.spriteWeapon.y = frame.y;
 
-    frame = this.imageContainer.create(0, 0, 'inventory:item-frame');
-    frame.scale.setTo(GAME.RATIO*2, GAME.RATIO*2);
-    frame.anchor.set(0.5, 0);
-    frame.x = (minWidth / 4) * 3;
-
     frame = new Ninepatch(this.game);
     frame.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
     frame.x = ((minWidth / 4) * 3) - (frame.width / 2);
+    frame.enableClick(function() { 
+        this.selectItem('shield');
+    }, this);
     this.imageContainer.add(frame);
 
     this.spriteShield = this.imageContainer.create(0, 0, 'item:apple');
+    this.spriteShield.item = GAME.json['items']['apple'];
     this.spriteShield.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
     this.spriteShield.x = frame.x;
     this.spriteShield.y = frame.y;
@@ -222,6 +227,18 @@ Inventory.prototype.addStats = function(stat, from, to) {
     text.y += (labelHeight - text.height) / 2;
     this.descriptionContainer.addChild(text);
     textX += text.width + this.padding;
+};
+
+Inventory.prototype.selectItem = function(slot) {
+    if (slot != this.selectedSlot) {
+        let position = (slot == 'weapon' ? 0 : 2);
+        this.imageContainer.getChildAt(position).alpha = 0.5;
+        let item = this.imageContainer.getChildAt(position+1).item;
+
+        console.log(item);
+
+        this.selectedSlot = slot;
+    }
 };
 
 Inventory.prototype.show = function() {

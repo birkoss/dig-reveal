@@ -21,6 +21,13 @@ Ninepatch.prototype.removeBorders = function(position) {
     this.borders[position] = false;
 };
 
+Ninepatch.prototype.enableClick = function(callback, context) {
+    for (let i=0; i<this.backgroundContainer.children.length; i++) {
+        this.backgroundContainer.getChildAt(i).inputEnabled = true;
+        this.backgroundContainer.getChildAt(i).events.onInputDown.add(callback, context);
+    }
+};
+
 Ninepatch.prototype.init = function() {
     for (let y=0; y<3; y++) {
         for (let x=0; x<3; x++) {

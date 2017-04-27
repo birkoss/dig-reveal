@@ -19,6 +19,7 @@
  * - On health below treshold, change into another enemy
  *
  * Add an inventory for owned weapon and shield
+ * Add a default weapon that attack of 1, same with shield
  *
  */
 var GAME = GAME || {};
