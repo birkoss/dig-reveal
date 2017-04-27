@@ -58,19 +58,6 @@ Map.prototype.load = function(data) {
     }, this);
 };
 
-/* @TODO Rename to start, or something more pertinent */
-/* @TODO Should not be called when the map is loading, only when created or opened for the first time */
-Map.prototype.show = function() {
-    let positions = this.getItems('start');
-
-    positions.forEach(function(tile) {
-        /* Reveals all tiles around it */
-        this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
-            this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false, false);
-        }, this);
-    }, this);
-};
-
 Map.prototype.createMap = function() {
     let background = this.game.add.tileSprite(0, 0, this.gridWidth*16, this.gridHeight*16, 'tile:'+this.type+'-floor');
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
@@ -134,7 +121,12 @@ Map.prototype.createFOW = function(gridX, gridY) {
 };
 
 Map.prototype.createStartPosition = function(gridX, gridY, data) {
-    this.createItem(gridX, gridY, this.type + '-start', 'start', data);
+    let tile = this.createItem(gridX, gridY, this.type + '-start', 'start', data);
+
+    /* Reveals all tiles around it */
+    this.getNeighboorsAt(tile.gridX, tile.gridY, false, 1, false).forEach(function(position) {
+        this.destroyFOW(this.getFOWAt(position.gridX, position.gridY), false, false);
+    }, this);
 };
 
 Map.prototype.createEnemy = function(gridX, gridY, sprite, data) {
@@ -180,6 +172,8 @@ Map.prototype.destroyEnemy = function(tile) {
 };
 
 Map.prototype.destroyFOW = function(tile, playSound, shouldAnimate) {
+    if (shouldAnimate == null) { shouldAnimate = true; }
+
     if (tile != null) {
         tile.inputEnabled = false;
 

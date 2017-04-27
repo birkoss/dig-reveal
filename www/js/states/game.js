@@ -79,10 +79,7 @@ GAME.Game.prototype = {
     },
     showPanel: function() {
         this.panel.levelName.text = this.level.config.name;
-        let tween = this.game.add.tween(this.panelContainer).to({y:0}, 1000, Phaser.Easing.Bounce.Out).start();
-        tween.onComplete.add(function() {
-            this.map.show();
-        }, this);
+        this.game.add.tween(this.panelContainer).to({y:0}, 1000, Phaser.Easing.Bounce.Out).start();
     },
 
     /* Events */
