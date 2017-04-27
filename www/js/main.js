@@ -24,6 +24,7 @@ GAME.music = null;
 GAME.equip = function(type, itemID) {
     if (itemID != null && GAME.json['items'] != null && GAME.json['items'][itemID] != null) {
         let item = GAME.json['items'][itemID];
+        /* Stamina Max = Stamina & StaminaMax mod */
         console.log(item);
     }
 };

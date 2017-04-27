@@ -3,27 +3,32 @@
         "id": "sword1",
         "name": "Épée en bois",
         "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
         "sprite": "sword1",
-        "modifier": [
-            {"attack": 1}
-        ]
+        "modifier": {
+            "attack": 1
+        }
     },
     "shield1": {
         "id": "shield1",
         "name": "Bouclier en bois",
         "type": "unique",
+        "equipable": true,
+        "slot": "shield",
         "sprite": "shield1",
-        "modifier": [
-            {"staminaMax": 10}
-        ]
+        "modifier": {
+            "staminaMax": 10
+        }
     },
     "apple": {
         "id": "apple",
         "name": "Pomme",
+        "usable": true,
         "type": "normal",
         "sprite": "apple",
-        "modifier": [
-            {"stamina": 25}
-        ]
+        "modifier": {
+            "stamina": 25
+        }
     }
 }

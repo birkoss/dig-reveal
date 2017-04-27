@@ -101,6 +101,14 @@ GAME.Game.prototype = {
                     popup.setImage("item:" + tile.item.sprite, tile.item.name);
                     popup.setContent("C'est un coffre: " + tile.item.name);
                     popup.addButton({text:"OK", callback:function() {
+                        if (tile.item.equipable == true) {
+                            Game.equip(tile.item.slot, tile.item);
+                        } else if (tile.item.usable == true) {
+                            if (tile.item.modifier != undefined && tile.item.modifier.stamina != undefined) {
+                                GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + tile.item.modifier.stamina);
+                            }
+                        }
+                        console.log(tile.item);
                         popup.close();
                     }, context:this});
                     popup.show();
