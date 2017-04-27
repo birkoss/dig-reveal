@@ -1,7 +1,6 @@
 /* @TODO
  *
  * Testing with different resolutions and set a limit
- * Update the text shown in the chest popup to represent the stats boost
  * See how to fix accentuated character
  *
  */
@@ -22,7 +21,7 @@ GAME.config['time'] = null;
 GAME.config['levelID'] = null;
 
 
-GAME.RATIO = Math.floor(window.innerWidth / 320) * 2;
+GAME.RATIO = Math.min(6, Math.floor(window.innerWidth / 320) * 2);
 
 GAME.json = {};
 
