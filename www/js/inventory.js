@@ -65,25 +65,44 @@ Inventory.prototype.generate = function() {
 
     /* Generate images */
 
-    let frame = this.imageContainer.create(0, 0, 'inventory:item-frame');
-    frame.scale.setTo(GAME.RATIO*2, GAME.RATIO*2);
-    frame.anchor.set(0.5, 0);
-    frame.x = (minWidth / 4);
+    let frame = new Ninepatch(this.game);
+    frame.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
+    frame.x = (minWidth / 4) - (frame.width/2);
+    this.imageContainer.add(frame);
+
+    this.spriteWeapon = this.imageContainer.create(0, 0, 'item:apple');
+    this.spriteWeapon.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
+    this.spriteWeapon.x = frame.x;
+    this.spriteWeapon.y = frame.y;
 
     frame = this.imageContainer.create(0, 0, 'inventory:item-frame');
     frame.scale.setTo(GAME.RATIO*2, GAME.RATIO*2);
     frame.anchor.set(0.5, 0);
     frame.x = (minWidth / 4) * 3;
 
+    frame = new Ninepatch(this.game);
+    frame.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
+    frame.x = ((minWidth / 4) * 3) - (frame.width / 2);
+    this.imageContainer.add(frame);
+
+    this.spriteShield = this.imageContainer.create(0, 0, 'item:apple');
+    this.spriteShield.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
+    this.spriteShield.x = frame.x;
+    this.spriteShield.y = frame.y;
+
     /* Description */
 
-    frame = this.descriptionContainer.create(0, 0, 'inventory:item-frame');
-    frame.scale.setTo(GAME.RATIO*2, GAME.RATIO*2);
-    frame.anchor.set(0, 0);
-    frame.width = minWidth - (this.padding * 2);
-    frame.height = 80;
+    let ninepatch = new Ninepatch(this.game);
+    this.descriptionContainer.add(ninepatch);
+    ninepatch.resize(minWidth - (this.padding * 2), 80);
 
-    //let InventoryWidth = Math.min(minWidth, Math.max(this.buttonsContainer.width, this.labelContainer.width)+(this.padding*2));
+    this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", "Aucun n'item n'est sélectionné", 8);
+    this.itemDescription.anchor.set(0, 0.5);
+    this.itemDescription.x = this.padding;
+    this.itemDescription.maxWidth = minWidth - (this.padding*2);
+    this.itemDescription.y = (this.descriptionContainer.height/2) + 3;
+    this.descriptionContainer.add(this.itemDescription);
+
     let InventoryWidth = minWidth;
     let InventoryHeight = (this.padding*2) + this.buttonsContainer.height;
 
