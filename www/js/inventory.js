@@ -231,6 +231,9 @@ Inventory.prototype.addStats = function(stat, from, to) {
 
 Inventory.prototype.selectItem = function(slot) {
     if (slot != this.selectedSlot) {
+        for (let i=0; i<this.imageContainer.children.length; i+=2) {
+            this.imageContainer.getChildAt(i).alpha = 1;
+        }
         let position = (slot == 'weapon' ? 0 : 2);
         this.imageContainer.getChildAt(position).alpha = 0.5;
         let item = this.imageContainer.getChildAt(position+1).item;
