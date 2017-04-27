@@ -96,9 +96,13 @@ GAME.Game.prototype = {
                 if (!tile.isOpen) {
                     let popup = new Popup(this.game);
                     popup.setImage("item:" + tile.item.sprite, tile.item.name);
-                    for (let index in tile.item.modifier) {
-                        let value = tile.item.modifier[index];
-                        popup.addStats(index, GAME.config[index], GAME.config[index]+value);
+                    for (let stat in tile.item.modifier) {
+                        let value = tile.item.modifier[stat];
+                        let newValue = GAME.config[stat] + value;
+                        if (stat == "stamina") {
+                            newValue = Math.min(GAME.config.staminaMax, newValue);
+                        }
+                        popup.addStats(stat, GAME.config[stat], newValue);
                     }
                     popup.addButton({text:"OK", callback:function() {
                         if (tile.item.equipable == true) {
