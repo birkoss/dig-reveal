@@ -214,7 +214,7 @@ Map.prototype.openChest = function(tile, playSound) {
         sound.play();
     }
 
-    // @TODO : Save the chest open this.onMapDirty.dispatch(tile, 1);
+    this.onMapDirty.dispatch(tile, 1);
 };
 
 /* Getters */
