@@ -11,10 +11,10 @@ Panel.prototype.updateStamina = function(staminaTotal, staminaMax) {
     this.staminaText.text = staminaTotal + "/" + staminaMax; 
     this.stamina.width = staminaTotal / staminaMax * this.stamina.originalWidth;
 
-    if (GAME.time == null) {
+    if (GAME.config.time == null) {
         this.staminaRefresh.width = this.width;
     } else {
-        this.staminaRefresh.width = this.width * ((GAME.now - GAME.time) / GAME.timeDelay);
+        this.staminaRefresh.width = this.width * ((GAME.now - GAME.config.time) / GAME.config.timeDelay);
     }
 };
 
