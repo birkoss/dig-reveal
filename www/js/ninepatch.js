@@ -9,11 +9,17 @@ function Ninepatch(game, spriteSheet) {
     this.backgroundContainer = this.game.add.group();
     this.add(this.backgroundContainer);
 
+    this.borders = {bottom: true};
+
     this.init();
 };
 
 Ninepatch.prototype = Object.create(Phaser.Group.prototype);
 Ninepatch.prototype.constructor = Ninepatch;
+
+Ninepatch.prototype.removeBorders = function(position) {
+    this.borders[position] = false;
+};
 
 Ninepatch.prototype.init = function() {
     for (let y=0; y<3; y++) {
@@ -45,5 +51,13 @@ Ninepatch.prototype.resize = function(newWidth, newHeight) {
            this.backgroundContainer.getChildAt(parts[i]).height = newHeight - (cornerSize * 2);
            this.backgroundContainer.getChildAt(parts[i]+3).y = this.backgroundContainer.getChildAt(parts[i]).height + this.backgroundContainer.getChildAt(parts[i]).y;
        }
+    }
+
+    /* Remove unwanted borders */
+    parts = [];
+    if (!this.borders.bottom) { parts = [8, 7, 6]; }
+
+    for (let i=0; i<parts.length; i++) {
+        this.backgroundContainer.getChildAt(parts[i]).destroy();
     }
 };

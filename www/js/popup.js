@@ -61,7 +61,7 @@ Popup.prototype.generate = function() {
         popupHeight += this.contentContainer.height + this.padding;
     }
 
-    this.resizePopupBackground(popupWidth, popupHeight);
+    this.ninepatch.resize(popupWidth, popupHeight);
 
     this.buttonsContainer.x = (this.popupBackgroundContainer.width - this.buttonsContainer.width) / 2;
     this.buttonsContainer.y = this.popupBackgroundContainer.height - this.buttonsContainer.height - this.padding;
@@ -91,15 +91,8 @@ Popup.prototype.generate = function() {
 };
 
 Popup.prototype.createPopupBackground = function() {
-    for (let y=0; y<3; y++) {
-        for (let x=0; x<3; x++) {
-            let sprite = this.popupBackgroundContainer.create(0, 0, 'popup:background');
-            sprite.scale.setTo(GAME.RATIO, GAME.RATIO);
-            sprite.frame = (y * 3) + x;
-            sprite.x = x * sprite.width;
-            sprite.y = y * sprite.height;
-        }
-    }
+    this.ninepatch = new Ninepatch(this.game);
+    this.popupBackgroundContainer.add(this.ninepatch);
 };
 
 Popup.prototype.createBackground = function() {
@@ -109,27 +102,6 @@ Popup.prototype.createBackground = function() {
     sprite.tint = 0x000000;
     sprite.alpha = 0.5;
     sprite.inputEnabled = true;
-};
-
-Popup.prototype.resizePopupBackground = function(newWidth, newHeight) {
-    let cornerSize = this.popupBackgroundContainer.getChildAt(0).width;
-    let parts = new Array();
-
-    if (newWidth != this.popupBackgroundContainer.width) {
-       parts = [1, 4, 7]; 
-       for (let i=0; i<parts.length; i++) {
-           this.popupBackgroundContainer.getChildAt(parts[i]).width = newWidth - (cornerSize * 2);
-           this.popupBackgroundContainer.getChildAt(parts[i]+1).x = this.popupBackgroundContainer.getChildAt(parts[i]).width + this.popupBackgroundContainer.getChildAt(parts[i]).x;
-       }
-    }
-
-    if (newHeight != this.popupBackgroundContainer.height) {
-       parts = [3, 4, 5]; 
-       for (let i=0; i<parts.length; i++) {
-           this.popupBackgroundContainer.getChildAt(parts[i]).height = newHeight - (cornerSize * 2);
-           this.popupBackgroundContainer.getChildAt(parts[i]+3).y = this.popupBackgroundContainer.getChildAt(parts[i]).height + this.popupBackgroundContainer.getChildAt(parts[i]).y;
-       }
-    }
 };
 
 Popup.prototype.setContent = function(newContent) {

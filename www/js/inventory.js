@@ -97,8 +97,7 @@ Inventory.prototype.generate = function() {
         InventoryHeight += this.labelContainer.height + this.padding;
     }
 
-    this.resizeInventoryBackground(InventoryWidth, InventoryHeight);
-
+    this.ninepatch.resize(InventoryWidth, InventoryHeight);
 
     let InventoryY = 0;
 
@@ -128,15 +127,9 @@ Inventory.prototype.generate = function() {
 };
 
 Inventory.prototype.createInventoryBackground = function() {
-    for (let y=0; y<2; y++) {
-        for (let x=0; x<3; x++) {
-            let sprite = this.inventoryBackgroundContainer.create(0, 0, 'popup:background');
-            sprite.scale.setTo(GAME.RATIO, GAME.RATIO);
-            sprite.frame = (y * 3) + x;
-            sprite.x = x * sprite.width;
-            sprite.y = y * sprite.height;
-        }
-    }
+    this.ninepatch = new Ninepatch(this.game);
+    this.ninepatch.removeBorders('bottom');
+    this.inventoryBackgroundContainer.add(this.ninepatch);
 };
 
 Inventory.prototype.createBackground = function() {
@@ -146,26 +139,6 @@ Inventory.prototype.createBackground = function() {
     sprite.tint = 0x000000;
     sprite.alpha = 0.5;
     sprite.inputEnabled = true;
-};
-
-Inventory.prototype.resizeInventoryBackground = function(newWidth, newHeight) {
-    let cornerSize = this.inventoryBackgroundContainer.getChildAt(0).width;
-    let parts = new Array();
-
-    if (newWidth != this.inventoryBackgroundContainer.width) {
-       parts = [1, 4]; 
-       for (let i=0; i<parts.length; i++) {
-           this.inventoryBackgroundContainer.getChildAt(parts[i]).width = newWidth - (cornerSize * 2);
-           this.inventoryBackgroundContainer.getChildAt(parts[i]+1).x = this.inventoryBackgroundContainer.getChildAt(parts[i]).width + this.inventoryBackgroundContainer.getChildAt(parts[i]).x;
-       }
-    }
-
-    if (newHeight != this.inventoryBackgroundContainer.height) {
-       parts = [3, 4, 5]; 
-       for (let i=0; i<parts.length; i++) {
-           this.inventoryBackgroundContainer.getChildAt(parts[i]).height = newHeight - (cornerSize * 2);
-       }
-    }
 };
 
 Inventory.prototype.setContent = function(newContent) {
