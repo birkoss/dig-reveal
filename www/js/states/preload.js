@@ -47,7 +47,9 @@ GAME.Preload.prototype = {
         this.load.image('progress-bar:border', 'images/progress-bar/border.png');
 
         this.load.image('item:shield1', 'images/items/shield1.png');
+        this.load.image('item:wooden-stick', 'images/items/wooden-stick.png');
         this.load.image('item:apple', 'images/items/apple.png');
+        this.load.image('item:leather-glove', 'images/items/leather-glove.png');
         this.load.image('item:sword1', 'images/items/sword1.png');
 
         this.load.spritesheet('enemy:demon', 'images/enemies/demon.png', 16, 16);
@@ -109,7 +111,7 @@ GAME.Preload.prototype = {
         GAME.json['items'] = this.cache.getJSON('data:items');
 
         GAME.equip('weapon', GAME.config.weapon);
-        GAME.equip('shield', GAME.config.shield);
+        GAME.equip('armor', GAME.config.armor);
 
         this.state.start('Debug'); /* Game/Debug */
     }

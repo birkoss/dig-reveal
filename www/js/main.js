@@ -18,8 +18,8 @@
  * - On reveal, spawn enemies around to protect it
  * - On health below treshold, change into another enemy
  *
- * Add an inventory for owned weapon and shield
- * Add a default weapon that attack of 1, same with shield
+ * Add an inventory for owned weapon and armor
+ * Add a default weapon that attack of 1, same with armor
  *
  */
 var GAME = GAME || {};
@@ -27,13 +27,13 @@ var GAME = GAME || {};
 GAME.config = {};
 
 /* Base values, never saved */
-GAME.config['attack'] = 1;
+GAME.config['attack'] = 0;
 GAME.config['staminaMax'] = 100;
 GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 
 /* Dynamics values */
-GAME.config['weapon'] = null;
-GAME.config['shield'] = null;
+GAME.config['weapon'] = 'wooden-stick';
+GAME.config['armor'] = 'leather-glove';
 GAME.config['stamina'] = GAME.config['staminaMax'];
 GAME.config['time'] = null;
 GAME.config['levelID'] = null;
@@ -91,7 +91,7 @@ GAME.tick = function() {
 };
 
 GAME.save = function() {
-    let fields = ['time', 'stamina', 'levelID', 'weapon', 'shield'];
+    let fields = ['time', 'stamina', 'levelID', 'weapon', 'armor'];
 
     let data = {};
     fields.forEach(function(field) {

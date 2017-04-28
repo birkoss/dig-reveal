@@ -26,6 +26,8 @@ function Inventory(game) {
 
     this.selectedSlot = '';
 
+    this.items = {};
+
     this.createBackground();
     this.createInventoryBackground();
 };
@@ -59,7 +61,7 @@ Inventory.prototype.generate = function() {
     label.x = (minWidth / 4);
     this.labelContainer.addChild(label);
     
-    label = this.game.add.bitmapText(0, 0, 'font:gui', "Bouclier", 10);
+    label = this.game.add.bitmapText(0, 0, 'font:gui', "Armure", 10);
     label.anchor.set(0.5, 0);
     label.x = (minWidth / 4) * 3;
     this.labelContainer.addChild(label);
@@ -74,25 +76,25 @@ Inventory.prototype.generate = function() {
     }, this);
     this.imageContainer.add(frame);
 
-    this.spriteWeapon = this.imageContainer.create(0, 0, 'item:apple');
-    this.spriteWeapon.item = GAME.json['items']['apple'];
-    this.spriteWeapon.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
-    this.spriteWeapon.x = frame.x;
-    this.spriteWeapon.y = frame.y;
+    this.items['weapon'] = this.imageContainer.create(0, 0, 'item:apple');
+    this.items['weapon'].item = GAME.json['items']['apple'];
+    this.items['weapon'].scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
+    this.items['weapon'].x = frame.x;
+    this.items['weapon'].y = frame.y;
 
     frame = new Ninepatch(this.game);
     frame.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
     frame.x = ((minWidth / 4) * 3) - (frame.width / 2);
     frame.enableClick(function() { 
-        this.selectItem('shield');
+        this.selectItem('armor');
     }, this);
     this.imageContainer.add(frame);
 
-    this.spriteShield = this.imageContainer.create(0, 0, 'item:apple');
-    this.spriteShield.item = GAME.json['items']['apple'];
-    this.spriteShield.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
-    this.spriteShield.x = frame.x;
-    this.spriteShield.y = frame.y;
+    this.items['armor'] = this.imageContainer.create(0, 0, 'item:apple');
+    this.items['armor'].item = GAME.json['items']['apple'];
+    this.items['armor'].scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
+    this.items['armor'].x = frame.x;
+    this.items['armor'].y = frame.y;
 
     /* Description */
 
@@ -103,7 +105,7 @@ Inventory.prototype.generate = function() {
     this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", "Aucun n'item n'est sélectionné", 10);
     this.itemDescription.anchor.set(0, 0.5);
     this.itemDescription.x = this.padding;
-    this.itemDescription.maxWidth = minWidth - (this.padding*2);
+    this.itemDescription.maxWidth = minWidth - (this.padding*4);
     this.itemDescription.y = (this.descriptionContainer.height/2) + 3;
     this.descriptionContainer.add(this.itemDescription);
     
@@ -168,6 +170,9 @@ Inventory.prototype.generate = function() {
     this.inventoryContainer.y = (this.backgroundContainer.height - this.inventoryContainer.height + toggle.height);
     this.inventoryContainer.originalY = this.inventoryContainer.y;
 
+    this.setItem('weapon');
+    this.setItem('armor');
+
     this.selectItem('weapon');
     this.hide(true);
 };
@@ -187,6 +192,17 @@ Inventory.prototype.createBackground = function() {
     sprite.inputEnabled = true;
 };
 
+Inventory.prototype.setItem = function(slot) {
+    let itemID = GAME.config[slot];
+    if (itemID != null) {
+        let item = GAME.json['items'][itemID];
+        if (item != null) {
+            this.items[slot].item = item;
+            this.items[slot].loadTexture('item:' + item.sprite);
+        }
+    }
+};
+
 Inventory.prototype.selectItem = function(slot) {
     if (slot != this.selectedSlot) {
         for (let i=0; i<this.imageContainer.children.length; i+=2) {
@@ -198,7 +214,7 @@ Inventory.prototype.selectItem = function(slot) {
 
         this.selectedSlot = slot;
 
-        this.itemDescription.text = item.name;
+        this.itemDescription.text = item.description;
     }
 };
 

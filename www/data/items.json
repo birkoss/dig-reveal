@@ -1,21 +1,47 @@
 {
+    "wooden-stick": {
+        "id": "wooden-stick",
+        "name": "Bâton en bois",
+        "description": "Un restant de branche qui ne semble pas très solide",
+        "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
+        "sprite": "wooden-stick",
+        "modifier": {
+            "attack": 1
+        }
+    },
     "sword1": {
         "id": "sword1",
         "name": "Épée en bois",
+        "description": "Une épée qui ressemble plus à un cure-dent",
         "type": "unique",
         "equipable": true,
         "slot": "weapon",
         "sprite": "sword1",
         "modifier": {
-            "attack": 1
+            "attack": 2
+        }
+    },
+    "leather-glove": {
+        "id": "leather-glove",
+        "name": "Gant en cuir",
+        "description": "Un seul gant troué qui émet une odeur particulière",
+        "type": "unique",
+        "equipable": true,
+        "slot": "armor",
+        "sprite": "leather-glove",
+        "modifier": {
+            "staminaMax": 0
         }
     },
     "shield1": {
         "id": "shield1",
         "name": "Bouclier en bois",
+        "description": "Un couvercle de baril en bois craqué",
         "type": "unique",
         "equipable": true,
-        "slot": "shield",
+        "slot": "armor",
         "sprite": "shield1",
         "modifier": {
             "staminaMax": 10
@@ -24,6 +50,7 @@
     "apple": {
         "id": "apple",
         "name": "Pomme",
+        "description": "Une belle pomme rouge, sans ver, je crois...",
         "usable": true,
         "type": "normal",
         "sprite": "apple",
