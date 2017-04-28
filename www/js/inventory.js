@@ -108,48 +108,68 @@ Inventory.prototype.generate = function() {
     this.descriptionContainer.add(this.itemDescription);
     
     /* Buttons */
-    this.addButton({text:"Changer"});
 
-    let InventoryWidth = minWidth;
-    let InventoryHeight = (this.padding*2) + this.buttonsContainer.height;
+    //this.addButton({text:"Changer"});
 
-    if (this.imageContainer.height > 0) {
-        InventoryHeight += this.imageContainer.height + this.padding;
-    }
-    if (this.descriptionContainer.height > 0) {
-        InventoryHeight += this.descriptionContainer.height + this.padding;
-    }
+    /* Resize the inventory */
+
+    let inventoryWidth = minWidth;
+    let inventoryHeight = this.padding;
+    //inventoryHeight += this.buttonsContainer.height + this.padding;
+    inventoryHeight += this.imageContainer.height + this.padding;
+    inventoryHeight += this.descriptionContainer.height + this.padding;
+    inventoryHeight += this.labelContainer.height + this.padding;
+
+    this.ninepatch.resize(inventoryWidth, inventoryHeight);
+
+    /* Position each containers */
+
+    let inventoryY = 0;
+
     if (this.labelContainer.height > 0) {
-        InventoryHeight += this.labelContainer.height + this.padding;
-    }
-
-    this.ninepatch.resize(InventoryWidth, InventoryHeight);
-
-    let InventoryY = 0;
-
-    if (this.labelContainer.height > 0) {
-        //this.labelContainer.x = this.padding;
-        this.labelContainer.y = this.padding + InventoryY;
-        InventoryY += this.labelContainer.height + this.padding;
+        this.labelContainer.y = this.padding + inventoryY;
+        inventoryY += this.labelContainer.height + this.padding;
     }
 
     if (this.imageContainer.height > 0) {
-        this.imageContainer.y = this.padding + InventoryY;
+        this.imageContainer.y = this.padding + inventoryY;
         //this.imageContainer.x = this.padding;
-        InventoryY += this.imageContainer.height + this.padding;
+        inventoryY += this.imageContainer.height + this.padding;
     }
 
     if (this.descriptionContainer.height > 0) {
         this.descriptionContainer.x = (this.inventoryContainer.width - this.descriptionContainer.width) / 2;
-        this.descriptionContainer.y = this.padding + InventoryY;
-        InventoryY += this.descriptionContainer.height + this.padding;
+        this.descriptionContainer.y = this.padding + inventoryY;
+        inventoryY += this.descriptionContainer.height + this.padding;
     }
 
-    this.buttonsContainer.x = (this.inventoryBackgroundContainer.width - this.buttonsContainer.width) / 2;
-    this.buttonsContainer.y = InventoryY + this.padding;//this.inventoryBackgroundContainer.height - this.buttonsContainer.height - this.padding;
+    if (this.buttonsContainer.height > 0) {
+        this.buttonsContainer.x = (this.inventoryBackgroundContainer.width - this.buttonsContainer.width) / 2;
+        this.buttonsContainer.y = inventoryY + this.padding;
+    }
+
+    /* Add the toggle */
+
+    let toggle = this.inventoryContainer.create(0, 0, 'inventory:toggle');
+    toggle.scale.setTo(GAME.RATIO, GAME.RATIO);
+    toggle.x = (this.inventoryContainer.width-toggle.width)/2;
+    toggle.y = -toggle.height + GAME.RATIO;
+    toggle.inputEnabled = true;
+    toggle.events.onInputDown.add(this.onToggleClicked, this);
+
+    this.toggleIcon = this.inventoryContainer.create(0, 0, 'inventory:arrows');
+    this.toggleIcon.scale.setTo(GAME.RATIO, GAME.RATIO);
+    this.toggleIcon.x = toggle.x + ((toggle.width - this.toggleIcon.width) / 2);
+    this.toggleIcon.y = toggle.y + ((toggle.height - this.toggleIcon.height) / 2);
+
+    /* Position the inventory at the bottom */
 
     this.inventoryContainer.x = (this.backgroundContainer.width - this.inventoryContainer.width)/2;
-    this.inventoryContainer.y = (this.backgroundContainer.height - this.inventoryContainer.height);
+    this.inventoryContainer.y = (this.backgroundContainer.height - this.inventoryContainer.height + toggle.height);
+    this.inventoryContainer.originalY = this.inventoryContainer.y;
+
+    this.selectItem('weapon');
+    this.reveal();
 };
 
 Inventory.prototype.createInventoryBackground = function() {
@@ -167,71 +187,6 @@ Inventory.prototype.createBackground = function() {
     sprite.inputEnabled = true;
 };
 
-Inventory.prototype.setContent = function(newContent) {
-    let borderSize = this.inventoryBackgroundContainer.getChildAt(0).width;
-
-    let maxWidth = this.game.width - (borderSize*2) - (this.padding*4);
-
-    let content = this.game.add.bitmapText(0, 0, 'font:gui-multiline', newContent, 8);
-    content.maxWidth = maxWidth;
-    this.labelContainer.addChild(content);
-};
-
-Inventory.prototype.setImage = function(spriteName, label) {
-    let sprite = this.imageContainer.create(0, 0, spriteName);
-    sprite.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
-
-    if (label != undefined) {
-        let content = this.game.add.bitmapText(0, 0, 'font:gui-multiline', label, 8);
-        content.x = sprite.width + (this.padding / 2)
-        content.y = (sprite.height - content.height) / 2;
-        this.imageContainer.addChild(content);
-    }
-};
-
-Inventory.prototype.addStats = function(stat, from, to) {
-    let statName = stat;
-    switch(stat) {
-        case "attack":
-            statName = "Attaque";
-            break;
-        case "stamina":
-            statName = "Stamina";
-            break;
-        case "staminaMax":
-            statName = "Stamina\nmaximum";
-            break;
-    }
-
-    let nbrStats = Math.floor(this.descriptionContainer.children.length/4);
-    let textX = 0;
-    let textY = this.descriptionContainer.height;
-    if (textY > 0) {
-        textY += this.padding;
-    }
-
-    let text = this.game.add.bitmapText(textX, textY, 'font:gui-multiline', statName + ": ", 8);
-    this.descriptionContainer.addChild(text);
-    textX += text.width + this.padding;
-    let labelHeight = text.height;
-
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', from, 8);
-    text.y += (labelHeight - text.height) / 2;
-    this.descriptionContainer.addChild(text);
-    textX += text.width + this.padding;
-    
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', "->", 8);
-    text.y += (labelHeight - text.height) / 2;
-    this.descriptionContainer.addChild(text);
-    textX += text.width + this.padding;
-
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', to, 8);
-    text.y += (labelHeight - text.height) / 2;
-    this.descriptionContainer.addChild(text);
-    textX += text.width + this.padding;
-
-};
-
 Inventory.prototype.selectItem = function(slot) {
     if (slot != this.selectedSlot) {
         for (let i=0; i<this.imageContainer.children.length; i+=2) {
@@ -242,26 +197,39 @@ Inventory.prototype.selectItem = function(slot) {
         let item = this.imageContainer.getChildAt(position+1).item;
 
         this.selectedSlot = slot;
+
+        this.itemDescription.text = item.name;
     }
 };
 
 Inventory.prototype.show = function() {
     this.generate();
+};
 
+Inventory.prototype.reveal = function() {
+    this.toggleIcon.frame = 1;
     this.backgroundContainer.alpha = 0.8;
-    this.inventoryContainer.originalY = this.inventoryContainer.y;
-    this.inventoryContainer.y = this.backgroundContainer.height;
 
     let tween = this.game.add.tween(this.inventoryContainer).to({y:this.inventoryContainer.originalY}, Inventory.SPEED).start();
 };
 
 Inventory.prototype.hide = function() {
+    this.toggleIcon.frame = 0;
     let sound = this.game.add.audio('sound:popup-button');
     sound.play();
-
-    let tween = this.game.add.tween(this.inventoryContainer).to({y:-this.backgroundContainer.height}, Inventory.SPEED);
+    
+    let newY = this.backgroundContainer.height - this.padding;
+    let tween = this.game.add.tween(this.inventoryContainer).to({y:newY}, Inventory.SPEED);
     tween.onComplete.add(function() {
-        this.destroy();
     }, this);
     tween.start();
+};
+
+Inventory.prototype.onToggleClicked = function() {
+    if (this.inventoryContainer.y == this.inventoryContainer.originalY) {
+        this.hide();
+    } else {
+        this.reveal();
+    }
+
 };

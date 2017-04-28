@@ -75,6 +75,8 @@ GAME.Preload.prototype = {
         this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 100, 16);
 
         this.load.image('inventory:item-frame', 'images/gui/popup/background.png');
+        this.load.spritesheet('inventory:arrows', 'images/inventory/arrows.png', 8, 8);
+        this.load.image('inventory:toggle', 'images/inventory/toggle.png');
 
         this.load.audio('music:map', 'audio/musics/map.ogg');
         this.load.audio('music:dungeon', 'audio/musics/dungeon.ogg');
