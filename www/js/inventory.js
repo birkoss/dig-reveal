@@ -169,7 +169,7 @@ Inventory.prototype.generate = function() {
     this.inventoryContainer.originalY = this.inventoryContainer.y;
 
     this.selectItem('weapon');
-    this.reveal();
+    this.hide(true);
 };
 
 Inventory.prototype.createInventoryBackground = function() {
@@ -213,16 +213,17 @@ Inventory.prototype.reveal = function() {
     let tween = this.game.add.tween(this.inventoryContainer).to({y:this.inventoryContainer.originalY}, Inventory.SPEED).start();
 };
 
-Inventory.prototype.hide = function() {
+Inventory.prototype.hide = function(skipAnimation) {
     this.toggleIcon.frame = 0;
     let sound = this.game.add.audio('sound:popup-button');
     sound.play();
     
     let newY = this.backgroundContainer.height - this.padding;
-    let tween = this.game.add.tween(this.inventoryContainer).to({y:newY}, Inventory.SPEED);
-    tween.onComplete.add(function() {
-    }, this);
-    tween.start();
+    if (skipAnimation == true) {
+        this.inventoryContainer.y = newY;
+    } else {
+        this.game.add.tween(this.inventoryContainer).to({y:newY}, Inventory.SPEED).start();
+    }
 };
 
 Inventory.prototype.onToggleClicked = function() {
