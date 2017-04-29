@@ -113,6 +113,6 @@ GAME.Preload.prototype = {
         GAME.equip('weapon', GAME.config.weapon);
         GAME.equip('armor', GAME.config.armor);
 
-        this.state.start('Debug'); /* Game/Debug */
+        this.state.start('Game'); /* Game/Debug */
     }
 };

@@ -246,6 +246,8 @@ Inventory.prototype.reveal = function() {
 };
 
 Inventory.prototype.hide = function(skipAnimation) {
+    this.backgroundContainer.alpha = 0;
+
     this.toggleIcon.frame = 0;
     let sound = this.game.add.audio('sound:popup-button');
     sound.play();

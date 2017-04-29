@@ -12,14 +12,19 @@ GAME.Game.prototype = {
 
         this.mapContainer = this.game.add.group();
         this.panelContainer = this.game.add.group();
+        this.inventoryContainer = this.game.add.group();
 
         this.createPanel();
         this.createMap();
+
+        this.inventory = new Inventory(this.game);
+        this.inventoryContainer.add(this.inventory);
 
         GAME.music = this.game.add.audio('music:' + this.level.config.type, 1, true);
         GAME.music.play();
 
         this.showPanel();
+        this.inventory.show();
     },
     update: function() {
         /* Keep the panel updated with the stamina amount */
