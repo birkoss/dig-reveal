@@ -128,7 +128,7 @@ Inventory.prototype.generate = function() {
     
     /* Buttons */
 
-    //this.addButton({text:"Changer",});
+    this.addButton({text:"Changer", callback:this.onBtnChangeItemClicked, context:this});
 
     /* Resize the inventory */
 
@@ -277,5 +277,8 @@ Inventory.prototype.onToggleClicked = function() {
     } else {
         this.reveal();
     }
+};
 
+Inventory.prototype.onBtnChangeItemClicked = function() {
+    console.log('SHOULD DO SOMETHING...');
 };
