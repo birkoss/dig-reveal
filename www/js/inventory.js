@@ -128,13 +128,13 @@ Inventory.prototype.generate = function() {
     
     /* Buttons */
 
-    //this.addButton({text:"Changer"});
+    //this.addButton({text:"Changer",});
 
     /* Resize the inventory */
 
     let inventoryWidth = minWidth;
     let inventoryHeight = this.padding;
-    //inventoryHeight += this.buttonsContainer.height + this.padding;
+    inventoryHeight += this.buttonsContainer.height + this.padding;
     inventoryHeight += this.imageContainer.height + this.padding;
     inventoryHeight += this.descriptionContainer.height + this.padding;
     inventoryHeight += this.labelContainer.height + this.padding;

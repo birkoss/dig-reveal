@@ -1,8 +1,5 @@
 /* @TODO
  *
- * See how to fix accentuated character
- * - Use a new fonts to replace gui and gui-multiline
- *
  * Time based usable items:
  * - Reduce the stamina timeDelay by X secondes for 2 hours
  *
@@ -19,7 +16,8 @@
  * - On health below treshold, change into another enemy
  *
  * Add an inventory for owned weapon and armor
- * Add a default weapon that attack of 1, same with armor
+ *
+ * Leave the FOW with an alpha value, but hide the tile bellow
  *
  */
 var GAME = GAME || {};
@@ -50,8 +48,8 @@ GAME.equip = function(type, itemID) {
         let item = GAME.json['items'][itemID];
         if (item.equipable == true && item.modifier != undefined) {
             if (item.modifier.staminaMax != undefined) {
-                GAME.config['stamina'] += item.modifier.staminaMax;
                 GAME.config['staminaMax'] += item.modifier.staminaMax;
+                GAME.config['stamina'] = Math.min(GAME.config['staminaMax'], item.modifier.staminaMax + GAME.config['stamina']);
             }
             if (item.modifier.attack != undefined) {
                 GAME.config['attack'] += item.modifier.attack;
