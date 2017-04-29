@@ -26,7 +26,7 @@ Panel.prototype.createBackground = function() {
     this.staminaRefresh = this.create(0, 0, 'panel:stamina-timer');
     this.staminaRefresh.scale.setTo(GAME.RATIO, GAME.RATIO);
 
-    this.levelName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', '', 8);
+    this.levelName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', '', 10);
     this.levelName.anchor.set(0, 0.5);
     this.addChild(this.levelName);
 
@@ -51,7 +51,7 @@ Panel.prototype.createBackground = function() {
     progressBarBorder.scale.setTo(GAME.RATIO, GAME.RATIO);
     progressBarBorder.x = staminaIcon.x - progressBarBorder.width - staminaIcon.width - 16;
 
-    this.staminaText = this.game.add.bitmapText(this.stamina.x + (this.stamina.width/2), (background.height/2), 'font:gui', '100/100', 8);
+    this.staminaText = this.game.add.bitmapText(this.stamina.x + (this.stamina.width/2), (background.height/2), 'font:gui', '100/100', 10);
     this.staminaText.anchor.set(0.5, 0.5);
     this.addChild(this.staminaText);
 };

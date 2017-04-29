@@ -241,12 +241,14 @@ Inventory.prototype.show = function() {
 Inventory.prototype.reveal = function() {
     this.toggleIcon.frame = 1;
     this.backgroundContainer.alpha = 0.8;
+    this.backgroundContainer.getChildAt(0).inputEnabled = true;
 
     let tween = this.game.add.tween(this.inventoryContainer).to({y:this.inventoryContainer.originalY}, Inventory.SPEED).start();
 };
 
 Inventory.prototype.hide = function(skipAnimation) {
     this.backgroundContainer.alpha = 0;
+    this.backgroundContainer.getChildAt(0).inputEnabled = false;
 
     this.toggleIcon.frame = 0;
     let sound = this.game.add.audio('sound:popup-button');
