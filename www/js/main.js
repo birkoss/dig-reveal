@@ -17,10 +17,12 @@
  *
  * Add an inventory for owned weapon and armor
  *
- * Leave the FOW with an alpha value, but hide the tile bellow
+ * Make a sound/effect when trying to reveal when an enemy is active
  *
  */
 var GAME = GAME || {};
+
+GAME.debug = true;
 
 GAME.config = {};
 

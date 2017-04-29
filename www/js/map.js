@@ -155,6 +155,8 @@ Map.prototype.createItem = function(gridX, gridY, sprite, type, data) {
     tile.gridX = gridX;
     tile.gridY = gridY;
 
+    tile.alpha = (this.getFOWAt(gridX, gridY) == null || GAME.debug ? 1 : 0);
+
     tile.inputEnabled = true;
     tile.events.onInputDown.add(this.onTileClick, this);
 
@@ -277,6 +279,18 @@ Map.prototype.getNeighboorsAt = function(gridX, gridY, onlyAdjacent, depth, excl
     return neighboors;
 };
 
+Map.prototype.getItemAt = function(gridX, gridY) {
+    let item = null;
+
+    this.tilesContainer.forEach(function(tile) {
+        if (tile.gridX == gridX && tile.gridY == gridY) {
+            item = tile;
+        }
+    }, this);
+
+    return item;
+};
+
 Map.prototype.getItems = function(type) {
     let items = this.tilesContainer.filter(function(tile) {
         return tile.type == type;
@@ -300,6 +314,11 @@ Map.prototype.getFOWAt = function(gridX, gridY) {
 /* Events */
 
 Map.prototype.onFOWClick = function(tile, pointer) {
+    let item = this.getItemAt(tile.gridX, tile.gridY);
+    if (item != null) {
+        item.alpha = 1;
+    }
+
     if (GAME.config.stamina > 0) {
         let hasEnemyActive = false;
         this.getItems('enemy').forEach(function(enemy) {
