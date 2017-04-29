@@ -16,6 +16,9 @@ function Inventory(game) {
     this.imageContainer = this.game.add.group();
     this.inventoryContainer.add(this.imageContainer);
 
+    this.nameContainer = this.game.add.group();
+    this.inventoryContainer.add(this.nameContainer);
+
     this.descriptionContainer = this.game.add.group();
     this.inventoryContainer.add(this.descriptionContainer);
 
@@ -96,6 +99,11 @@ Inventory.prototype.generate = function() {
     this.items['armor'].x = frame.x;
     this.items['armor'].y = frame.y;
 
+    /* Name */
+
+    this.itemName = this.game.add.bitmapText(0, 0, "font:gui", "ABC", 10);
+    this.nameContainer.add(this.itemName);
+
     /* Description */
 
     let ninepatch = new Ninepatch(this.game);
@@ -121,6 +129,7 @@ Inventory.prototype.generate = function() {
     inventoryHeight += this.imageContainer.height + this.padding;
     inventoryHeight += this.descriptionContainer.height + this.padding;
     inventoryHeight += this.labelContainer.height + this.padding;
+    inventoryHeight += this.nameContainer.height + this.padding;
 
     this.ninepatch.resize(inventoryWidth, inventoryHeight);
 
@@ -137,6 +146,12 @@ Inventory.prototype.generate = function() {
         this.imageContainer.y = this.padding + inventoryY;
         //this.imageContainer.x = this.padding;
         inventoryY += this.imageContainer.height + this.padding;
+    }
+
+    if (this.nameContainer.height > 0) {
+        this.nameContainer.y = this.padding + inventoryY;
+        this.nameContainer.x = this.padding;
+        inventoryY += this.nameContainer.height + this.padding;
     }
 
     if (this.descriptionContainer.height > 0) {
@@ -214,6 +229,7 @@ Inventory.prototype.selectItem = function(slot) {
 
         this.selectedSlot = slot;
 
+        this.itemName.text = item.name;
         this.itemDescription.text = item.description;
     }
 };
