@@ -40,6 +40,15 @@ Inventory.prototype.constructor = Inventory;
 
 Inventory.SPEED = 250;
 
+Inventory.prototype.update = function() {
+    if (GAME.config.weapon != this.items['weapon'].item.id) {
+        this.setItem('weapon');
+    }
+    if (GAME.config.armor != this.items['armor'].item.id) {
+        this.setItem('armor');
+    }
+};
+
 Inventory.prototype.addButton = function(buttonData) {
     let button = this.game.add.button(0, 0, 'popup:button', buttonData.callback, buttonData.context, 1, 0, 1, 0);
     button.x = this.buttonsContainer.children.length * (button.width + this.padding);
