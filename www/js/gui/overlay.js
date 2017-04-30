@@ -90,7 +90,7 @@ Overlay.prototype.setName = function(name) {
     group.add(this.itemName);
 };
 
-Overlay.prototype.setStats = function(itemModifier) {
+Overlay.prototype.createStats = function() {
     let stats = new Array();
     stats.push({label:'Attaque', id:'attack', value:0});
     stats.push({label:'Stamina', id:'stamina', value:0});
@@ -138,6 +138,21 @@ Overlay.prototype.setStats = function(itemModifier) {
     statsContainer.y += background.y;
 
     title.x = (group.width-title.width)/2;
+};
+
+Overlay.prototype.setStats = function(modifier) {
+    let group = this.getContainerGroup("stats");
+    if (group.height == 0) {
+        this.createStats();
+    }
+
+    for (let stat in this.itemStats) {
+        this.itemStats[stat].text = "0";
+    }
+
+    for (let stat in modifier) {
+        this.itemStats[stat].text = modifier[stat];
+    }
 };
 
 Overlay.prototype.setDescription = function(description) {

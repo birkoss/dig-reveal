@@ -32,7 +32,7 @@
         "slot": "armor",
         "sprite": "leather-glove",
         "modifier": {
-            "staminaMax": 0
+            "staminaMax": 10
         }
     },
     "shield1": {

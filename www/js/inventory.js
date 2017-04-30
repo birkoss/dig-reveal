@@ -33,14 +33,12 @@ Inventory.prototype = Object.create(Overlay.prototype);
 Inventory.prototype.constructor = Inventory;
 
 Inventory.prototype.update = function() {
-    /*
-    if (GAME.config.weapon != this.items['weapon'].item.id) {
-        //this.setItem('weapon');
+    if (GAME.config.weapon != this.getItem("weapon").id) {
+        this.setItem('weapon');
     }
-    if (GAME.config.armor != this.items['armor'].item.id) {
-        //this.setItem('armor');
+    if (GAME.config.armor != this.getItem("armor").id) {
+        this.setItem('armor');
     }
-    */
 };
 
 Inventory.prototype.createItems = function() {
@@ -57,21 +55,31 @@ Inventory.prototype.createItems = function() {
     }, this);
 };
 
-
 Inventory.prototype.setItem = function(slot) {
     let itemID = GAME.config[slot];
     if (itemID != null) {
         let item = GAME.json['items'][itemID];
         if (item != null) {
-            console.log(slot);
-            console.log(this.items);
-            console.log(this.items[slot]);
             let sprite = this.items[slot].getChildAt(1);
 
             sprite.item = item;
             sprite.loadTexture('item:' + item.sprite);
         }
     }
+};
+
+Inventory.prototype.getItem = function(slot) {
+    let slotItem = null;
+
+    let itemID = GAME.config[slot];
+    if (itemID != null) {
+        let item = GAME.json['items'][itemID];
+        if (item != null) {
+            slotItem = this.items[slot].getChildAt(1).item;
+        }
+    }
+
+    return slotItem;
 };
 
 Inventory.prototype.selectItem = function(slot) {
@@ -83,12 +91,13 @@ Inventory.prototype.selectItem = function(slot) {
         let position = (slot == 'weapon' ? 0 : 1);
         group.getChildAt(position).getChildAt(0).alpha = 0.5;
         let item = group.getChildAt(position).getChildAt(1).item;
-        console.log(item);
 
         this.selectedSlot = slot;
 
         this.itemName.text = item.name;
         this.itemDescription.text = item.description;
+
+        this.setStats(item.modifier);
     }
 };
 
