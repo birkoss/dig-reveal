@@ -15,6 +15,7 @@ function Overlay(game) {
 
     this.createOverlay();
     this.createBackground();
+
 };
 
 Overlay.prototype = Object.create(Phaser.Group.prototype);
@@ -73,19 +74,70 @@ Overlay.prototype.addItem = function(itemData, paddingBetween) {
 
         let label = this.game.add.bitmapText(0, 0, 'font:gui', itemData.label, 10);
         label.anchor.set(0.5, 0);
-        label.y = -this.padding - label.height;
+        label.y = -(this.padding/2) - label.height;
         label.x = background.width/2;
         background.addChild(label);
-        background.y += this.padding + label.height;
+        background.y += (this.padding/2) + label.height;
     }
 
     return background;
 };
 
 Overlay.prototype.setName = function(name) {
+    this.getContainer("name").padding = this.padding/2;
     let group = this.getContainerGroup("name");
-    this.itemName = this.game.add.bitmapText(0, 0, "font:gui", name, 20);
+    this.itemName = this.game.add.bitmapText(0, 0, "font:gui", name, 10);
     group.add(this.itemName);
+};
+
+Overlay.prototype.setStats = function(itemModifier) {
+    let stats = new Array();
+    stats.push({label:'Attaque', id:'attack', value:0});
+    stats.push({label:'Stamina', id:'stamina', value:0});
+    stats.push({label:"Stamina\nMaximal", id:'staminaMax', value:0});
+
+    let itemStats = {attack:0, stamina:0, staminaMax:0};
+
+    let group = this.getContainerGroup("stats");
+
+    let background = new Ninepatch(this.game);
+    group.add(background);
+
+    let title = this.game.add.bitmapText(0, 0, 'font:gui', "Statistiques", 10);
+    group.add(title);
+
+    let statsContainer = this.game.add.group();
+    group.add(statsContainer);
+
+    this.itemStats = {};
+    let statY = 0;
+    stats.forEach(function(singleStat) {
+        let label = this.game.add.bitmapText(0, statY, "font:gui", singleStat.label + ":", 10);
+        label.anchor.set(1, 0.5);
+        label.x = this.minWidth/2;
+        label.maxWidth = this.minWidth - (this.padding*4);
+        statsContainer.add(label);
+
+        this.itemStats[singleStat.id] = this.game.add.bitmapText(0, statY, "font:gui", itemStats.attack+"", 10);
+        this.itemStats[singleStat.id].anchor.set(0, 0.5);
+        this.itemStats[singleStat.id].x = this.minWidth/2;
+        this.itemStats[singleStat.id].maxWidth = this.minWidth - (this.padding*4);
+        statsContainer.add(this.itemStats[singleStat.id]);
+
+        label.y += label.height/2;
+        this.itemStats[singleStat.id].y += label.height/2;
+
+        statY += label.height + (this.padding/2);
+    }, this);
+
+    background.resize(this.minWidth - (this.padding*2), statsContainer.height + (this.padding));
+
+    statsContainer.y = (background.height-statsContainer.height)/2;
+
+    background.y = title.height + this.padding/2;
+    statsContainer.y += background.y;
+
+    title.x = (group.width-title.width)/2;
 };
 
 Overlay.prototype.setDescription = function(description) {
@@ -96,8 +148,8 @@ Overlay.prototype.setDescription = function(description) {
 
     this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", description, 10);
     this.itemDescription.anchor.set(0, 0.5);
-    this.itemDescription.x = this.padding;
-    this.itemDescription.maxWidth = this.minWidth - (this.padding*4);
+    this.itemDescription.x = this.padding/2;
+    this.itemDescription.maxWidth = this.minWidth - (this.padding*2);
     group.add(this.itemDescription);
 
     background.resize(this.minWidth - (this.padding * 2), this.itemDescription.height + background.getCornerSize() + this.padding);
@@ -169,6 +221,10 @@ Overlay.prototype.generate = function() {
     let containerY = this.padding;
 
     this.containers.forEach(function(singleContainer) {
+        let paddingBottom = this.padding;
+        if (singleContainer.padding != undefined) {
+            paddingBottom = this.padding/2;
+        }
         if (singleContainer.x != undefined) {
             singleContainer.group.x = singleContainer.x;
         } else {
@@ -176,7 +232,7 @@ Overlay.prototype.generate = function() {
         }
         singleContainer.group.y = containerY;
 
-        containerY += singleContainer.group.height + this.padding;
+        containerY += singleContainer.group.height + paddingBottom;
     }, this);
 
     /* Resize the background */
