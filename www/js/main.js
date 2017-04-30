@@ -34,6 +34,8 @@ GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 /* Dynamics values */
 GAME.config['weapon'] = 'wooden-stick';
 GAME.config['armor'] = 'leather-glove';
+GAME.config['inventory'] = ['wooden-stock', 'leather-glove'];
+
 GAME.config['stamina'] = GAME.config['staminaMax'];
 GAME.config['time'] = null;
 GAME.config['levelID'] = null;
@@ -48,6 +50,18 @@ GAME.music = null;
 GAME.equip = function(type, itemID) {
     if (itemID != null && GAME.json['items'] != null && GAME.json['items'][itemID] != null) {
         let item = GAME.json['items'][itemID];
+        if (item.equipable == true) {
+            let newItem = true;
+            GAME.config.inventory.forEach(function(singleItemID) {
+                if (singleItemID == itemID) {
+                    newItem = false;
+                }
+            }, this);
+
+            if (newItem) {
+                GAME.config.inventory.push(itemID);
+            }
+        }
         if (item.equipable == true && item.modifier != undefined) {
             if (item.modifier.staminaMax != undefined) {
                 GAME.config['staminaMax'] += item.modifier.staminaMax;
@@ -91,7 +105,7 @@ GAME.tick = function() {
 };
 
 GAME.save = function() {
-    let fields = ['time', 'stamina', 'levelID', 'weapon', 'armor'];
+    let fields = ['time', 'stamina', 'levelID', 'weapon', 'armor', 'inventory'];
 
     let data = {};
     fields.forEach(function(field) {
@@ -112,7 +126,6 @@ GAME.load = function() {
 
 GAME.load();
 
-console.log(GAME.config);
 /* Start Phaser */
 
 GAME.game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.CANVAS, '');
