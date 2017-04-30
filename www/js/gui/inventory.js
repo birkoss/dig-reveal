@@ -34,9 +34,11 @@ Inventory.prototype.constructor = Inventory;
 Inventory.prototype.update = function() {
     if (GAME.config.weapon != this.getItem("weapon").id) {
         this.setItem('weapon');
+        this.selectItem('weapon', true);
     }
     if (GAME.config.armor != this.getItem("armor").id) {
         this.setItem('armor');
+        this.selectItem('armor', true);
     }
 };
 
@@ -103,8 +105,8 @@ Inventory.prototype.getItem = function(slot) {
 };
 
 /* Update the item details from a current slot and select it */
-Inventory.prototype.selectItem = function(slot) {
-    if (slot != this.selectedSlot) {
+Inventory.prototype.selectItem = function(slot, forceRefresh) {
+    if (slot != this.selectedSlot || forceRefresh === true) {
         let group = this.getContainerGroup("images");
         for (let i=0; i<group.children.length; i++) {
             group.getChildAt(i).getChildAt(0).alpha = 1;

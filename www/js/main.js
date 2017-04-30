@@ -34,7 +34,7 @@ GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 /* Dynamics values */
 GAME.config['weapon'] = 'wooden-stick';
 GAME.config['armor'] = 'leather-glove';
-GAME.config['inventory'] = ['wooden-stock', 'leather-glove'];
+GAME.config['inventory'] = ['wooden-stick', 'leather-glove'];
 
 GAME.config['stamina'] = GAME.config['staminaMax'];
 GAME.config['time'] = null;

@@ -99,9 +99,12 @@ Overlay.prototype.addItem = function(itemData, paddingBetween) {
 };
 
 Overlay.prototype.setName = function(name) {
+    this.getContainer("name").x = 0;
     this.getContainer("name").padding = this.padding/2;
     let group = this.getContainerGroup("name");
     this.itemName = this.game.add.bitmapText(0, 0, "font:gui", name, 10);
+    this.itemName.anchor.set(0.5, 0);
+    this.itemName.x = this.minWidth/2;
     group.add(this.itemName);
 };
 
@@ -179,7 +182,7 @@ Overlay.prototype.setDescription = function(description) {
     this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", description, 10);
     this.itemDescription.anchor.set(0, 0.5);
     this.itemDescription.x = this.padding/2;
-    this.itemDescription.maxWidth = this.minWidth - (this.padding*2);
+    this.itemDescription.maxWidth = this.minWidth - (this.padding*3);
     group.add(this.itemDescription);
 
     background.resize(this.minWidth - (this.padding * 2), (description == "#" ? this.itemDescription.height*3 : this.itemDescription.height) + background.getCornerSize() + this.padding);

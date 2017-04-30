@@ -44,7 +44,7 @@
         "slot": "armor",
         "sprite": "shield1",
         "modifier": {
-            "staminaMax": 10
+            "staminaMax": 15
         }
     },
     "apple": {
