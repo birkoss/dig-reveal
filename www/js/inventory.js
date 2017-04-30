@@ -1,68 +1,67 @@
 function Inventory(game) {
-    Phaser.Group.call(this, game);
+    Overlay.call(this, game);
 
-    this.backgroundContainer = this.game.add.group();
-    this.add(this.backgroundContainer);
-
-    this.inventoryContainer = this.game.add.group();
-    this.add(this.inventoryContainer);
-
-    this.inventoryBackgroundContainer = this.game.add.group();
-    this.inventoryContainer.add(this.inventoryBackgroundContainer);
-
-    this.labelContainer = this.game.add.group();
-    this.inventoryContainer.add(this.labelContainer);
-
-    this.imageContainer = this.game.add.group();
-    this.inventoryContainer.add(this.imageContainer);
-
-    this.nameContainer = this.game.add.group();
-    this.inventoryContainer.add(this.nameContainer);
-
-    this.descriptionContainer = this.game.add.group();
-    this.inventoryContainer.add(this.descriptionContainer);
-
-    this.buttonsContainer = this.game.add.group();
-    this.inventoryContainer.add(this.buttonsContainer);
-
-    this.padding = 10 * GAME.RATIO;
+    this.setPosition('bottom');
 
     this.selectedSlot = '';
 
     this.items = {};
 
-    this.createBackground();
-    this.createInventoryBackground();
+    this.ninepatch.removeBorders('bottom');
+
+    this.createItems();
+
+    this.setName("Épée en bois");
+    
+    this.addStats("attack", "1", "2");
+    this.addStats("attack", "1", "2");
+
+    this.setDescription("Épée en bois bla bla bla bla bla....");
+
+    this.addButton({text: "Remplacer"});
 };
 
-Inventory.prototype = Object.create(Phaser.Group.prototype);
+Inventory.prototype = Object.create(Overlay.prototype);
 Inventory.prototype.constructor = Inventory;
 
-Inventory.SPEED = 250;
-
 Inventory.prototype.update = function() {
+    /*
     if (GAME.config.weapon != this.items['weapon'].item.id) {
-        this.setItem('weapon');
+        //this.setItem('weapon');
     }
     if (GAME.config.armor != this.items['armor'].item.id) {
-        this.setItem('armor');
+        //this.setItem('armor');
     }
+    */
 };
 
-Inventory.prototype.addButton = function(buttonData) {
-    let button = this.game.add.button(0, 0, 'popup:button', buttonData.callback, buttonData.context, 1, 0, 1, 0);
-    button.x = this.buttonsContainer.children.length * (button.width + this.padding);
-    button.scale.setTo(GAME.RATIO, GAME.RATIO);
-    this.buttonsContainer.addChild(button);
+Inventory.prototype.createItems = function() {
+    let paddingBetweenItems = 50;
 
-    let label = this.game.add.bitmapText(0, 0, 'font:gui', buttonData.text, 10);
-    label.anchor.set(0.5, 0.5);
-    label.x = (button.width/2);
-    label.y = (button.height/2);
-    this.buttonsContainer.addChild(label);
+    let weapon = this.addItem({label:"Arme", item:GAME.json['items']['apple']}, paddingBetweenItems);
+    weapon.enableClick(function() { 
+        this.selectItem('weapon');
+    }, this);
+
+    let armor = this.addItem({label:"Armure", item:GAME.json['items']['apple']}, paddingBetweenItems);
+    armor.enableClick(function() { 
+        this.selectItem('armor');
+    }, this);
 };
 
-Inventory.prototype.generate = function() {
+Inventory.prototype.addLabel = function(labelText) {
+    let group = this.getContainerGroup("label");
+    let groupImage = this.getContainerGroup("images");
+    let item = groupImage.getChildAt(groupImage.children.length - 1);
+
+    let label = this.game.add.bitmapText(0, 0, 'font:gui', labelText, 10);
+    label.anchor.set(0.5, 0);
+    label.x = item.x + ((item.width-label.width)/2);
+    group.addChild(label);
+    
+};
+
+Inventory.prototype.generate2 = function() {
 
     let minWidth = this.backgroundContainer.width - (this.padding*4);
 
@@ -201,21 +200,6 @@ Inventory.prototype.generate = function() {
     this.hide(true);
 };
 
-Inventory.prototype.createInventoryBackground = function() {
-    this.ninepatch = new Ninepatch(this.game);
-    this.ninepatch.removeBorders('bottom');
-    this.inventoryBackgroundContainer.add(this.ninepatch);
-};
-
-Inventory.prototype.createBackground = function() {
-    let sprite = this.backgroundContainer.create(0, 0, 'popup:background');
-    sprite.width = this.game.width;
-    sprite.height = this.game.height;
-    sprite.tint = 0x000000;
-    sprite.alpha = 0.5;
-    sprite.inputEnabled = true;
-};
-
 Inventory.prototype.setItem = function(slot) {
     let itemID = GAME.config[slot];
     if (itemID != null) {
@@ -240,34 +224,6 @@ Inventory.prototype.selectItem = function(slot) {
 
         this.itemName.text = item.name;
         this.itemDescription.text = item.description;
-    }
-};
-
-Inventory.prototype.show = function() {
-    this.generate();
-};
-
-Inventory.prototype.reveal = function() {
-    this.toggleIcon.frame = 1;
-    this.backgroundContainer.alpha = 0.8;
-    this.backgroundContainer.getChildAt(0).inputEnabled = true;
-
-    let tween = this.game.add.tween(this.inventoryContainer).to({y:this.inventoryContainer.originalY}, Inventory.SPEED).start();
-};
-
-Inventory.prototype.hide = function(skipAnimation) {
-    this.backgroundContainer.alpha = 0;
-    this.backgroundContainer.getChildAt(0).inputEnabled = false;
-
-    this.toggleIcon.frame = 0;
-    let sound = this.game.add.audio('sound:popup-button');
-    sound.play();
-    
-    let newY = this.backgroundContainer.height - this.padding;
-    if (skipAnimation == true) {
-        this.inventoryContainer.y = newY;
-    } else {
-        this.game.add.tween(this.inventoryContainer).to({y:newY}, Inventory.SPEED).start();
     }
 };
 

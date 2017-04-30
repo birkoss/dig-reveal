@@ -38,6 +38,19 @@ Ninepatch.prototype.init = function() {
             sprite.y = y * sprite.height;
         }
     }
+    this.cornerSize = this.backgroundContainer.getChildAt(0).height;
+};
+
+Ninepatch.prototype.getCornerSize = function(direction) {
+    let size = this.cornerSize;
+    if (direction == 'y') {
+        if (this.borders.bottom) {
+            size *= 2;
+        }
+    } else {
+        size *= 2;
+    }
+    return size;
 };
 
 Ninepatch.prototype.resize = function(newWidth, newHeight) {
