@@ -167,7 +167,7 @@ Overlay.prototype.setDescription = function(description) {
     this.itemDescription.maxWidth = this.minWidth - (this.padding*2);
     group.add(this.itemDescription);
 
-    background.resize(this.minWidth - (this.padding * 2), this.itemDescription.height + background.getCornerSize() + this.padding);
+    background.resize(this.minWidth - (this.padding * 2), (this.itemDescription.height*3) + background.getCornerSize() + this.padding);
     this.itemDescription.y = (background.height/2) + 3;
 };
 
@@ -235,19 +235,26 @@ Overlay.prototype.generate = function() {
 
     let containerY = this.padding;
 
-    this.containers.forEach(function(singleContainer) {
-        let paddingBottom = this.padding;
-        if (singleContainer.padding != undefined) {
-            paddingBottom = this.padding/2;
-        }
-        if (singleContainer.x != undefined) {
-            singleContainer.group.x = singleContainer.x;
-        } else {
-            singleContainer.group.x = (this.minWidth - singleContainer.group.width) / 2;
-        }
-        singleContainer.group.y = containerY;
+    let outsideContainerHeight = 0;
 
-        containerY += singleContainer.group.height + paddingBottom;
+    this.containers.forEach(function(singleContainer) {
+            let paddingBottom = this.padding;
+            if (singleContainer.padding != undefined) {
+                paddingBottom = this.padding/2;
+            }
+            if (singleContainer.x != undefined) {
+                singleContainer.group.x = singleContainer.x;
+            } else {
+                singleContainer.group.x = (this.minWidth - singleContainer.group.width) / 2;
+            }
+
+            if (singleContainer.outside === true) {
+                outsideContainerHeight += singleContainer.group.height;
+            } else {
+                singleContainer.group.y = containerY;
+
+                containerY += singleContainer.group.height + paddingBottom;
+            }
     }, this);
 
     /* Resize the background */
@@ -261,11 +268,15 @@ Overlay.prototype.generate = function() {
     this.backgroundContainer.x = (this.overlayContainer.width - this.backgroundContainer.width)/2;
     if (this.backgroundPosition == 'middle') {
         this.backgroundContainer.y = (this.overlayContainer.height - this.backgroundContainer.height)/2;
+        this.backgroundContainer.destinationY = -this.overlayContainer.height;
     } else if (this.backgroundPosition == 'bottom') {
-        this.backgroundContainer.y = (this.overlayContainer.height - this.backgroundContainer.height);
+        this.backgroundContainer.y = (this.overlayContainer.height - this.backgroundContainer.height) + outsideContainerHeight;
+        this.backgroundContainer.destinationY = this.overlayContainer.height - this.padding;
     }
 
-    //this.hide(true);
+    this.backgroundContainer.originalY = this.backgroundContainer.y;
+
+    this.hide(true);
 };
 
 Overlay.prototype.createBackground = function() {
@@ -306,10 +317,9 @@ Overlay.prototype.hide = function(skipAnimation) {
     let sound = this.game.add.audio('sound:popup-button');
     sound.play();
     
-    let newY = this.overlayContainer.height - this.padding;
     if (skipAnimation == true) {
-        this.backgroundContainer.y = newY;
+        this.backgroundContainer.y = this.backgroundContainer.destinationY;
     } else {
-        this.game.add.tween(this.backgroundContainer).to({y:newY}, Overlay.SPEED).start();
+        this.game.add.tween(this.backgroundContainer).to({y:this.backgroundContainer.destinationY}, Overlay.SPEED).start();
     }
 };

@@ -9,29 +9,28 @@ function Inventory(game) {
 
     this.ninepatch.removeBorders('bottom');
 
+    this.createToggleButton();
+
     this.createItems();
 
-    this.setName("Épée en bois");
-    
-    //this.addStats("attack", "1", "2");
-    //this.addStats("attack", "1", "2");
-
-    this.setDescription("Épée en bois bla bla bla bla bla....");
-
+    this.setName("");
+    this.setDescription("#");
     this.setStats();
 
     this.addButton({text: "Remplacer"});
 
-    this.slot = "weapon";
+    /* Set the item from our current equipment */
     this.setItem('weapon');
     this.setItem('armor');
 
+    /* Select the first item */
     this.selectItem('weapon');
 };
 
 Inventory.prototype = Object.create(Overlay.prototype);
 Inventory.prototype.constructor = Inventory;
 
+/* Always keep the inventory updated with the current equipment */
 Inventory.prototype.update = function() {
     if (GAME.config.weapon != this.getItem("weapon").id) {
         this.setItem('weapon');
@@ -41,6 +40,7 @@ Inventory.prototype.update = function() {
     }
 };
 
+/* Create 2 items: Armor and Weapon, for each equipment slot */
 Inventory.prototype.createItems = function() {
     let paddingBetweenItems = 50;
 
@@ -55,6 +55,24 @@ Inventory.prototype.createItems = function() {
     }, this);
 };
 
+Inventory.prototype.createToggleButton = function() {
+    this.getContainer("toggle").outside = true;
+    let group = this.getContainerGroup("toggle");
+
+    let toggle = group.create(0, 0, 'inventory:toggle');
+    toggle.scale.setTo(GAME.RATIO, GAME.RATIO);
+    toggle.x = (this.backgroundContainer.width-toggle.width)/2;
+    toggle.y = -toggle.height + GAME.RATIO;
+    toggle.inputEnabled = true;
+    toggle.events.onInputDown.add(this.onToggleClicked, this);
+
+    this.toggleIcon = group.create(0, 0, 'inventory:arrows');
+    this.toggleIcon.scale.setTo(GAME.RATIO, GAME.RATIO);
+    this.toggleIcon.x = toggle.x + ((toggle.width - this.toggleIcon.width) / 2);
+    this.toggleIcon.y = toggle.y + ((toggle.height - this.toggleIcon.height) / 2);
+};
+
+/* Update an item with the appropriate item equipped */
 Inventory.prototype.setItem = function(slot) {
     let itemID = GAME.config[slot];
     if (itemID != null) {
@@ -68,6 +86,8 @@ Inventory.prototype.setItem = function(slot) {
     }
 };
 
+/* Get the item currently in the slot */
+/* @TODO Check to see if we could use GAME.weapon/GAME.armor instead since they should be in sync... */
 Inventory.prototype.getItem = function(slot) {
     let slotItem = null;
 
@@ -82,6 +102,7 @@ Inventory.prototype.getItem = function(slot) {
     return slotItem;
 };
 
+/* Update the item details from a current slot and select it */
 Inventory.prototype.selectItem = function(slot) {
     if (slot != this.selectedSlot) {
         let group = this.getContainerGroup("images");
@@ -101,14 +122,18 @@ Inventory.prototype.selectItem = function(slot) {
     }
 };
 
+/* Called to toggle the inventory screen */
 Inventory.prototype.onToggleClicked = function() {
-    if (this.inventoryContainer.y == this.inventoryContainer.originalY) {
+    if (this.backgroundContainer.y == this.backgroundContainer.originalY) {
+        this.toggleIcon.frame = 0;
         this.hide();
     } else {
+        this.toggleIcon.frame = 1;
         this.reveal();
     }
 };
 
+/* Should show all the items available in the current slot */
 Inventory.prototype.onBtnChangeItemClicked = function() {
     console.log('SHOULD DO SOMETHING...');
 };
