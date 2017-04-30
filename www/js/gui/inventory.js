@@ -17,7 +17,7 @@ function Inventory(game) {
     this.setDescription("#");
     this.setStats();
 
-    this.addButton({text: "Remplacer"});
+    this.addButton({text: "Remplacer", callback:this.onBtnChangeItemClicked, context:this});
 
     /* Set the item from our current equipment */
     this.setItem('weapon');
@@ -135,5 +135,6 @@ Inventory.prototype.onToggleClicked = function() {
 
 /* Should show all the items available in the current slot */
 Inventory.prototype.onBtnChangeItemClicked = function() {
-    console.log('SHOULD DO SOMETHING...');
+    let popup = new Items(this.game, this.selectedSlot);
+    popup.show();
 };

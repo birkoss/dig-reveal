@@ -58,19 +58,32 @@ Overlay.prototype.addItem = function(itemData, paddingBetween) {
     if (paddingBetween == undefined) { paddingBetween = this.padding/2; }
     let group = this.getContainerGroup('images');
 
+    let frameMaxWidth = 3;
+    let frameSize = 2;
+    if (itemData.size != undefined) {
+        frameSize = itemData.size;
+        frameMaxWidth = 5;
+    }
+
+    let frameY = Math.floor(group.children.length / frameMaxWidth);
+    let frameX = group.children.length - (frameY * frameMaxWidth);
+
     let background = new Ninepatch(this.game);
-    background.resize(16 * GAME.RATIO * 2, 16 * GAME.RATIO * 2);
-    background.x = group.children.length * (background.width + paddingBetween);
+    background.resize(16 * frameSize * GAME.RATIO, 16 * frameSize * GAME.RATIO);
+    background.x = frameX * (background.width + paddingBetween);
+    background.y = frameY * (background.height + paddingBetween);
     group.add(background);
 
-    item = background.create(0, 0, 'item:' + itemData.item.sprite);
-    item.item = itemData.item;
-    item.scale.setTo(GAME.RATIO * 2, GAME.RATIO * 2);
-    item.anchor.set(0.5, 0.5);
-    item.x = background.width/2;
-    item.y = background.height/2;
-    item.x -= (item.width/GAME.RATIO / 2);
-    item.y -= (item.height/GAME.RATIO / 2);
+    if (itemData.item != undefined) {
+        item = background.create(0, 0, 'item:' + itemData.item.sprite);
+        item.item = itemData.item;
+        item.scale.setTo(frameSize * GAME.RATIO, frameSize * GAME.RATIO);
+        item.anchor.set(0.5, 0.5);
+        item.x = background.width/2;
+        item.y = background.height/2;
+        item.x -= (item.width / 2 / GAME.RATIO);
+        item.y -= (item.height / 2 / GAME.RATIO);
+    }
 
     if (itemData.label != undefined) {
 
