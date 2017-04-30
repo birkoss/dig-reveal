@@ -13,6 +13,8 @@ function Overlay(game) {
 
     this.padding = 10 * GAME.RATIO;
 
+    this.openOnShow = false;
+
     this.createOverlay();
     this.createBackground();
 
@@ -167,7 +169,7 @@ Overlay.prototype.setDescription = function(description) {
     this.itemDescription.maxWidth = this.minWidth - (this.padding*2);
     group.add(this.itemDescription);
 
-    background.resize(this.minWidth - (this.padding * 2), (this.itemDescription.height*3) + background.getCornerSize() + this.padding);
+    background.resize(this.minWidth - (this.padding * 2), (description == "#" ? this.itemDescription.height*3 : this.itemDescription.height) + background.getCornerSize() + this.padding);
     this.itemDescription.y = (background.height/2) + 3;
 };
 
@@ -184,50 +186,6 @@ Overlay.prototype.addButton = function(buttonData) {
     label.x = (button.width/2);
     label.y = (button.height/2);
     group.addChild(label);
-};
-
-Overlay.prototype.addStats = function(stat, from, to) {
-    let statName = stat;
-    switch(stat) {
-        case "attack":
-            statName = "Attaque";
-            break;
-        case "stamina":
-            statName = "Stamina";
-            break;
-        case "staminaMax":
-            statName = "Stamina\nmaximum";
-            break;
-    }
-
-    let group = this.getContainerGroup("stats");
-
-    let nbrStats = Math.floor(group.children.length/4);
-    let textX = 0;
-    let textY = group.height;
-    if (textY > 0) {
-        textY += this.padding;
-    }
-
-    let text = this.game.add.bitmapText(textX, textY, 'font:gui-multiline', statName + ": ", 10);
-    group.addChild(text);
-    textX += text.width + this.padding;
-    let labelHeight = text.height;
-
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', from, 10);
-    text.y += (labelHeight - text.height) / 2;
-    group.addChild(text);
-    textX += text.width + this.padding;
-    
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', "->", 10);
-    text.y += (labelHeight - text.height) / 2;
-    group.addChild(text);
-    textX += text.width + this.padding;
-
-    text = this.game.add.bitmapText(textX, textY, 'font:gui', to, 10);
-    text.y += (labelHeight - text.height) / 2;
-    group.addChild(text);
-    textX += text.width + this.padding;
 };
 
 Overlay.prototype.generate = function() {
@@ -277,6 +235,10 @@ Overlay.prototype.generate = function() {
     this.backgroundContainer.originalY = this.backgroundContainer.y;
 
     this.hide(true);
+
+    if (this.openOnShow) {
+        this.reveal();
+    }
 };
 
 Overlay.prototype.createBackground = function() {
@@ -310,7 +272,7 @@ Overlay.prototype.reveal = function() {
     this.game.add.tween(this.backgroundContainer).to({y:this.backgroundContainer.originalY}, Overlay.SPEED).start();
 };
 
-Overlay.prototype.hide = function(skipAnimation) {
+Overlay.prototype.hide = function(skipAnimation, destroyWhenCompleted) {
     this.overlayContainer.alpha = 0;
     this.overlayContainer.getChildAt(0).inputEnabled = false;
 
@@ -320,6 +282,20 @@ Overlay.prototype.hide = function(skipAnimation) {
     if (skipAnimation == true) {
         this.backgroundContainer.y = this.backgroundContainer.destinationY;
     } else {
-        this.game.add.tween(this.backgroundContainer).to({y:this.backgroundContainer.destinationY}, Overlay.SPEED).start();
+        let tween = this.game.add.tween(this.backgroundContainer).to({y:this.backgroundContainer.destinationY}, Overlay.SPEED);
+        tween.onComplete.add(function() {
+            if (destroyWhenCompleted) {
+                this.destroy();
+            }
+        }, this);
+        tween.start();
     }
+};
+
+/* Hide and destroy the overlay */
+Overlay.prototype.close = function() {
+    let sound = this.game.add.audio('sound:popup-button');
+    sound.play();
+
+    this.hide(false, true);
 };

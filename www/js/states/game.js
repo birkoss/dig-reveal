@@ -100,15 +100,7 @@ GAME.Game.prototype = {
             case 'chest':
                 if (!tile.isOpen) {
                     let popup = new Popup(this.game);
-                    popup.setImage("item:" + tile.item.sprite, tile.item.name);
-                    for (let stat in tile.item.modifier) {
-                        let value = tile.item.modifier[stat];
-                        let newValue = GAME.config[stat] + value;
-                        if (stat == "stamina") {
-                            newValue = Math.min(GAME.config.staminaMax, newValue);
-                        }
-                        popup.addStats(stat, GAME.config[stat], newValue);
-                    }
+                    popup.setItem(tile.item);
                     popup.addButton({text:"OK", callback:function() {
                         if (tile.item.equipable == true) {
                             GAME.equip(tile.item.slot, tile.item.id);
@@ -137,7 +129,7 @@ GAME.Game.prototype = {
         }
     },
     onMapDirty: function(tile, value) {
-        GAME.save();
-        this.level.saveMap(this.map);
+        //GAME.save();
+        //this.level.saveMap(this.map);
     }
 };
