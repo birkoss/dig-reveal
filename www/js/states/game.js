@@ -101,14 +101,22 @@ GAME.Game.prototype = {
                 if (!tile.isOpen) {
                     let popup = new Popup(this.game);
                     popup.setItem(tile.item);
-                    popup.addButton({text:"OK", callback:function() {
-                        if (tile.item.equipable == true) {
+
+                    if (tile.item.equipable == true) {
+                        popup.addButton({text:"Equipper", callback:function() {
                             GAME.equip(tile.item.slot, tile.item.id);
-                        } else if (tile.item.usable == true) {
+                            popup.close();
+                        }, context:this});
+                    } else if (tile.item.usable == true) {
+                        popup.addButton({text:"Utiliser", callback:function() {
                             if (tile.item.modifier != undefined && tile.item.modifier.stamina != undefined) {
                                 GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + tile.item.modifier.stamina);
                             }
-                        }
+                            popup.close();
+                        }, context:this});
+                    }
+                    popup.addButton({text:"Ranger", callback:function() {
+                        console.log("SHOULD SAVE the item...");
                         popup.close();
                     }, context:this});
                     popup.show();

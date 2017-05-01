@@ -34,8 +34,8 @@ Items.prototype.createItems = function() {
 
     let group = this.getContainerGroup("images");
     let currentItem = 0;
-    GAME.config.inventory.forEach(function(singleItemID) {
-        let item = GAME.json['items'][singleItemID];
+    GAME.config.inventory.forEach(function(singleItem) {
+        let item = GAME.json['items'][singleItem.itemID];
         if (item != null) {
             if (item.slot == this.slotName) {
                 group.getChildAt(currentItem).getChildAt(1).alpha = 1;

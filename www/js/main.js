@@ -18,6 +18,9 @@
  * Make a sound/effect when trying to reveal when an enemy is active
  *
  * On the new item popup, add a EQUIP button (and rename the remaining as keep)
+ * * Allow to add to inventory (Allow multiple usable...)
+ *
+ * On equip, check to fix the "stamina difference" without allowing the user to cheat and switching armors back and forth
  *
  */
 var GAME = GAME || {};
@@ -34,7 +37,7 @@ GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 /* Dynamics values */
 GAME.config['weapon'] = 'wooden-stick';
 GAME.config['armor'] = 'leather-glove';
-GAME.config['inventory'] = ['wooden-stick', 'leather-glove'];
+GAME.config['inventory'] = [{itemID:'wooden-stick', qty:1}, {itemID:'leather-glove', qty:1}];
 
 GAME.config['stamina'] = GAME.config['staminaMax'];
 GAME.config['time'] = null;
@@ -52,14 +55,14 @@ GAME.equip = function(type, itemID) {
         let item = GAME.json['items'][itemID];
         if (item.equipable == true) {
             let newItem = true;
-            GAME.config.inventory.forEach(function(singleItemID) {
-                if (singleItemID == itemID) {
+            GAME.config.inventory.forEach(function(singleItem) {
+                if (singleItem.itemID == itemID) {
                     newItem = false;
                 }
             }, this);
 
             if (newItem) {
-                GAME.config.inventory.push(itemID);
+                GAME.config.inventory.push({itemID:itemID, qty:1});
             }
         }
         if (item.equipable == true && item.modifier != undefined) {
