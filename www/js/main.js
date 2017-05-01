@@ -17,8 +17,6 @@
  *
  * Make a sound/effect when trying to reveal when an enemy is active
  *
- * On the inventory, add a CHange button, only active when not equipped
- *
  * On the new item popup, add a EQUIP button (and rename the remaining as keep)
  *
  */

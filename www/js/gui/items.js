@@ -11,12 +11,14 @@ function Items(game, slotName) {
     this.setDescription("#");
     this.setStats();
 
-    this.addButton({text: "Équipper", callback:this.close, context:this});
+    this.currentItemID = null;
+
+    this.btnEquip = this.addButton({text: "Équipper", callback:this.equipSelectedItem, context:this});
     this.addButton({text: "Fermer", callback:this.close, context:this});
 
     let group = this.getContainerGroup("images").forEach(function(frame) {
         if (frame.getChildAt(1).item.id == GAME.config[this.slotName]) {
-            this.selectItem(frame, true);
+            this.selectItem(frame);
         }
     }, this);
 };
@@ -52,11 +54,11 @@ Items.prototype.createItems = function() {
     }, this);
 };
 
-Items.prototype.selectItem = function(singleFrame, forceRefresh) {
+Items.prototype.selectItem = function(singleFrame) {
     let itemSprite = singleFrame.getChildAt(1);
     let item = itemSprite.item;
 
-    if (GAME.config[this.slotName] != item.id || forceRefresh === true) {
+    if (this.currentItemID != item.id) {
         let group = this.getContainerGroup("images");
         for (let i=0; i<group.children.length; i++) {
             group.getChildAt(i).getChildAt(0).alpha = 1;
@@ -64,10 +66,23 @@ Items.prototype.selectItem = function(singleFrame, forceRefresh) {
 
         singleFrame.getChildAt(0).alpha = 0.5;
 
-        GAME.equip(this.slotName, item.id);
-
         this.itemName.text = item.name;
         this.itemDescription.text = item.description;
         this.setStats(item.modifier);
+
+        this.currentItemID = item.id;
+
+        if (GAME.config[this.slotName] === this.currentItemID) {
+            this.btnEquip.inputEnabled = false;
+            this.btnEquip.alpha = 0.5;
+        } else {
+            this.btnEquip.inputEnabled = true;
+            this.btnEquip.alpha = 1;
+        }
     }
+};
+
+Items.prototype.equipSelectedItem = function() {
+    GAME.equip(this.slotName, this.currentItemID);
+    this.close();
 };

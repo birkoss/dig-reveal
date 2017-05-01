@@ -202,6 +202,8 @@ Overlay.prototype.addButton = function(buttonData) {
     label.x = button.x + (button.width/2);
     label.y = (button.height/2);
     group.addChild(label);
+
+    return button;
 };
 
 Overlay.prototype.generate = function() {

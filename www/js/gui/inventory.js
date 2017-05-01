@@ -17,7 +17,7 @@ function Inventory(game) {
     this.setDescription("#");
     this.setStats();
 
-    this.addButton({text: "Remplacer", callback:this.onBtnChangeItemClicked, context:this});
+    this.addButton({text: "Changer", callback:this.onBtnChangeItemClicked, context:this});
 
     /* Set the item from our current equipment */
     this.setItem('weapon');
