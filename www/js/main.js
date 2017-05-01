@@ -27,8 +27,8 @@ GAME.debug = true;
 GAME.config = {};
 
 /* Base values, never saved */
-GAME.config['attack'] = 0;
-GAME.config['staminaMax'] = 100;
+GAME.config['attack'] = GAME.config['attackBase'] = 0;
+GAME.config['staminaMax'] = GAME.config['staminaMaxBase'] = 100;
 GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 
 /* Dynamics values */
@@ -64,11 +64,11 @@ GAME.equip = function(type, itemID) {
         }
         if (item.equipable == true && item.modifier != undefined) {
             if (item.modifier.staminaMax != undefined) {
-                GAME.config['staminaMax'] += item.modifier.staminaMax;
-                GAME.config['stamina'] = Math.min(GAME.config['staminaMax'], item.modifier.staminaMax + GAME.config['stamina']);
+                GAME.config['staminaMax'] = GAME.config['staminaMaxBase'] + item.modifier.staminaMax;
+                GAME.config['stamina'] = Math.min(GAME.config['staminaMax'], GAME.config['stamina']);
             }
             if (item.modifier.attack != undefined) {
-                GAME.config['attack'] += item.modifier.attack;
+                GAME.config['attack'] = GAME.config['attackBase'] + item.modifier.attack;
             }
 
             /* If it's a new equipment, equip and save it */
