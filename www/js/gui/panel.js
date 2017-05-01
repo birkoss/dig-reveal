@@ -34,16 +34,10 @@ Panel.prototype.createBackground = function() {
     this.levelName.anchor.set(0, 0.5);
     this.addChild(this.levelName);
 
-    let button = this.game.add.button(0, (background.height/2), 'popup:button', this.showUsableItems, this, 1, 0, 1, 0);
+    let button = this.game.add.button(0, (background.height/2), "panel:btn-items", this.showUsableItems, this, 1, 0, 1, 0);
     button.anchor.set(1, 0.5);
-    button.scale.setTo(GAME.RATIO, GAME.RATIO);
     button.x = this.game.width - 16;
     this.addChild(button);
-
-    let label = this.game.add.bitmapText(0, (background.height/2), 'font:gui', "Items", 10);
-    label.anchor.set(0.5, 0.5);
-    label.x = button.x - (button.width/2);
-    this.addChild(label);
 
     this.staminaBackground = this.create(0, (background.height/2), 'progress-bar:background');
     this.staminaBackground.anchor.set(0, 0.5);

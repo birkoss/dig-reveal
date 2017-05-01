@@ -41,6 +41,7 @@ GAME.Preload.prototype = {
         this.load.image('panel:background', 'images/gui/panel/background.png');
         this.load.image('panel:stamina-background', 'images/gui/panel/stamina-background.png');
         this.load.image('panel:stamina-progress', 'images/gui/panel/stamina-progress.png');
+        this.load.spritesheet('panel:btn-items', 'images/gui/panel/btn-items.png', 64, 28);
 
         this.load.image('progress-bar:background', 'images/progress-bar/background.png');
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');
