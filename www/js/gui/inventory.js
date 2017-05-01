@@ -17,7 +17,7 @@ function Inventory(game) {
     this.setDescription("#");
     this.setStats();
 
-    this.addButton({text: "Changer", callback:this.onBtnChangeItemClicked, context:this});
+    this.btnChange = this.addButton({text: "Changer", callback:this.onBtnChangeItemClicked, context:this});
 
     /* Set the item from our current equipment */
     this.setItem('weapon');
@@ -121,6 +121,23 @@ Inventory.prototype.selectItem = function(slot, forceRefresh) {
         this.itemDescription.text = item.description;
 
         this.setStats(item.modifier);
+
+        /* Check how many items of that slot we have in inventory */
+        let itemQty = 0;
+        GAME.config.inventory.forEach(function(singleItem) {
+            let item = GAME.json['items'][singleItem.itemID];
+            if (item.slot == this.selectedSlot) {
+                itemQty++;
+            }
+        }, this);
+
+        if (itemQty <= 1) {
+            this.btnChange.alpha = 0.5;
+            this.btnChange.inputEnabled = false;
+        } else {
+            this.btnChange.alpha = 1;
+            this.btnChange.inputEnabled = true;
+        }
     }
 };
 
