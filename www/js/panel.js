@@ -30,15 +30,21 @@ Panel.prototype.createBackground = function() {
     this.levelName.anchor.set(0, 0.5);
     this.addChild(this.levelName);
 
-    let staminaIcon = this.create(0, (background.height/2), 'panel:stamina');
-    staminaIcon.anchor.set(1, 0.5);
-    staminaIcon.scale.setTo(GAME.RATIO, GAME.RATIO);
-    staminaIcon.x = background.width - 16;
+    let button = this.game.add.button(0, (background.height/2), 'popup:button', this.showUsableItems, this, 1, 0, 1, 0);
+    button.anchor.set(1, 0.5);
+    button.scale.setTo(GAME.RATIO, GAME.RATIO);
+    button.x = this.game.width - 16;
+    this.addChild(button);
+
+    let label = this.game.add.bitmapText(0, (background.height/2), 'font:gui', "Items", 10);
+    label.anchor.set(0.5, 0.5);
+    label.x = button.x - (button.width/2);
+    this.addChild(label);
 
     this.staminaBackground = this.create(0, (background.height/2), 'progress-bar:background');
     this.staminaBackground.anchor.set(0, 0.5);
     this.staminaBackground.scale.setTo(GAME.RATIO, GAME.RATIO);
-    this.staminaBackground.x = staminaIcon.x - this.staminaBackground.width - staminaIcon.width - 16;
+    this.staminaBackground.x = button.x - this.staminaBackground.width - button.width - 16;
     this.staminaBackground.originalTint = this.staminaBackground.tint;
 
     this.stamina = this.create(this.staminaBackground.x, (background.height/2), 'progress-bar:filling');
@@ -49,7 +55,7 @@ Panel.prototype.createBackground = function() {
     let progressBarBorder = this.create(0, (background.height/2), 'progress-bar:border');
     progressBarBorder.anchor.set(0, 0.5);
     progressBarBorder.scale.setTo(GAME.RATIO, GAME.RATIO);
-    progressBarBorder.x = staminaIcon.x - progressBarBorder.width - staminaIcon.width - 16;
+    progressBarBorder.x = button.x - progressBarBorder.width - button.width - 16;
 
     this.staminaText = this.game.add.bitmapText(this.stamina.x + (this.stamina.width/2), (background.height/2), 'font:gui', '100/100', 10);
     this.staminaText.anchor.set(0.5, 0.5);
@@ -72,3 +78,7 @@ Panel.prototype.noMoreStamina = function() {
     }, this);
     tween.start();
 }
+
+Panel.prototype.showUsableItems = function() {
+    console.log('...popup...');
+};
