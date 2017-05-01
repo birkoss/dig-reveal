@@ -19,7 +19,7 @@ function Items(game, slotName) {
         this.selectItem(this.getContainerGroup("images").getChildAt(0));
     } else {
         let group = this.getContainerGroup("images").forEach(function(frame) {
-            if (frame.getChildAt(1).item.id == GAME.config[this.slotName]) {
+            if (frame.item.id == GAME.config[this.slotName]) {
                 this.selectItem(frame);
             }
         }, this);
@@ -29,10 +29,30 @@ function Items(game, slotName) {
 Items.prototype = Object.create(Overlay.prototype);
 Items.prototype.constructor = Items;
 
+Items.prototype.update = function() {
+    let group = this.getContainerGroup("images");
+    for (let i=0; i<group.children.length; i++) {
+        if (group.getChildAt(i).qtyLabel != null && group.getChildAt(i).inventoryItem != null) {
+            group.getChildAt(i).qtyLabel.text = group.getChildAt(i).inventoryItem.qty;
+        }
+    }
+};
+
 Items.prototype.createItems = function() {
     for (let i=0; i<15; i++) {
         let item = this.addItem({size:1, item:GAME.json['items']['apple']});
         item.getChildAt(1).alpha = 0;
+        
+        if (this.slotName == "usable") {
+            let label = this.game.add.bitmapText(0, 0, 'font:guiOutline', "0", 8);
+            label.anchor.set(1, 1);
+            label.x = item.width - 4;
+            label.y = item.height - 4;
+            label.alpha = 0;
+            item.addChild(label);
+
+            item.qtyLabel = label;
+        }
     }
 
     let group = this.getContainerGroup("images");
@@ -41,13 +61,19 @@ Items.prototype.createItems = function() {
         let item = GAME.json['items'][singleItem.itemID];
         if (item != null) {
             if ((this.slotName == "usable" && item.usable == true) || (item.slot == this.slotName)) {
+                group.getChildAt(currentItem).inventoryItem = singleItem;
+                group.getChildAt(currentItem).item = item;
+
                 group.getChildAt(currentItem).getChildAt(1).alpha = 1;
-                group.getChildAt(currentItem).getChildAt(1).item = item;
                 group.getChildAt(currentItem).getChildAt(1).loadTexture("item:" + item.sprite);
 
                 group.getChildAt(currentItem).enableClick(function(singleFrame) {
                     this.selectItem(singleFrame.parent.parent);
                 }, this);
+
+                if (group.getChildAt(currentItem).qtyLabel != null) {
+                    group.getChildAt(currentItem).qtyLabel.alpha = 1;
+                }
 
                 currentItem++;
             }
@@ -57,7 +83,7 @@ Items.prototype.createItems = function() {
 
 Items.prototype.selectItem = function(singleFrame) {
     let itemSprite = singleFrame.getChildAt(1);
-    let item = itemSprite.item;
+    let item = singleFrame.item;
 
     if (this.currentItemID != item.id) {
         let group = this.getContainerGroup("images");

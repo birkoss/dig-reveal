@@ -80,9 +80,9 @@ Inventory.prototype.setItem = function(slot) {
     if (itemID != null) {
         let item = GAME.json['items'][itemID];
         if (item != null) {
-            let sprite = this.items[slot].getChildAt(1);
+            this.items[slot].item = item;
 
-            sprite.item = item;
+            let sprite = this.items[slot].getChildAt(1);
             sprite.loadTexture('item:' + item.sprite);
         }
     }
@@ -97,7 +97,7 @@ Inventory.prototype.getItem = function(slot) {
     if (itemID != null) {
         let item = GAME.json['items'][itemID];
         if (item != null) {
-            slotItem = this.items[slot].getChildAt(1).item;
+            slotItem = this.items[slot].item;
         }
     }
 
@@ -113,7 +113,7 @@ Inventory.prototype.selectItem = function(slot, forceRefresh) {
         }
         let position = (slot == 'weapon' ? 0 : 1);
         group.getChildAt(position).getChildAt(0).alpha = 0.5;
-        let item = group.getChildAt(position).getChildAt(1).item;
+        let item = group.getChildAt(position).item;
 
         this.selectedSlot = slot;
 

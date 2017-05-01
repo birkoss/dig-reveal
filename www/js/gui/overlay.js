@@ -75,18 +75,18 @@ Overlay.prototype.addItem = function(itemData, paddingBetween) {
     group.add(background);
 
     if (itemData.item != undefined) {
-        item = background.create(0, 0, 'item:' + itemData.item.sprite);
-        item.item = itemData.item;
-        item.scale.setTo(frameSize * GAME.RATIO, frameSize * GAME.RATIO);
-        item.anchor.set(0.5, 0.5);
-        item.x = background.width/2;
-        item.y = background.height/2;
-        item.x -= (item.width / 2 / GAME.RATIO);
-        item.y -= (item.height / 2 / GAME.RATIO);
+        background.item = itemData.item;
+
+        let sprite = background.create(0, 0, 'item:' + itemData.item.sprite);
+        sprite.scale.setTo(frameSize * GAME.RATIO, frameSize * GAME.RATIO);
+        sprite.anchor.set(0.5, 0.5);
+        sprite.x = background.width/2;
+        sprite.y = background.height/2;
+        sprite.x -= (sprite.width / 2 / GAME.RATIO);
+        sprite.y -= (sprite.height / 2 / GAME.RATIO);
     }
 
     if (itemData.label != undefined) {
-
         let label = this.game.add.bitmapText(0, 0, 'font:gui', itemData.label, 10);
         label.anchor.set(0.5, 0);
         label.y = -(this.padding/2) - label.height;
