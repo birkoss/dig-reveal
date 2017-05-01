@@ -117,7 +117,7 @@ Overlay.prototype.createStats = function() {
 
     let group = this.getContainerGroup("stats");
 
-    let background = new Ninepatch(this.game);
+    let background = new Ninepatch(this.game, "ninepatch:light-gray");
     group.add(background);
 
     let title = this.game.add.bitmapText(0, 0, 'font:gui', "Statistiques", 10);
@@ -175,7 +175,7 @@ Overlay.prototype.setStats = function(modifier) {
 Overlay.prototype.setDescription = function(description) {
     let group = this.getContainerGroup("description");
 
-    let background = new Ninepatch(this.game);
+    let background = new Ninepatch(this.game, "ninepatch:light-gray");
     group.add(background);
 
     this.itemDescription = this.game.add.bitmapText(0, 0, "font:gui-multiline", description, 10);
@@ -184,7 +184,7 @@ Overlay.prototype.setDescription = function(description) {
     this.itemDescription.maxWidth = this.minWidth - (this.padding*3);
     group.add(this.itemDescription);
 
-    background.resize(this.minWidth - (this.padding * 2), (description == "#" ? this.itemDescription.height*3 : this.itemDescription.height) + background.getCornerSize() + this.padding);
+    background.resize(this.minWidth - (this.padding * 2), (description == "#" ? this.itemDescription.height*3 : this.itemDescription.height) + background.getCornerSize() + (this.padding*2));
     this.itemDescription.y = (background.height/2) + 3;
 };
 
