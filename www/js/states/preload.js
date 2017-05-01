@@ -38,9 +38,9 @@ GAME.Preload.prototype = {
         this.load.image('tile:dungeon-border-bottom-left', 'images/tiles/dungeon/borders/bottom-left.png');
         this.load.image('tile:dungeon-border-bottom-right', 'images/tiles/dungeon/borders/bottom-right.png');
 
-        this.load.image('panel:background', 'images/panel/background.png');
-        this.load.image('panel:stamina-timer', 'images/panel/stamina-timer.png');
-        this.load.image('panel:stamina', 'images/panel/stamina.png');
+        this.load.image('panel:background', 'images/gui/panel/background.png');
+        this.load.image('panel:stamina-background', 'images/gui/panel/stamina-background.png');
+        this.load.image('panel:stamina-progress', 'images/gui/panel/stamina-progress.png');
 
         this.load.image('progress-bar:background', 'images/progress-bar/background.png');
         this.load.image('progress-bar:filling', 'images/progress-bar/filling.png');

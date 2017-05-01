@@ -23,7 +23,11 @@ Panel.prototype.createBackground = function() {
     background.scale.setTo(GAME.RATIO, GAME.RATIO);
     background.width = this.game.width;
 
-    this.staminaRefresh = this.create(0, 0, 'panel:stamina-timer');
+    let staminaBackground = this.create(0, background.height, 'panel:stamina-background');
+    staminaBackground.scale.setTo(GAME.RATIO, GAME.RATIO);
+    staminaBackground.width = background.width;
+
+    this.staminaRefresh = this.create(0, background.height, 'panel:stamina-progress');
     this.staminaRefresh.scale.setTo(GAME.RATIO, GAME.RATIO);
 
     this.levelName = this.game.add.bitmapText(16, (background.height/2), 'font:gui', '', 10);
