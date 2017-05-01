@@ -109,14 +109,12 @@ GAME.Game.prototype = {
                         }, context:this});
                     } else if (tile.item.usable == true) {
                         popup.addButton({text:"Utiliser", callback:function() {
-                            if (tile.item.modifier != undefined && tile.item.modifier.stamina != undefined) {
-                                GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + tile.item.modifier.stamina);
-                            }
+                            GAME.useItem(tile.item.id);
                             popup.close();
                         }, context:this});
                     }
                     popup.addButton({text:"Ranger", callback:function() {
-                        console.log("SHOULD SAVE the item...");
+                        GAME.keepItem(tile.item.id);
                         popup.close();
                     }, context:this});
                     popup.show();

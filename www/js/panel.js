@@ -80,5 +80,6 @@ Panel.prototype.noMoreStamina = function() {
 }
 
 Panel.prototype.showUsableItems = function() {
-    console.log('...popup...');
+    let popup = new Items(this.game, "usable");
+    popup.show();
 };

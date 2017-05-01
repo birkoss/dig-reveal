@@ -22,6 +22,13 @@
  *
  * On equip, check to fix the "stamina difference" without allowing the user to cheat and switching armors back and forth
  *
+ * On the item list page, instead of hiding the remaining weapon :
+ * * Change the tint, change the alpha, and disable the click (will give hope for a better weapon and maybe keep the interest alive)
+ *
+ * On the usable items list, add an extra label showing the qty
+ * * Update that label on update() to always represent the value
+ * * When 0, alpha the sprite
+ *
  */
 var GAME = GAME || {};
 
@@ -37,7 +44,7 @@ GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 /* Dynamics values */
 GAME.config['weapon'] = 'wooden-stick';
 GAME.config['armor'] = 'leather-glove';
-GAME.config['inventory'] = [{itemID:'wooden-stick', qty:1}, {itemID:'leather-glove', qty:1}];
+GAME.config['inventory'] = [{itemID:'wooden-stick', qty:1}, {itemID:'leather-glove', qty:1}, {itemID:"apple", qty:2}];
 
 GAME.config['stamina'] = GAME.config['staminaMax'];
 GAME.config['time'] = null;
@@ -50,20 +57,41 @@ GAME.json = {};
 
 GAME.music = null;
 
+GAME.useItem = function(itemID) {
+    let item = GAME.json['items'][itemID];
+    if (item.modifier != undefined && item.modifier.stamina != undefined) {
+        GAME.config.stamina = Math.min(GAME.config.staminaMax, GAME.config.stamina + item.modifier.stamina);
+        GAME.save();
+    }
+};
+
+GAME.keepItem = function(itemID) {
+    console.log("keepItem:" + itemID);
+    let existingItem = null;
+    GAME.config.inventory.forEach(function(singleItem) {
+        if (singleItem.itemID == itemID) {
+            existingItem = singleItem;
+        }
+    }, this);
+
+    if (existingItem == null) {
+        GAME.config.inventory.push({itemID:itemID, qty:1});
+    } else {
+        let item = GAME.json['items'][itemID];
+        if (item.usable == true) {
+            console.log("QTY ++");
+            console.log(existingItem);
+            existingItem.qty++;
+        }
+    }
+    GAME.save();
+};
+
 GAME.equip = function(type, itemID) {
     if (itemID != null && GAME.json['items'] != null && GAME.json['items'][itemID] != null) {
         let item = GAME.json['items'][itemID];
         if (item.equipable == true) {
-            let newItem = true;
-            GAME.config.inventory.forEach(function(singleItem) {
-                if (singleItem.itemID == itemID) {
-                    newItem = false;
-                }
-            }, this);
-
-            if (newItem) {
-                GAME.config.inventory.push({itemID:itemID, qty:1});
-            }
+            GAME.keepItem(itemID);
         }
         if (item.equipable == true && item.modifier != undefined) {
             if (item.modifier.staminaMax != undefined) {
@@ -128,6 +156,8 @@ GAME.load = function() {
 };
 
 GAME.load();
+
+console.log(GAME.config);
 
 /* Start Phaser */
 
