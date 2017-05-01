@@ -1,4 +1,4 @@
-function Overlay(game) {
+function Overlay(game, spriteSheet) {
     Phaser.Group.call(this, game);
 
     this.backgroundPosition = 'middle';
@@ -16,8 +16,7 @@ function Overlay(game) {
     this.openOnShow = false;
 
     this.createOverlay();
-    this.createBackground();
-
+    this.createBackground(spriteSheet);
 };
 
 Overlay.prototype = Object.create(Phaser.Group.prototype);
@@ -68,7 +67,7 @@ Overlay.prototype.addItem = function(itemData, paddingBetween) {
     let frameY = Math.floor(group.children.length / frameMaxWidth);
     let frameX = group.children.length - (frameY * frameMaxWidth);
 
-    let background = new Ninepatch(this.game);
+    let background = new Ninepatch(this.game, "ninepatch:light-gray");
     background.resize(16 * frameSize * GAME.RATIO, 16 * frameSize * GAME.RATIO);
     background.x = frameX * (background.width + paddingBetween);
     background.y = frameY * (background.height + paddingBetween);
@@ -259,8 +258,8 @@ Overlay.prototype.generate = function() {
     }
 };
 
-Overlay.prototype.createBackground = function() {
-    this.ninepatch = new Ninepatch(this.game);
+Overlay.prototype.createBackground = function(spriteSheet) {
+    this.ninepatch = new Ninepatch(this.game, spriteSheet);
     this.backgroundContainer.add(this.ninepatch);
 };
 

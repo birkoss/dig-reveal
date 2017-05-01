@@ -38,6 +38,9 @@ GAME.Preload.prototype = {
         this.load.image('tile:dungeon-border-bottom-left', 'images/tiles/dungeon/borders/bottom-left.png');
         this.load.image('tile:dungeon-border-bottom-right', 'images/tiles/dungeon/borders/bottom-right.png');
 
+        this.load.spritesheet('ninepatch:blue', 'images/gui/ninepatch/blue.png', 4, 4);
+        this.load.spritesheet('ninepatch:light-gray', 'images/gui/ninepatch/light-gray.png', 4, 4);
+
         this.load.image('panel:background', 'images/gui/panel/background.png');
         this.load.image('panel:stamina-background', 'images/gui/panel/stamina-background.png');
         this.load.image('panel:stamina-progress', 'images/gui/panel/stamina-progress.png');
@@ -73,8 +76,8 @@ GAME.Preload.prototype = {
         this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 50, 16);
 
         this.load.image('inventory:item-frame', 'images/gui/popup/background.png');
-        this.load.spritesheet('inventory:arrows', 'images/inventory/arrows.png', 8, 8);
-        this.load.image('inventory:toggle', 'images/inventory/toggle.png');
+        this.load.spritesheet('inventory:arrows', 'images/gui/inventory/toggle-arrows.png', 8, 8);
+        this.load.image('inventory:toggle', 'images/gui/inventory/toggle.png');
 
         this.load.audio('music:map', 'audio/musics/map.ogg');
         this.load.audio('music:dungeon', 'audio/musics/dungeon.ogg');

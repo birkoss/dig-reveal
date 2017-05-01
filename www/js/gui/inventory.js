@@ -1,5 +1,5 @@
 function Inventory(game) {
-    Overlay.call(this, game);
+    Overlay.call(this, game, 'ninepatch:blue');
 
     this.setPosition('bottom');
 
@@ -71,7 +71,7 @@ Inventory.prototype.createToggleButton = function() {
     this.toggleIcon = group.create(0, 0, 'inventory:arrows');
     this.toggleIcon.scale.setTo(GAME.RATIO, GAME.RATIO);
     this.toggleIcon.x = toggle.x + ((toggle.width - this.toggleIcon.width) / 2);
-    this.toggleIcon.y = toggle.y + ((toggle.height - this.toggleIcon.height) / 2);
+    this.toggleIcon.y = toggle.y + ((toggle.height - this.toggleIcon.height));
 };
 
 /* Update an item with the appropriate item equipped */
@@ -109,10 +109,12 @@ Inventory.prototype.selectItem = function(slot, forceRefresh) {
     if (slot != this.selectedSlot || forceRefresh === true) {
         let group = this.getContainerGroup("images");
         for (let i=0; i<group.children.length; i++) {
-            group.getChildAt(i).getChildAt(0).alpha = 1;
+            group.getChildAt(i).getChildAt(0).alpha = 0.5;
+            group.getChildAt(i).getChildAt(1).alpha = 0.5;
         }
         let position = (slot == 'weapon' ? 0 : 1);
-        group.getChildAt(position).getChildAt(0).alpha = 0.5;
+        group.getChildAt(position).getChildAt(0).alpha = 1;
+        group.getChildAt(position).getChildAt(1).alpha = 1;
         let item = group.getChildAt(position).item;
 
         this.selectedSlot = slot;
