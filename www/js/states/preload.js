@@ -74,7 +74,7 @@ GAME.Preload.prototype = {
         }
 
         this.load.spritesheet('popup:background', 'images/gui/popup/background.png', 4, 4);
-        this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 60, 16);
+        this.load.spritesheet('popup:button', 'images/gui/popup/button.png', 50, 16);
 
         this.load.image('inventory:item-frame', 'images/gui/popup/background.png');
         this.load.spritesheet('inventory:arrows', 'images/inventory/arrows.png', 8, 8);

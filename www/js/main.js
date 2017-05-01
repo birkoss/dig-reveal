@@ -15,9 +15,11 @@
  * - On reveal, spawn enemies around to protect it
  * - On health below treshold, change into another enemy
  *
- * Add an inventory for owned weapon and armor
- *
  * Make a sound/effect when trying to reveal when an enemy is active
+ *
+ * On the inventory, add a CHange button, only active when not equipped
+ *
+ * On the new item popup, add a EQUIP button (and rename the remaining as keep)
  *
  */
 var GAME = GAME || {};

@@ -193,13 +193,13 @@ Overlay.prototype.addButton = function(buttonData) {
     let group = this.getContainerGroup('buttons');
 
     let button = this.game.add.button(0, 0, 'popup:button', buttonData.callback, buttonData.context, 1, 0, 1, 0);
-    button.x = group.children.length * (button.width + this.padding);
+    button.x = group.children.length * (button.width + (this.padding/2));
     button.scale.setTo(GAME.RATIO, GAME.RATIO);
     group.addChild(button);
 
     let label = this.game.add.bitmapText(0, 0, 'font:gui', buttonData.text, 10);
     label.anchor.set(0.5, 0.5);
-    label.x = (button.width/2);
+    label.x = button.x + (button.width/2);
     label.y = (button.height/2);
     group.addChild(label);
 };

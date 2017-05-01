@@ -11,6 +11,7 @@ function Items(game, slotName) {
     this.setDescription("#");
     this.setStats();
 
+    this.addButton({text: "Équipper", callback:this.close, context:this});
     this.addButton({text: "Fermer", callback:this.close, context:this});
 
     let group = this.getContainerGroup("images").forEach(function(frame) {
