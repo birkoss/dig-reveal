@@ -55,7 +55,7 @@
         "type": "normal",
         "sprite": "apple",
         "modifier": {
-            "stamina": 25
+            "stamina": 5
         }
     }
 }
