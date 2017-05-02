@@ -11,16 +11,64 @@
             "attack": 0
         }
     },
-    "sword1": {
-        "id": "sword1",
-        "name": "Épée en bois",
-        "description": "Une épée qui ressemble plus à un cure-dent",
+    "club": {
+        "id": "club",
+        "name": "Gourdin",
+        "description": "Un gros bâton en bois",
         "type": "unique",
         "equipable": true,
         "slot": "weapon",
-        "sprite": "sword1",
+        "sprite": "club",
         "modifier": {
             "attack": 1
+        }
+    },
+    "dagger": {
+        "id": "dagger",
+        "name": "Dague",
+        "description": "Un petit couteau, un peu coupant",
+        "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
+        "sprite": "dagger",
+        "modifier": {
+            "attack": 2
+        }
+    },
+    "sword": {
+        "id": "sword",
+        "name": "Épée",
+        "description": "Une épée assez légère",
+        "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
+        "sprite": "sword",
+        "modifier": {
+            "attack": 3
+        }
+    },
+    "axe": {
+        "id": "axe",
+        "name": "Hâche",
+        "description": "Aucun arbre ne résistera",
+        "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
+        "sprite": "axe",
+        "modifier": {
+            "attack": 4
+        }
+    },
+    "sabre": {
+        "id": "sabre",
+        "name": "Sabre",
+        "description": "Une grosse épée prête à tout",
+        "type": "unique",
+        "equipable": true,
+        "slot": "weapon",
+        "sprite": "sabre",
+        "modifier": {
+            "attack": 5
         }
     },
     "leather-glove": {
@@ -35,16 +83,64 @@
             "staminaMax": 0
         }
     },
-    "shield1": {
-        "id": "shield1",
+    "wooden-shield": {
+        "id": "wooden-shield",
         "name": "Bouclier en bois",
         "description": "Un couvercle de baril en bois craqué",
         "type": "unique",
         "equipable": true,
         "slot": "armor",
-        "sprite": "shield1",
+        "sprite": "wooden-shield",
         "modifier": {
             "staminaMax": 10
+        }
+    },
+    "cooper-armor": {
+        "id": "cooper-armor",
+        "name": "Armure en cuivre",
+        "description": "Il faut faire attention à la pluie",
+        "type": "unique",
+        "equipable": true,
+        "slot": "armor",
+        "sprite": "cooper-armor",
+        "modifier": {
+            "staminaMax": 20
+        }
+    },
+    "iron-shield": {
+        "id": "iron-shield",
+        "name": "Bouclier en métal",
+        "description": "Rond et pesant",
+        "type": "unique",
+        "equipable": true,
+        "slot": "armor",
+        "sprite": "iron-shield",
+        "modifier": {
+            "staminaMax": 30
+        }
+    },
+    "plated-mail": {
+        "id": "plated-mail",
+        "name": "Cotte de mailles",
+        "description": "C'est très lourd, c'est problement utile",
+        "type": "unique",
+        "equipable": true,
+        "slot": "armor",
+        "sprite": "plated-mail",
+        "modifier": {
+            "staminaMax": 40
+        }
+    },
+    "diamond-boot": {
+        "id": "diamond-boot",
+        "name": "Botte en diamant",
+        "description": "Cendrillon en serait jalouse",
+        "type": "unique",
+        "equipable": true,
+        "slot": "armor",
+        "sprite": "diamond-boot",
+        "modifier": {
+            "staminaMax": 50
         }
     },
     "apple": {
@@ -56,6 +152,44 @@
         "sprite": "apple",
         "modifier": {
             "stamina": 5
+        }
+    },
+    "reveal-potion": {
+        "id": "reveal-potion",
+        "name": "Potion de lumière",
+        "description": "Assez pratique quand il fait noir",
+        "usable": true,
+        "type": "normal",
+        "sprite": "reveal-potion",
+        "effects": {
+            "type": "reveal-fow",
+            "spread": "random"
+        }
+    },
+    "enemy-potion": {
+        "id": "enemy-potion",
+        "name": "Sort de Vision",
+        "description": "Ou te caches-tu ?",
+        "usable": true,
+        "type": "normal",
+        "sprite": "enemy-potion",
+        "effects": {
+            "type": "reveal-item",
+            "item": "enemy",
+            "count": 3
+        }
+    },
+    "vision-scroll": {
+        "id": "vision-scroll",
+        "name": "Sort de Vision",
+        "description": "Montre moi les richesses",
+        "usable": true,
+        "type": "normal",
+        "sprite": "vision-scroll",
+        "effects": {
+            "type": "reveal-item",
+            "item": "chest",
+            "count": 1
         }
     }
 }

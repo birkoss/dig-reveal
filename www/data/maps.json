@@ -3,7 +3,7 @@
         "id": "village",
         "name": "Village",
         "type": "map",
-        "items": ["sword1", "shield1"],
+        "items": ["club", "wooden-shield"],
         "boss": "skeletonKing",
         "enemies": [
             {"skeleton": 40},
@@ -15,7 +15,10 @@
             {"vampire": 5}
         ],
         "chests": [
-            {"apple": 40}
+            {"apple": 40},
+            {"reveal-potion": 30},
+            {"enemy-potion": 15},
+            {"vision-scroll": 15}
         ]
     }
 }

@@ -29,6 +29,8 @@
  * * Update that label on update() to always represent the value
  * * When 0, alpha the sprite
  *
+ * Verify if the items are randomnize before placing the in a castle (the weapon and armor are always in the same castle....
+ *
  */
 var GAME = GAME || {};
 
