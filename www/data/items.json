@@ -8,7 +8,7 @@
         "slot": "weapon",
         "sprite": "wooden-stick",
         "modifier": {
-            "attack": 1
+            "attack": 0
         }
     },
     "sword1": {
@@ -20,7 +20,7 @@
         "slot": "weapon",
         "sprite": "sword1",
         "modifier": {
-            "attack": 2
+            "attack": 1
         }
     },
     "leather-glove": {
@@ -32,7 +32,7 @@
         "slot": "armor",
         "sprite": "leather-glove",
         "modifier": {
-            "staminaMax": 10
+            "staminaMax": 0
         }
     },
     "shield1": {
@@ -44,7 +44,7 @@
         "slot": "armor",
         "sprite": "shield1",
         "modifier": {
-            "staminaMax": 15
+            "staminaMax": 10
         }
     },
     "apple": {

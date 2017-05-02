@@ -37,7 +37,7 @@ GAME.debug = true;
 GAME.config = {};
 
 /* Base values, never saved */
-GAME.config['attack'] = GAME.config['attackBase'] = 0;
+GAME.config['attack'] = GAME.config['attackBase'] = 1;
 GAME.config['staminaMax'] = GAME.config['staminaMaxBase'] = 40;
 GAME.config['timeDelay'] = Phaser.Timer.SECOND * 60;
 
